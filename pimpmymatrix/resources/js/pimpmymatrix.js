@@ -18,26 +18,100 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   {
     this.$matrixContainer = $('.matrix');
 
-    this.addListener(this.$matrixContainer, 'resize', 'addBlockHeadings');
+    this.addListener(Garnish.$win, 'load', 'getFieldBlockTypes');
+  },
 
-    this.addListener(Garnish.$win, 'load', 'addBlockHeadings');
+  getFieldBlockTypes: function()
+  {
+
+    // cache this so we can use it later
+    var that = this;
+
+    // loop each matrix field
+    this.$matrixContainer.each($.proxy(function()
+    {
+
+      // cache field elem
+      var $matrixField = $(this);
+
+      // get matrix field handle out of DOM
+      var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
+          regExp  = /fields\[([^\]]+)\]/,
+          matches = regExp.exec(matrixFieldName),
+          matrixFieldHandle = matches[1];
+
+      // get array of blockTypes
+      Craft.postActionRequest('pimpMyMatrix/getBlockTypesFromField', { matrixFieldHandle : matrixFieldHandle }, $.proxy(function(response, textStatus)
+      {
+        if (textStatus === 'success')
+        {
+          if (response.success)
+          {
+
+            // we have blockTypes so add them to the data object on the field
+            $matrixField.data('blockTypes', response.blockTypes);
+
+            // bind resize now on the matrix field
+            that.addListener($matrixField, 'resize', 'addBlockHeadings');
+
+            // ping addBlockHeadings anyway
+            that.addBlockHeadings();
+
+          }
+        }
+      }), this);
+
+    }), this);
+
   },
 
   addBlockHeadings: function()
   {
 
-    this.$matrixContainer.find('.matrixblock').each(function()
+    // loop available matrix fields
+    this.$matrixContainer.each($.proxy(function()
     {
 
-      var $elem = $(this);
+      // get field and blockTypes
+      var $matrixField = $(this),
+          blockTypes = $matrixField.data('blockTypes');
 
-      if ( !$elem.data('pimped') )
-      {
-        $elem.data('pimped', true);
-        $elem.prepend('<div class="pimpmymatrix-heading">WHO ARE YOU</div>')
+      // loop blocks if we have blockTypes
+      if (typeof blockTypes !== "undefined") {
+        $matrixField.find('.matrixblock').each($.proxy(function()
+        {
+
+          // cache block
+          var $block = $(this);
+
+          // final check that we haven't already added one in case something has gone mental
+          if ( ! $block.hasClass('pimped') )
+          {
+
+            // get the block type handle
+            var blockTypeHandle = $block.find('input[type="hidden"][name*="[type]"]').val();
+
+            // using the blockTypes, match the handle to the blockType object
+            var result = $.grep(blockTypes, function(e){ return e.handle === blockTypeHandle; });
+
+            // check we have something
+            if (result.length > 0)
+            {
+
+              // get the name and add it!
+              var blockName = result[0].name;
+              $block.addClass('pimped');
+              $block.prepend('<div class="pimpmymatrix-heading">'+blockName+'</div>')
+
+            }
+
+          }
+
+        }), this);
       }
 
-    });
+    }), this);
+
   }
 
 });
