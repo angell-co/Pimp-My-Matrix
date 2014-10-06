@@ -1,0 +1,30 @@
+.matrixblock {
+  padding-top: 0;
+}
+
+.pimpmymatrix-heading {
+  background: #444;
+  color: #fff;
+  margin-left: -14px;
+  margin-right: -14px;
+  margin-bottom: 14px;
+  padding: 14px;
+
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
+}
+
+.matrixblock > .actions {
+  top: 15px;
+
+}
+.matrixblock > .actions a,
+.matrixblock > .actions a:before {
+  color: #fff;
+}
+
+.matrixblock > .actions a:hover,
+.matrixblock > .actions a:hover:before {
+  color: #c6c6c6 !important;
+}
