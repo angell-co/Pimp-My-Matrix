@@ -1,5 +1,6 @@
 .matrixblock.pimped {
   padding-top: 0;
+  min-height: 62px; /* magically, this fixed the collapsed state */
 }
 
 .pimpmymatrix-heading {
