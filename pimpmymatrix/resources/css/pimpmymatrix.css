@@ -1,4 +1,4 @@
-.matrixblock {
+.matrixblock.pimped {
   padding-top: 0;
 }
 
@@ -15,16 +15,16 @@
   border-radius: 3px 3px 0 0;
 }
 
-.matrixblock > .actions {
+.matrixblock.pimped > .actions {
   top: 15px;
 
 }
-.matrixblock > .actions a,
-.matrixblock > .actions a:before {
+.matrixblock.pimped > .actions a,
+.matrixblock.pimped > .actions a:before {
   color: #fff;
 }
 
-.matrixblock > .actions a:hover,
-.matrixblock > .actions a:hover:before {
+.matrixblock.pimped > .actions a:hover,
+.matrixblock.pimped > .actions a:hover:before {
   color: #c6c6c6 !important;
 }
