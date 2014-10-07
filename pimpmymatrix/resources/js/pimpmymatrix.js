@@ -18,49 +18,57 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   {
     this.$matrixContainer = $('.matrix');
 
-    this.addListener(Garnish.$win, 'load', 'getFieldBlockTypes');
+    this.addListener(Garnish.$win, 'load', 'loopMatrixFields');
   },
 
-  getFieldBlockTypes: function()
+  loopMatrixFields: function()
   {
 
-    // cache this so we can use it later
     var that = this;
 
     // loop each matrix field
     this.$matrixContainer.each($.proxy(function()
     {
 
-      // cache field elem
-      var $matrixField = $(this);
+      // sort block headings
+      that.getFieldBlockTypes($(this));
 
-      // get matrix field handle out of DOM
-      var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
-          regExp  = /fields\[([^\]]+)\]/,
-          matches = regExp.exec(matrixFieldName),
-          matrixFieldHandle = matches[1];
+      // sort buttons
+      that.sortButtons($(this));
 
-      // get array of blockTypes
-      Craft.postActionRequest('pimpMyMatrix/getBlockTypesFromField', { matrixFieldHandle : matrixFieldHandle }, $.proxy(function(response, textStatus)
+    }), this);
+
+  },
+
+  getFieldBlockTypes: function($matrixField)
+  {
+    var that = this;
+
+    // get matrix field handle out of DOM
+    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
+        regExp  = /fields\[([^\]]+)\]/,
+        matches = regExp.exec(matrixFieldName),
+        matrixFieldHandle = matches[1];
+
+    // get array of blockTypes
+    Craft.postActionRequest('pimpMyMatrix/getBlockTypesFromField', { matrixFieldHandle : matrixFieldHandle }, $.proxy(function(response, textStatus)
+    {
+      if (textStatus === 'success')
       {
-        if (textStatus === 'success')
+        if (response.success)
         {
-          if (response.success)
-          {
 
-            // we have blockTypes so add them to the data object on the field
-            $matrixField.data('blockTypes', response.blockTypes);
+          // we have blockTypes so add them to the data object on the field
+          $matrixField.data('blockTypes', response.blockTypes);
 
-            // bind resize now on the matrix field
-            that.addListener($matrixField, 'resize', 'addBlockHeadings');
+          // bind resize now on the matrix field
+          that.addListener($matrixField, 'resize', 'addBlockHeadings');
 
-            // ping addBlockHeadings anyway
-            that.addBlockHeadings();
+          // ping addBlockHeadings anyway
+          that.addBlockHeadings();
 
-          }
         }
-      }), this);
-
+      }
     }), this);
 
   },
@@ -112,6 +120,11 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
     }), this);
 
+  },
+
+  sortButtons: function($matrixField)
+  {
+    $matrixField.find('> .buttons').clone(true, true).appendTo($matrixField);
   }
 
 });
