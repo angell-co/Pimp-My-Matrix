@@ -124,7 +124,14 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   sortButtons: function($matrixField)
   {
-    $matrixField.find('> .buttons').clone(true, true).appendTo($matrixField);
+    var $origButtons = $matrixField.find('> .buttons'),
+        $ourButtons  = $origButtons.clone(true, true).appendTo($matrixField);
+
+    $origButtons.remove();
+
+    // set up
+    // $ourButtons.find('.btngroup').addClass('hidden');
+    // $ourButtons.find('.menubtn.hidden').removeClass('hidden');
   }
 
 });
