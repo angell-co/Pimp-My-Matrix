@@ -16,115 +16,11 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   $matrixContainer: null,
 
-  init: function()
+  init: function(buttonConfig)
   {
     this.$matrixContainer = $('.matrix');
 
-
-    this.buttonConfig = [
-      {
-        "fieldHandle" : "someThingElseThatWontWork",
-        "config" : [
-          {
-            "blockType" : {
-              "handle"  : "rbaOne",
-              "name"    : "RBA One"
-            },
-            "group"     : "Text"
-          }
-        ]
-      },
-      {
-        "fieldHandle" : "reallyBigArticle",
-        "config" : [
-          {
-            "blockType" : {
-              "handle"  : "rbaOne",
-              "name"    : "RBA One"
-            },
-            "group"     : "Text"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaTwo",
-              "name"    : "RBA Two"
-            },
-            "group"     : "Media"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaThree",
-              "name"    : "RBA Three"
-            },
-            "group"     : "Other"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaFour",
-              "name"    : "RBA Four"
-            },
-            "group"     : "Media"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaFive",
-              "name"    : "RBA Five"
-            },
-            "group"     : "Text"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaSix",
-              "name"    : "RBA Six"
-            },
-            "group"     : "Text"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaSeven",
-              "name"    : "RBA Seven"
-            },
-            "group"     : "Other"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaEight",
-              "name"    : "RBA Eight"
-            },
-            "group"     : "Text"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaNine",
-              "name"    : "RBA Nine"
-            },
-            "group"     : "Media"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaTen",
-              "name"    : "RBA Ten"
-            },
-            "group"     : "Other"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaEleven",
-              "name"    : "RBA Eleven"
-            },
-            "group"     : "Other"
-          },
-          {
-            "blockType" : {
-              "handle"  : "rbaTwelve",
-              "name"    : "RBA Twelve"
-            },
-            "group"     : "Widget"
-          }
-        ]
-      }
-    ];
-
+    this.buttonConfig = buttonConfig;
 
     this.addListener(Garnish.$win, 'load', 'loopMatrixFields');
   },

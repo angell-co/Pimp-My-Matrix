@@ -19,10 +19,16 @@ class PimpMyMatrixPlugin extends BasePlugin
     // check its a cp request and that they're logged in
     if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
     {
-      craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
-      craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
 
-      craft()->templates->includeJs('new Craft.PimpMyMatrix();');
+      $buttonConfig = $this->getSettings()['buttonConfig'];
+
+      if ( $buttonConfig !== '' )
+      {
+        craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
+        craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+        craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
+      }
+
     }
 
   }
@@ -47,5 +53,18 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'http://www.supercooldesign.co.uk';
   }
 
+  public function getSettingsHtml()
+  {
+    return craft()->templates->render('pimpMyMatrix/settings', array(
+      'settings' => $this->getSettings()
+    ));
+  }
+
+  protected function defineSettings()
+  {
+    return array(
+      'buttonConfig' => array(AttributeType::String)
+    );
+  }
 
 }
