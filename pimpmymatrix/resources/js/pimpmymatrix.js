@@ -209,37 +209,41 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       var $ourButtons = $('<div class="buttons pimped" />').insertAfter($origButtons),
           $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
 
-
       // loop each blockType / group pairing
       var buttonObject = buttonConfig[0]['config'];
       for (var key in buttonObject)
       {
 
         // check if group exists, add if not
-        if ( $ourButtons.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
+        if ( $ourButtonsInner.find('[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
         {
-          var $newGroup = $('<div class="btngroup hidden" data-pimped-group="'+buttonObject[key]['group']+'"></div>').appendTo($ourButtons);
-          var $newGroupTrigger = $('<div class="btn menubtn">'+buttonObject[key]['group']+'</div>').appendTo($ourButtonsInner);
-
-          // bind trigger to open group
-
+          $('<div class="btn  menubtn">'+buttonObject[key]['group']+'</div><div class="menu" data-pimped-group="'+buttonObject[key]['group']+'"><ul /></div>').appendTo($ourButtonsInner);
         }
 
         // find sub group
-        var $group = $ourButtons.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]');
+        $groupUl = $ourButtonsInner.find('[data-pimped-group="'+buttonObject[key]['group']+'"] ul');
 
-        // clone relavent original button to add to our new sub group
-        var $newButton = $origButtons.find('[data-type="'+buttonObject[key]['blockType']+'"]').clone(true,true).appendTo($group);
+        // make link in new sub group
+        $('<li><a data-type="'+buttonObject[key]['blockType']+'">'+buttonObject[key]['blockType']+'</a></li>').appendTo($groupUl);
 
       }
 
+      // make triggers MenuBtns
+      $ourButtonsInner.find('.menubtn').each(function()
+      {
+        new Garnish.MenuBtn($(this),
+        {
+          onOptionSelect: function(option)
+          {
+            // find our type and click the correct original btn!
+            var type = $(option).data('type');
+            $origButtons.find('[data-type="'+type+'"]').click();
+          }
+        });
+      });
+
     }
 
-
-
-    // set up
-    // $ourButtons.find('.btngroup').addClass('hidden');
-    // $ourButtons.find('.menubtn.hidden').removeClass('hidden');
   },
 
 
