@@ -12,11 +12,80 @@
 Craft.PimpMyMatrix = Garnish.Base.extend(
 {
 
+  buttonConfig: null,
+
   $matrixContainer: null,
 
   init: function()
   {
     this.$matrixContainer = $('.matrix');
+
+
+    this.buttonConfig = [
+      {
+        "fieldHandle" : "someThingElseThatWontWork",
+        "config" : [
+          {
+            "blockType" : "rbaOne",
+            "group"     : "Text"
+          }
+        ]
+      },
+      {
+        "fieldHandle" : "reallyBigArticle",
+        "config" : [
+          {
+            "blockType" : "rbaOne",
+            "group"     : "Text"
+          },
+          {
+            "blockType" : "rbaTwo",
+            "group"     : "Media"
+          },
+          {
+            "blockType" : "rbaThree",
+            "group"     : "Other"
+          },
+          {
+            "blockType" : "rbaFour",
+            "group"     : "Media"
+          },
+          {
+            "blockType" : "rbaFive",
+            "group"     : "Text"
+          },
+          {
+            "blockType" : "rbaSix",
+            "group"     : "Text"
+          },
+          {
+            "blockType" : "rbaSeven",
+            "group"     : "Other"
+          },
+          {
+            "blockType" : "rbaEight",
+            "group"     : "Text"
+          },
+          {
+            "blockType" : "rbaNine",
+            "group"     : "Media"
+          },
+          {
+            "blockType" : "rbaTen",
+            "group"     : "Other"
+          },
+          {
+            "blockType" : "rbaEleven",
+            "group"     : "Other"
+          },
+          {
+            "blockType" : "rbaTwelve",
+            "group"     : "Widget"
+          }
+        ]
+      }
+    ];
+
 
     this.addListener(Garnish.$win, 'load', 'loopMatrixFields');
   },
@@ -42,13 +111,10 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   getFieldBlockTypes: function($matrixField)
   {
-    var that = this;
-
     // get matrix field handle out of DOM
-    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
-        regExp  = /fields\[([^\]]+)\]/,
-        matches = regExp.exec(matrixFieldName),
-        matrixFieldHandle = matches[1];
+    var matrixFieldHandle = this._getMatrixFieldName($matrixField);
+
+    var that = this;
 
     // get array of blockTypes
     Craft.postActionRequest('pimpMyMatrix/getBlockTypesFromField', { matrixFieldHandle : matrixFieldHandle }, $.proxy(function(response, textStatus)
@@ -124,14 +190,70 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   sortButtons: function($matrixField)
   {
-    var $origButtons = $matrixField.find('> .buttons'),
-        $ourButtons  = $origButtons.clone(true, true).appendTo($matrixField);
 
-    $origButtons.remove();
+    // get matrix field handle out of DOM
+    var matrixFieldHandle = this._getMatrixFieldName($matrixField);
+
+    // look for an object that matches this field in the config array
+    var buttonConfig = $.grep(this.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+
+    // if we found one, execute our magic
+    if ( buttonConfig[0] !== undefined )
+    {
+
+      // find and hide the original buttons
+      var $origButtons = $matrixField.find('> .buttons');
+      $origButtons.hide();
+
+      // make our own container
+      var $ourButtons = $('<div class="buttons pimped" />').insertAfter($origButtons),
+          $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
+
+
+      // loop each blockType / group pairing
+      var buttonObject = buttonConfig[0]['config'];
+      for (var key in buttonObject)
+      {
+
+        // check if group exists, add if not
+        if ( $ourButtonsInner.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
+        {
+          var $newGroup = $('<div class="btngroup hidden" data-pimped-group="'+buttonObject[key]['group']+'"></div><div class="btn menubtn">'+buttonObject[key]['group']+'</div>').appendTo($ourButtonsInner);
+        }
+
+        // clone relavent original button to add to our new sub group
+        // look for this: (.buttons > .btngroup >) data-type="flutey2"
+        // .clone(true, true)
+      }
+
+    }
+
+
 
     // set up
     // $ourButtons.find('.btngroup').addClass('hidden');
     // $ourButtons.find('.menubtn.hidden').removeClass('hidden');
+  },
+
+
+  /**
+   * This simply returns a fieldHandle if it can get one or false if not
+   */
+  _getMatrixFieldName: function($matrixField)
+  {
+    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
+        regExp  = /fields\[([^\]]+)\]/,
+        matches = regExp.exec(matrixFieldName),
+        matrixFieldHandle = matches[1];
+
+    if ( matrixFieldHandle != '' )
+    {
+      return matrixFieldHandle;
+    }
+    else
+    {
+      return false;
+    }
   }
 
 });
