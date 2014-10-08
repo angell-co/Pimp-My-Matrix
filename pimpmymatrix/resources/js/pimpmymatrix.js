@@ -26,7 +26,10 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         "fieldHandle" : "someThingElseThatWontWork",
         "config" : [
           {
-            "blockType" : "rbaOne",
+            "blockType" : {
+              "handle"  : "rbaOne",
+              "name"    : "RBA One"
+            },
             "group"     : "Text"
           }
         ]
@@ -35,51 +38,87 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         "fieldHandle" : "reallyBigArticle",
         "config" : [
           {
-            "blockType" : "rbaOne",
+            "blockType" : {
+              "handle"  : "rbaOne",
+              "name"    : "RBA One"
+            },
             "group"     : "Text"
           },
           {
-            "blockType" : "rbaTwo",
+            "blockType" : {
+              "handle"  : "rbaTwo",
+              "name"    : "RBA Two"
+            },
             "group"     : "Media"
           },
           {
-            "blockType" : "rbaThree",
+            "blockType" : {
+              "handle"  : "rbaThree",
+              "name"    : "RBA Three"
+            },
             "group"     : "Other"
           },
           {
-            "blockType" : "rbaFour",
+            "blockType" : {
+              "handle"  : "rbaFour",
+              "name"    : "RBA Four"
+            },
             "group"     : "Media"
           },
           {
-            "blockType" : "rbaFive",
+            "blockType" : {
+              "handle"  : "rbaFive",
+              "name"    : "RBA Five"
+            },
             "group"     : "Text"
           },
           {
-            "blockType" : "rbaSix",
+            "blockType" : {
+              "handle"  : "rbaSix",
+              "name"    : "RBA Six"
+            },
             "group"     : "Text"
           },
           {
-            "blockType" : "rbaSeven",
+            "blockType" : {
+              "handle"  : "rbaSeven",
+              "name"    : "RBA Seven"
+            },
             "group"     : "Other"
           },
           {
-            "blockType" : "rbaEight",
+            "blockType" : {
+              "handle"  : "rbaEight",
+              "name"    : "RBA Eight"
+            },
             "group"     : "Text"
           },
           {
-            "blockType" : "rbaNine",
+            "blockType" : {
+              "handle"  : "rbaNine",
+              "name"    : "RBA Nine"
+            },
             "group"     : "Media"
           },
           {
-            "blockType" : "rbaTen",
+            "blockType" : {
+              "handle"  : "rbaTen",
+              "name"    : "RBA Ten"
+            },
             "group"     : "Other"
           },
           {
-            "blockType" : "rbaEleven",
+            "blockType" : {
+              "handle"  : "rbaEleven",
+              "name"    : "RBA Eleven"
+            },
             "group"     : "Other"
           },
           {
-            "blockType" : "rbaTwelve",
+            "blockType" : {
+              "handle"  : "rbaTwelve",
+              "name"    : "RBA Twelve"
+            },
             "group"     : "Widget"
           }
         ]
@@ -224,7 +263,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         $groupUl = $ourButtonsInner.find('[data-pimped-group="'+buttonObject[key]['group']+'"] ul');
 
         // make link in new sub group
-        $('<li><a data-type="'+buttonObject[key]['blockType']+'">'+buttonObject[key]['blockType']+'</a></li>').appendTo($groupUl);
+        $('<li><a data-type="'+buttonObject[key]['blockType']['handle']+'">'+buttonObject[key]['blockType']['name']+'</a></li>').appendTo($groupUl);
 
       }
 
