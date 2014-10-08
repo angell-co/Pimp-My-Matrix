@@ -216,14 +216,21 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       {
 
         // check if group exists, add if not
-        if ( $ourButtonsInner.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
+        if ( $ourButtons.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
         {
-          var $newGroup = $('<div class="btngroup hidden" data-pimped-group="'+buttonObject[key]['group']+'"></div><div class="btn menubtn">'+buttonObject[key]['group']+'</div>').appendTo($ourButtonsInner);
+          var $newGroup = $('<div class="btngroup hidden" data-pimped-group="'+buttonObject[key]['group']+'"></div>').appendTo($ourButtons);
+          var $newGroupTrigger = $('<div class="btn menubtn">'+buttonObject[key]['group']+'</div>').appendTo($ourButtonsInner);
+
+          // bind trigger to open group
+
         }
 
+        // find sub group
+        var $group = $ourButtons.find('.btngroup[data-pimped-group="'+buttonObject[key]['group']+'"]');
+
         // clone relavent original button to add to our new sub group
-        // look for this: (.buttons > .btngroup >) data-type="flutey2"
-        // .clone(true, true)
+        var $newButton = $origButtons.find('[data-type="'+buttonObject[key]['blockType']+'"]').clone(true,true).appendTo($group);
+
       }
 
     }
