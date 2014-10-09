@@ -41,3 +41,15 @@
 .matrixblock.pimped > .actions a:hover:before {
   color: #c6c6c6 !important;
 }
+
+
+
+/* settings page */
+.pimpmymatrix-settings__list {
+  overflow: hidden;
+}
+.pimpmymatrix-settings__list li {
+  float: left;
+  margin-right: 12px;
+  margin-top: 12px;
+}

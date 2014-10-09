@@ -10,4 +10,24 @@
     rows: 8,
     errors: settings.getErrors('buttonConfig')
   }) }}
+
+  {% for field in blockTypesOnFields %}
+
+    <h2>{{ field.name }}</h2>
+
+    <ul class="pimpmymatrix-settings__list" data-pimpmymatrix-field-handle="{{ field.handle }}">
+    {% for blockType in field.blockTypes %}
+      <li data-pimpmymatrix-blocktype-name="{{ blockType.name }}" data-pimpmymatrix-blocktype-handle="{{ blockType.handle }}">
+        {{ forms.textField({
+          label: blockType.name,
+          id: blockType.handle,
+          name: blockType.handle,
+          size: 12
+        }) }}
+      </li>
+    {% endfor %}
+    </ul>
+
+    <hr>
+  {% endfor %}
 </div>

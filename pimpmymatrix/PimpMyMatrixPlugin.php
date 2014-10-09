@@ -26,7 +26,7 @@ class PimpMyMatrixPlugin extends BasePlugin
       {
         craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-        craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
+        craft()->templates->includeJs('var pimp = new Craft.PimpMyMatrix('.$buttonConfig.');');
       }
 
     }
@@ -55,8 +55,39 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getSettingsHtml()
   {
+    // get fields
+    $fields = craft()->fields->getAllFields();
+    $blockTypesOnFields = array();
+
+    // filter out the non-matrix and add blockTypes
+    foreach ($fields as $field) {
+      if ( $field->type === "Matrix" )
+      {
+
+        $blockTypes = array();
+        foreach (craft()->matrix->getBlockTypesByFieldId($field->id) as $blockType) {
+          $blockTypes[] = array(
+            'name' => $blockType->name,
+            'handle' => $blockType->handle
+          );
+        }
+
+        $blockTypesOnFields[] = array(
+          'id'         => $field->id,
+          'name'       => $field->name,
+          'handle'     => $field->handle,
+          'blockTypes' => $blockTypes
+        );
+      }
+    }
+
+    // ping the buttonConfigurator
+    craft()->templates->includeJs('pimp.buttonConfigurator();');
+
+    // load settings template
     return craft()->templates->render('pimpMyMatrix/settings', array(
-      'settings' => $this->getSettings()
+      'settings'           => $this->getSettings(),
+      'blockTypesOnFields' => $blockTypesOnFields
     ));
   }
 

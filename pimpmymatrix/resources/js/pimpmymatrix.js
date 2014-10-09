@@ -181,6 +181,49 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   },
 
+  buttonConfigurator: function()
+  {
+
+    var that = this;
+
+    // loop the fields we have on the page
+    $('.pimpmymatrix-settings__list').each(function(){
+
+      // get matrixFieldHandle and assoc stored config
+      var matrixFieldHandle = $(this).data('pimpmymatrix-field-handle'),
+          buttonConfig = $.grep(that.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+
+      // if we found a stored config, set up the fields
+      if ( buttonConfig[0] !== undefined )
+      {
+
+        // loop this fields’ blockTypes
+        $(this).children('li').each(function(){
+
+          // get config from current settings by blockType.handle
+          var blockTypeHandle = $(this).data('pimpmymatrix-blocktype-handle'),
+              // blockTypeName = $(this).data('pimpmymatrix-blocktype-name'),
+              blockTypeConfig = $.grep(buttonConfig[0].config, function(e){ return e.blockType.handle === blockTypeHandle; });
+
+          // check its not undefined (i.e. - not in the settings array)
+          if ( blockTypeConfig[0] !== undefined )
+          {
+            // set value of the input
+            $(this).find('input').val(blockTypeConfig[0].group);
+          }
+
+        });
+
+      }
+
+    });
+
+
+    // hi-jack the save so that anything that is in our fake fields
+    // gets stuck in the field before it saves
+    // make sure not to add empty fake fields
+
+  },
 
   /**
    * This simply returns a fieldHandle if it can get one or false if not
