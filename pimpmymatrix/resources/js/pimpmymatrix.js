@@ -193,23 +193,58 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       var matrixFieldHandle = $(this).data('pimpmymatrix-field-handle'),
           buttonConfig = $.grep(that.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
-      // if we found a stored config, set up the fields
+      // check we found a stored config
       if ( buttonConfig[0] !== undefined )
       {
+
+        // work out the groups
+        var configObject = buttonConfig[0].config,
+            groupArray = [];
+
+        for (var key in configObject)
+        {
+
+          if ( ! Craft.inArray(configObject[key].group, groupArray) )
+          {
+            groupArray.push(configObject[key].group);
+          }
+
+        }
+
+        // output our group interface
+
+
 
         // loop this fields’ blockTypes
         $(this).children('li').each(function(){
 
-          // get config from current settings by blockType.handle
+          // add our group select box
           var blockTypeHandle = $(this).data('pimpmymatrix-blocktype-handle'),
-              // blockTypeName = $(this).data('pimpmymatrix-blocktype-name'),
-              blockTypeConfig = $.grep(buttonConfig[0].config, function(e){ return e.blockType.handle === blockTypeHandle; });
+              blockTypeName = $(this).data('pimpmymatrix-blocktype-name'),
+              $field =$('<div class="field">'+
+                '<div class="heading">'+
+                  '<label for="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'">'+blockTypeName+'</label>'+
+                '</div>'+
+                '<div class="input"><div class="select"></div></div>'+
+              '</div>'),
+              $select = $('<select id="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" name="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" />').appendTo($field.find('.select'));
 
-          // check its not undefined (i.e. - not in the settings array)
+          $('<option value="" selected></option>').appendTo($select);
+          for (var key in groupArray) {
+            $('<option value="'+groupArray[key]+'">'+groupArray[key]+'</option>').appendTo($select);
+          }
+
+          $(this).append($field);
+
+
+          // get config from current settings by blockType.handle
+          var blockTypeConfig = $.grep(configObject, function(e){ return e.blockType.handle === blockTypeHandle; });
+
+          // check its in the settings array
           if ( blockTypeConfig[0] !== undefined )
           {
-            // set value of the input
-            $(this).find('input').val(blockTypeConfig[0].group);
+            // set value of the select
+            $(this).find('select').val(blockTypeConfig[0].group);
           }
 
         });
