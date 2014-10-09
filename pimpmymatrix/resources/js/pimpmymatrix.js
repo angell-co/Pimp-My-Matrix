@@ -197,7 +197,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       if ( buttonConfig[0] !== undefined )
       {
 
-        // work out the groups
+        // work out the groups - couldn’t we just get these from the php?
         var configObject = buttonConfig[0].config,
             groupArray = [];
 
@@ -206,14 +206,11 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
           if ( ! Craft.inArray(configObject[key].group, groupArray) )
           {
+            // save in array for later
             groupArray.push(configObject[key].group);
           }
 
         }
-
-        // output our group interface
-
-
 
         // loop this fields’ blockTypes
         $(this).children('li').each(function(){
@@ -251,9 +248,13 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
       }
 
+      // TODO:
+      // watch the group table for changes and then re-populate the selects accordingly
+
     });
 
 
+    // TODO:
     // hi-jack the save so that anything that is in our fake fields
     // gets stuck in the field before it saves
     // make sure not to add empty fake fields

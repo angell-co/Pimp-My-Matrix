@@ -26,6 +26,8 @@ class PimpMyMatrixPlugin extends BasePlugin
       {
         craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+
+        // JsonHelper::encode($buttonConfig) ??????
         craft()->templates->includeJs('var pimp = new Craft.PimpMyMatrix('.$buttonConfig.');');
       }
 
@@ -59,7 +61,7 @@ class PimpMyMatrixPlugin extends BasePlugin
     $fields = craft()->fields->getAllFields();
     $blockTypesOnFields = array();
 
-    // filter out the non-matrix and add blockTypes
+    // filter out the non-matrix and add blockTypes and eny existign groups
     foreach ($fields as $field) {
       if ( $field->type === "Matrix" )
       {
@@ -72,11 +74,36 @@ class PimpMyMatrixPlugin extends BasePlugin
           );
         }
 
+        // get any groups for this field from current settings
+        $rows = array();
+        $settings = JsonHelper::decode($this->getSettings()->buttonConfig);
+        foreach ($settings as $key => $value)
+        {
+
+          if ( $settings[$key]['fieldHandle'] === $field->handle )
+          {
+
+            foreach ($settings[$key]['config'] as $config)
+            {
+
+              $row = array('label' => $config['group']);
+              if ( ! in_array($row, $rows) )
+              {
+                $rows[] = $row;
+              }
+
+            }
+
+          }
+
+        }
+
         $blockTypesOnFields[] = array(
           'id'         => $field->id,
           'name'       => $field->name,
           'handle'     => $field->handle,
-          'blockTypes' => $blockTypes
+          'blockTypes' => $blockTypes,
+          'rows'       => $rows
         );
       }
     }
