@@ -270,7 +270,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   },
 
-  onAddTableRow: function(settings)
+  bindTextchanges: function(settings)
   {
 
     // bind textchanges on textareas inside table
@@ -344,7 +344,8 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         // loop li's
         $(this).find('li').each(function(){
 
-          if ( $(this).find('select').val() != '' )
+          var selectVal = $(this).find('select').val();
+          if ( selectVal !== '' && selectVal !== null )
           {
             hasSomeValue = true;
           }
@@ -356,7 +357,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
                 "handle"  : $(this).data('pimpmymatrix-blocktype-handle'),
                 "name"    : $(this).data('pimpmymatrix-blocktype-name')
               },
-              "group"     : $(this).find('select').val()
+              "group"     : selectVal
             }
           );
 

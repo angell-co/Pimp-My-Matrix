@@ -79,8 +79,6 @@ class PimpMyMatrixPlugin extends BasePlugin
         $rows = array();
         $settings = JsonHelper::decode($this->getSettings()->buttonConfig);
 
-        // echo"<pre>"; print_r($settings);die();
-
         if ( $settings )
         {
           foreach ($settings as $key => $value)
@@ -132,11 +130,16 @@ class PimpMyMatrixPlugin extends BasePlugin
         $name = craft()->templates->namespaceInputName("pimpmymatrix-grouptable-".$field->handle);
         craft()->templates->includeJs("
           var pimpTable = new Craft.EditableTable('".$id."','".$name."', ".JsonHelper::encode($columns).",{
-            onAddRow: $.proxy(pimp, 'onAddTableRow', {
+            onAddRow: $.proxy(pimp, 'bindTextchanges', {
               tableId: '".$id."',
               fieldHandle: '".$field->handle."'
             }),
             onDeleteRow: $.proxy(pimp, 'reconstructSelects')
+          });
+
+          pimp.bindTextchanges({
+            tableId: '".$id."',
+            fieldHandle: '".$field->handle."'
           });
 
           pimpTable.sorter.settings.onSortChange = $.proxy(pimp, 'reconstructSelects');
