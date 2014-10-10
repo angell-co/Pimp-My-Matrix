@@ -133,7 +133,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
     // look for an object that matches this field in the config array
     var buttonConfig = $.grep(this.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
-    // if we found one, execute our magic
+    // if we found one (and it has at least one group) execute our magic
     if ( buttonConfig[0] !== undefined )
     {
 
@@ -146,7 +146,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
 
       // loop each blockType / group pairing
-      var buttonObject = buttonConfig[0]['config'];
+      var buttonObject = buttonConfig[0].config;
       for (var key in buttonObject)
       {
 
@@ -195,10 +195,15 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           buttonConfig = $.grep(that.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
       // check we found a stored config
+      var hasConfig = false;
       if ( buttonConfig[0] !== undefined )
       {
+        hasConfig = true;
+      }
 
-        // work out the groups - couldn’t we just get these from the php?
+      // work out the groups - couldn’t we just get these from the php?
+      if ( hasConfig )
+      {
         var configObject = buttonConfig[0].config,
             groupArray = [];
 
@@ -212,29 +217,37 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           }
 
         }
+      }
 
-        // loop this fields’ blockTypes
-        $(this).children('li').each(function(){
+      // loop this fields’ blockTypes
+      $(this).children('li').each(function(){
 
-          // add our group select box
-          var blockTypeHandle = $(this).data('pimpmymatrix-blocktype-handle'),
-              blockTypeName = $(this).data('pimpmymatrix-blocktype-name'),
-              $field =$('<div class="field">'+
-                '<div class="heading">'+
-                  '<label for="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'">'+blockTypeName+'</label>'+
-                '</div>'+
-                '<div class="input"><div class="select"></div></div>'+
-              '</div>'),
-              $select = $('<select id="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" name="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" />').appendTo($field.find('.select'));
+        // add our group select box
+        var blockTypeHandle = $(this).data('pimpmymatrix-blocktype-handle'),
+            blockTypeName = $(this).data('pimpmymatrix-blocktype-name'),
+            $field =$('<div class="field">'+
+              '<div class="heading">'+
+                '<label for="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'">'+blockTypeName+'</label>'+
+              '</div>'+
+              '<div class="input"><div class="select"></div></div>'+
+            '</div>'),
+            $select = $('<select id="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" name="pimpmymatrix-blocktypeselect-'+blockTypeHandle+'" />').appendTo($field.find('.select'));
 
-          $('<option value="" selected></option>').appendTo($select);
+        $('<option value="" selected></option>').appendTo($select);
+
+        // add any existing options
+        if ( hasConfig )
+        {
           for (var key in groupArray) {
             $('<option value="'+groupArray[key]+'">'+groupArray[key]+'</option>').appendTo($select);
           }
+        }
 
-          $(this).append($field);
+        // add field to this li
+        $(this).append($field);
 
-
+        if ( hasConfig )
+        {
           // get config from current settings by blockType.handle
           var blockTypeConfig = $.grep(configObject, function(e){ return e.blockType.handle === blockTypeHandle; });
 
@@ -245,12 +258,12 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
             $(this).find('select').val(blockTypeConfig[0].group);
           }
 
-          // watch select changes
-          that.addListener($(this), 'change', 'reconstructSettings');
+        }
 
-        });
+        // watch select changes
+        that.addListener($(this), 'change', 'reconstructSettings');
 
-      }
+      });
 
     });
 
@@ -320,6 +333,8 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       // loop each field
       $('.pimpmymatrix-settings__list').each(function(){
 
+        var hasSomeValue = false;
+
         // make settings object
         var settingsObject = {
           "fieldHandle" : $(this).data('pimpmymatrix-field-handle'),
@@ -328,6 +343,11 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
         // loop li's
         $(this).find('li').each(function(){
+
+          if ( $(this).find('select').val() != '' )
+          {
+            hasSomeValue = true;
+          }
 
           // add top config array in the object
           settingsObject.config.push(
@@ -342,8 +362,12 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
         });
 
+        // if there was at least one group value
         // push this object into the settingsArray
-        settingsArray.push(settingsObject);
+        if ( hasSomeValue )
+        {
+          settingsArray.push(settingsObject);
+        }
 
       });
 
