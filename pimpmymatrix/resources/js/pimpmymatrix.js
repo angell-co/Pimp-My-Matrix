@@ -13,6 +13,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 {
 
   buttonConfig: null,
+  reconstructSettingsTimeout: null,
 
   $matrixContainer: null,
 
@@ -244,10 +245,8 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
             $(this).find('select').val(blockTypeConfig[0].group);
           }
 
-          // TODO:
-          // bind li watch here for any select changes, send to function that
-          // gets makes json from the whole page - using the table's order to
-          // order the groups eventually
+          // watch select changes
+          that.addListener($(this), 'change', 'reconstructSettings');
 
         });
 
@@ -299,7 +298,59 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
       });
 
+    }).promise().done(function(){
+      that.reconstructSettings();
     });
+
+  },
+
+  reconstructSettings: function()
+  {
+
+    if (this.reconstructSettingsTimeout)
+    {
+      clearTimeout(this.reconstructSettingsTimeout);
+    }
+
+    this.reconstructSettingsTimeout = setTimeout(function()
+    {
+
+      var settingsArray = [];
+
+      // loop each field
+      $('.pimpmymatrix-settings__list').each(function(){
+
+        // make settings object
+        var settingsObject = {
+          "fieldHandle" : $(this).data('pimpmymatrix-field-handle'),
+          "config" : []
+        };
+
+        // loop li's
+        $(this).find('li').each(function(){
+
+          // add top config array in the object
+          settingsObject.config.push(
+            {
+              "blockType" : {
+                "handle"  : $(this).data('pimpmymatrix-blocktype-handle'),
+                "name"    : $(this).data('pimpmymatrix-blocktype-name')
+              },
+              "group"     : $(this).find('select').val()
+            }
+          );
+
+        });
+
+        // push this object into the settingsArray
+        settingsArray.push(settingsObject);
+
+      });
+
+      // pop the settingsArray into our hidden field
+      $('#settings-buttonConfig').val(JSON.stringify(settingsArray));
+
+    }, 500);
 
   },
 

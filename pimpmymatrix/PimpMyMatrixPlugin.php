@@ -79,6 +79,8 @@ class PimpMyMatrixPlugin extends BasePlugin
         $rows = array();
         $settings = JsonHelper::decode($this->getSettings()->buttonConfig);
 
+        // echo"<pre>"; print_r($settings);die();
+
         if ( $settings )
         {
           foreach ($settings as $key => $value)
