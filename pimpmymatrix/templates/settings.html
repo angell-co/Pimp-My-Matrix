@@ -1,13 +1,10 @@
 {% import "_includes/forms" as forms %}
 
 <div class="item" data-colspan="1">
-  {{ forms.textareaField({
-    label: 'Button Config'|t,
+  {{ forms.hidden({
     id: 'buttonConfig',
     name: 'buttonConfig',
-    instructions: "JSON - format this properly"|t,
     value: settings.buttonConfig,
-    rows: 8,
     errors: settings.getErrors('buttonConfig')
   }) }}
 
