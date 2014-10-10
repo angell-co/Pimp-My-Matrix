@@ -1,27 +1,26 @@
 .matrixblock.pimped {
   padding-top: 0;
-  min-height: 62px; /* magically, this fixed the collapsed state */
+  min-height: 48px; /* magically, this fixed the collapsed state */
 }
 
 /* when disabled lets show the user an opacified version */
 .matrixblock.pimped.disabled {
   zoom: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-  filter: alpha(opacity=70);
-  -moz-opacity: 0.7;
-  -khtml-opacity: 0.7;
-  opacity: 0.7;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+  -moz-opacity: 0.4;
+  -khtml-opacity: 0.4;
+  opacity: 0.4;
 }
 
 .pimpmymatrix-heading {
-  background: #444;
+  background: #CACACA; /* #B2B2B2 */
   color: #fff;
   margin-left: -14px;
   margin-right: -14px;
   margin-bottom: 14px;
-  padding: 14px;
+  padding: 8px 14px 6px 14px;
   font-size: 14px;
-  font-weight: bold;
 
   -webkit-border-radius: 3px 3px 0 0;
   -moz-border-radius: 3px 3px 0 0;
@@ -29,7 +28,7 @@
 }
 
 .matrixblock.pimped > .actions {
-  top: 15px;
+  top: 7px;
 
 }
 .matrixblock.pimped > .actions a,
@@ -39,7 +38,7 @@
 
 .matrixblock.pimped > .actions a:hover,
 .matrixblock.pimped > .actions a:hover:before {
-  color: #c6c6c6 !important;
+  color: #949494 !important;
 }
 
 
