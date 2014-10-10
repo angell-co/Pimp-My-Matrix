@@ -289,7 +289,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
       // make new option list from table
       $selectTmlp = $('<select><option value=""></option></select>');
-      $(this).prev('.field').find('table tbody textarea').each(function(){
+      $('#settings-pimpmymatrix-grouptable-'+$(this).data('pimpmymatrix-field-handle')).find('tbody textarea').each(function(){
         $('<option value="'+$(this).val()+'">'+$(this).val()+'</option>').appendTo($selectTmlp);
       });
 
@@ -375,7 +375,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       // pop the settingsArray into our hidden field
       $('#settings-buttonConfig').val(JSON.stringify(settingsArray));
 
-    }, 500);
+    }, 300);
 
   },
 

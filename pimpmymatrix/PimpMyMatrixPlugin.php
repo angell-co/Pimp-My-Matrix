@@ -114,13 +114,12 @@ class PimpMyMatrixPlugin extends BasePlugin
         // make table html
         $table = craft()->templates->renderMacro('_includes/forms', 'editableTableField', array(
           array(
-            'label'        => Craft::t('Table Columns'),
-            'instructions' => Craft::t('Define the columns your table should have.'),
+            'label'        => Craft::t('Groups'),
             'id'           => 'pimpmymatrix-grouptable-'.$field->handle,
             'name'         => 'pimpmymatrix-grouptable-'.$field->handle,
             'cols'         => $columns,
             'rows'         => $rows,
-            'addRowLabel'  => Craft::t('Add an option'),
+            'addRowLabel'  => Craft::t('Add a group'),
             'initJs'       => false
             )
         ));
