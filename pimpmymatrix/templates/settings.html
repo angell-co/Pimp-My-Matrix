@@ -15,19 +15,7 @@
 
     <h2>{{ field.name }}</h2>
 
-    {{ forms.editableTableField({
-      label: 'Blocktype groups for this field'|t,
-      id: 'pimpmymatrix-grouptable-' ~ field.handle,
-      name: 'pimpmymatrix-grouptable-' ~ field.handle,
-      addRowLabel: 'Add a group'|t,
-      cols: {
-        label: {
-          heading: 'Group Name'|t,
-          type: 'singleline'
-        }
-      },
-      rows: field.rows
-    }) }}
+    {{ field.table }}
 
     <ul class="pimpmymatrix-settings__list" data-pimpmymatrix-field-handle="{{ field.handle }}">
     {% for blockType in field.blockTypes %}

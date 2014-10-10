@@ -244,20 +244,62 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
             $(this).find('select').val(blockTypeConfig[0].group);
           }
 
+          // TODO:
+          // bind li watch here for any select changes, send to function that
+          // gets makes json from the whole page - using the table's order to
+          // order the groups eventually
+
         });
 
       }
 
-      // TODO:
-      // watch the group table for changes and then re-populate the selects accordingly
-
     });
 
 
-    // TODO:
-    // hi-jack the save so that anything that is in our fake fields
-    // gets stuck in the field before it saves
-    // make sure not to add empty fake fields
+  },
+
+  onAddTableRow: function(settings)
+  {
+
+    // bind textchanges on textareas inside table
+    var $textareas = $('#'+settings.tableId).find('tbody textarea');
+    this.addListener($textareas, 'textchange', 'reconstructSelects');
+
+  },
+
+  reconstructSelects: function()
+  {
+
+    var that = this;
+
+    // loop all fields
+    $('.pimpmymatrix-settings__list').each(function(){
+
+      // make new option list from table
+      $selectTmlp = $('<select><option value=""></option></select>');
+      $(this).prev('.field').find('table tbody textarea').each(function(){
+        $('<option value="'+$(this).val()+'">'+$(this).val()+'</option>').appendTo($selectTmlp);
+      });
+
+      // loop each li
+      $(this).find('li').each(function(){
+
+        // replace select with options from our select template
+        var $select = $(this).find('select'),
+            selectVal = $select.val();
+
+        // remove options
+        $(this).find('option').remove();
+
+        // clone in our new options
+        $selectTmlp.find('option').clone().appendTo($select);
+
+        // set the value of the select back
+        $select.val(selectVal);
+
+      });
+
+    });
 
   },
 

@@ -61,11 +61,12 @@ class PimpMyMatrixPlugin extends BasePlugin
     $fields = craft()->fields->getAllFields();
     $blockTypesOnFields = array();
 
-    // filter out the non-matrix and add blockTypes and eny existign groups
+    // filter out the non-matrix
     foreach ($fields as $field) {
       if ( $field->type === "Matrix" )
       {
 
+        // add blockTypes
         $blockTypes = array();
         foreach (craft()->matrix->getBlockTypesByFieldId($field->id) as $blockType) {
           $blockTypes[] = array(
@@ -74,36 +75,78 @@ class PimpMyMatrixPlugin extends BasePlugin
           );
         }
 
-        // get any groups for this field from current settings
+        // get any groups for table field from current settings
         $rows = array();
         $settings = JsonHelper::decode($this->getSettings()->buttonConfig);
-        foreach ($settings as $key => $value)
-        {
 
-          if ( $settings[$key]['fieldHandle'] === $field->handle )
+        if ( $settings )
+        {
+          foreach ($settings as $key => $value)
           {
 
-            foreach ($settings[$key]['config'] as $config)
+            if ( $settings[$key]['fieldHandle'] === $field->handle )
             {
 
-              $row = array('label' => $config['group']);
-              if ( ! in_array($row, $rows) )
+              foreach ($settings[$key]['config'] as $config)
               {
-                $rows[] = $row;
+
+                $row = array('label' => $config['group']);
+                if ( ! in_array($row, $rows) )
+                {
+                  $rows[] = $row;
+                }
+
               }
 
             }
 
           }
-
         }
 
+        // sort columns for table field
+        $columns = array(
+          'label' => array(
+            'heading' => Craft::t('Group Name'),
+            'type' => 'singleline'
+          )
+        );
+
+        // make table html
+        $table = craft()->templates->renderMacro('_includes/forms', 'editableTableField', array(
+          array(
+            'label'        => Craft::t('Table Columns'),
+            'instructions' => Craft::t('Define the columns your table should have.'),
+            'id'           => 'pimpmymatrix-grouptable-'.$field->handle,
+            'name'         => 'pimpmymatrix-grouptable-'.$field->handle,
+            'cols'         => $columns,
+            'rows'         => $rows,
+            'addRowLabel'  => Craft::t('Add an option'),
+            'initJs'       => false
+            )
+        ));
+
+        // ping the table here?
+        $id = craft()->templates->namespaceInputId("pimpmymatrix-grouptable-".$field->handle);
+        $name = craft()->templates->namespaceInputName("pimpmymatrix-grouptable-".$field->handle);
+        craft()->templates->includeJs("
+          var pimpTable = new Craft.EditableTable('".$id."','".$name."', ".JsonHelper::encode($columns).",{
+            onAddRow: $.proxy(pimp, 'onAddTableRow', {
+              tableId: '".$id."',
+              fieldHandle: '".$field->handle."'
+            }),
+            onDeleteRow: $.proxy(pimp, 'reconstructSelects')
+          });
+
+          pimpTable.sorter.settings.onSortChange = $.proxy(pimp, 'reconstructSelects');
+        ");
+
+        // add all of the above to an output array
         $blockTypesOnFields[] = array(
           'id'         => $field->id,
           'name'       => $field->name,
           'handle'     => $field->handle,
           'blockTypes' => $blockTypes,
-          'rows'       => $rows
+          'table'      => $table
         );
       }
     }
