@@ -348,27 +348,29 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         // loop li's
         $(this).find('li').each(function(){
 
+          // check we have a value in the select
           var selectVal = $(this).find('select').val();
           if ( selectVal !== '' && selectVal !== null )
           {
+            // set this to true so we know at least one of them was selected
             hasSomeValue = true;
-          }
 
-          // add top config array in the object
-          settingsObject.config.push(
-            {
-              "blockType" : {
-                "handle"  : $(this).data('pimpmymatrix-blocktype-handle'),
-                "name"    : $(this).data('pimpmymatrix-blocktype-name')
-              },
-              "group"     : selectVal
-            }
-          );
+            // add to config array in the object
+            settingsObject.config.push(
+              {
+                "blockType" : {
+                  "handle"  : $(this).data('pimpmymatrix-blocktype-handle'),
+                  "name"    : $(this).data('pimpmymatrix-blocktype-name')
+                },
+                "group"     : selectVal
+              }
+            );
+          }
 
         });
 
         // if there was at least one group value
-        // push this object into the settingsArray
+        // push the whole object into the settingsArray
         if ( hasSomeValue )
         {
           settingsArray.push(settingsObject);
