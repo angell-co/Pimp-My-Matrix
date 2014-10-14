@@ -190,15 +190,19 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
     // loop the fields we have on the page
     $('.pimpmymatrix-settings__list').each(function(){
 
-      // get matrixFieldHandle and assoc stored config
-      var matrixFieldHandle = $(this).data('pimpmymatrix-field-handle'),
-          buttonConfig = $.grep(that.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+      // get matrixFieldHandle
+      var matrixFieldHandle = $(this).data('pimpmymatrix-field-handle');
 
-      // check we found a stored config
+      // check for a stored config
       var hasConfig = false;
-      if ( buttonConfig[0] !== undefined )
+      if ( that.buttonConfig !== undefined )
       {
-        hasConfig = true;
+        var buttonConfig = $.grep(that.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+
+        if ( buttonConfig[0] !== undefined )
+        {
+          hasConfig = true;
+        }
       }
 
       // work out the groups - couldn’t we just get these from the php?
