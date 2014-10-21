@@ -27,7 +27,7 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
 
-        // JsonHelper::encode($buttonConfig) ??????
+        // shall we JsonHelper::encode($buttonConfig) ?
         craft()->templates->includeJs('var pimp = new Craft.PimpMyMatrix('.$buttonConfig.');');
       }
 
@@ -42,7 +42,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '0.1';
+    return '1.0';
   }
 
   public function getDeveloper()
