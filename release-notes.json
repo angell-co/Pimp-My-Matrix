@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "1.1",
+		"date"    : "22-10-2014",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed an error with php 5.3"
+			}
+		]
+	},
+	{
 		"version" : "1.0",
 		"date"    : "21-10-2014",
 		"notes"   : [

@@ -20,7 +20,9 @@ class PimpMyMatrixPlugin extends BasePlugin
     if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
     {
 
-      $buttonConfig = $this->getSettings()['buttonConfig'];
+      $settings = $this->getSettings();
+
+      $buttonConfig = $settings['buttonConfig'];
 
       if ( $buttonConfig !== '' )
       {
@@ -42,7 +44,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '1.0';
+    return '1.1';
   }
 
   public function getDeveloper()
