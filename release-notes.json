@@ -6,6 +6,10 @@
 			{
 				"type"    : "fixed",
 				"message" : "Fixed an error with php 5.3"
+			},
+			{
+				"type"    : "added",
+				"message" : "Added some limited documentation"
 			}
 		]
 	},
