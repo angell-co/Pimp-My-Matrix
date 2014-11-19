@@ -1,5 +1,19 @@
 [
 	{
+		"version" : "1.2",
+		"date"    : "19-11-2014",
+		"notes"   : [
+			{
+				"type"    : "improved",
+				"message" : "Improved the json generation when using the settings page"
+			},
+			{
+				"type"    : "improved",
+				"message" : "Added MIT licence"
+			}
+		]
+	},
+	{
 		"version" : "1.1",
 		"date"    : "22-10-2014",
 		"notes"   : [
