@@ -195,7 +195,11 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   buttonConfigurator: function()
   {
 
+    // alias this
     var that = this;
+
+    // bind settings page form submit event
+    this.addListener($('#content form'), 'submit', 'onButtonConfiguratorSubmit');
 
     // loop the fields we have on the page
     $('.pimpmymatrix-settings__list').each(function(){
@@ -273,9 +277,6 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           }
 
         }
-
-        // watch select changes
-        that.addListener($(this), 'change', 'reconstructSettings');
 
       });
 
@@ -392,6 +393,27 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       $('#settings-buttonConfig').val(JSON.stringify(settingsArray));
 
     }, 300);
+
+  },
+
+
+  /**
+   * This hi-jacks the submit for the settings page form
+   * so we can run the reconstructSettings() function first
+   */
+  onButtonConfiguratorSubmit: function(ev)
+  {
+
+    ev.preventDefault();
+
+    this.reconstructSettings();
+
+    var that = this,
+        submittimer = setTimeout(function()
+    {
+      that.removeListener($('#content form'), 'submit');
+      $('#content form').trigger('submit');
+    },400);
 
   },
 
