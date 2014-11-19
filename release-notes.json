@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "1.2.1",
+		"date"    : "19-11-2014",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug where all settings forms we're getting hi-jacked thus breaking installing / uninstalling other plugins."
+			}
+		]
+	},
+	{
 		"version" : "1.2",
 		"date"    : "19-11-2014",
 		"notes"   : [

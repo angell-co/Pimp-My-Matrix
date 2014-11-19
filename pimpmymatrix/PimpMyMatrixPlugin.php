@@ -30,7 +30,7 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
 
         // shall we JsonHelper::encode($buttonConfig) ?
-        craft()->templates->includeJs('var pimp = new Craft.PimpMyMatrix('.$buttonConfig.');');
+        craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
       }
 
     }
@@ -44,7 +44,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '1.2';
+    return '1.2.1';
   }
 
   public function getDeveloper()
@@ -59,6 +59,16 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getSettingsHtml()
   {
+
+    // set up the js
+    craft()->templates->includeJs('var pimpSettings = new Craft.PimpMyMatrixSettings('.$this->getSettings()->buttonConfig.');');
+
+    // see if we're on the actual settings form page
+    if ( craft()->request->getSegment(3) === 'pimpmymatrix' )
+    {
+      craft()->templates->includeJs('pimpSettings.onSettingsPage = true;');
+    }
+
     // get fields
     $fields = craft()->fields->getAllFields();
     $blockTypesOnFields = array();
@@ -131,19 +141,19 @@ class PimpMyMatrixPlugin extends BasePlugin
         $name = craft()->templates->namespaceInputName("pimpmymatrix-grouptable-".$field->handle);
         craft()->templates->includeJs("
           var pimpTable = new Craft.EditableTable('".$id."','".$name."', ".JsonHelper::encode($columns).",{
-            onAddRow: $.proxy(pimp, 'bindTextchanges', {
+            onAddRow: $.proxy(pimpSettings, 'bindTextchanges', {
               tableId: '".$id."',
               fieldHandle: '".$field->handle."'
             }),
-            onDeleteRow: $.proxy(pimp, 'reconstructSelects')
+            onDeleteRow: $.proxy(pimpSettings, 'reconstructSelects')
           });
 
-          pimp.bindTextchanges({
+          pimpSettings.bindTextchanges({
             tableId: '".$id."',
             fieldHandle: '".$field->handle."'
           });
 
-          pimpTable.sorter.settings.onSortChange = $.proxy(pimp, 'reconstructSelects');
+          pimpTable.sorter.settings.onSortChange = $.proxy(pimpSettings, 'reconstructSelects');
         ");
 
         // add all of the above to an output array
@@ -156,9 +166,6 @@ class PimpMyMatrixPlugin extends BasePlugin
         );
       }
     }
-
-    // ping the buttonConfigurator
-    craft()->templates->includeJs('pimp.buttonConfigurator();');
 
     // load settings template
     return craft()->templates->render('pimpMyMatrix/settings', array(

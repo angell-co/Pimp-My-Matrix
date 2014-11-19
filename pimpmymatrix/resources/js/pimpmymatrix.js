@@ -13,7 +13,6 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 {
 
   buttonConfig: null,
-  reconstructSettingsTimeout: null,
 
   $matrixContainer: null,
 
@@ -192,11 +191,49 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   },
 
-  buttonConfigurator: function()
+  /**
+   * This simply returns a fieldHandle if it can get one or false if not
+   */
+  _getMatrixFieldName: function($matrixField)
   {
+    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
+        regExp  = /fields\[([^\]]+)\]/,
+        matches = regExp.exec(matrixFieldName),
+        matrixFieldHandle = matches[1];
 
+    if ( matrixFieldHandle != '' )
+    {
+      return matrixFieldHandle;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+});
+
+
+/**
+ * Settings Class
+ */
+Craft.PimpMyMatrixSettings = Garnish.Base.extend(
+{
+
+  buttonConfig: null,
+  reconstructSettingsTimeout: null,
+  onSettingsPage: null,
+
+  init: function(buttonConfig)
+  {
     // alias this
     var that = this;
+
+    // get config
+    this.buttonConfig = buttonConfig;
+
+    // for safety presume not on settings page
+    this.onSettingsPage = false;
 
     // bind settings page form submit event
     this.addListener($('#content form'), 'submit', 'onButtonConfiguratorSubmit');
@@ -404,39 +441,25 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   onButtonConfiguratorSubmit: function(ev)
   {
 
-    ev.preventDefault();
-
-    this.reconstructSettings();
-
-    var that = this,
-        submittimer = setTimeout(function()
+    if ( this.onSettingsPage )
     {
-      that.removeListener($('#content form'), 'submit');
-      $('#content form').trigger('submit');
-    },400);
 
-  },
+      ev.preventDefault();
 
-  /**
-   * This simply returns a fieldHandle if it can get one or false if not
-   */
-  _getMatrixFieldName: function($matrixField)
-  {
-    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
-        regExp  = /fields\[([^\]]+)\]/,
-        matches = regExp.exec(matrixFieldName),
-        matrixFieldHandle = matches[1];
+      this.reconstructSettings();
 
-    if ( matrixFieldHandle != '' )
-    {
-      return matrixFieldHandle;
+      var that = this,
+          submittimer = setTimeout(function()
+      {
+        that.removeListener($('#content form'), 'submit');
+        $('#content form').trigger('submit');
+      },400);
+
     }
-    else
-    {
-      return false;
-    }
+
   }
 
 });
+
 
 })(jQuery);
