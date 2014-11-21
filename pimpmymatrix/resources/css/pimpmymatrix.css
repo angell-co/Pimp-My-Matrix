@@ -1,3 +1,6 @@
+/**
+ * Per block stuff
+ */
 .matrixblock.pimped {
   padding-top: 0;
   min-height: 48px; /* magically, this fixed the collapsed state */
@@ -42,8 +45,32 @@
 }
 
 
+/**
+ * Fix lack of .buttons class
+ */
+.buttons-pimped {
+  margin-top: 0;
+  height: 30px;
+  position: relative;
+  margin: 24px 0;
+  min-height: 30px;
+}
+.buttons-pimped:last-child {
+  margin-bottom: 0 !important;
+}
+.buttons-pimped:before {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+  margin-bottom: -5px;
+}
 
-/* settings page */
+
+/**
+ * Settings page
+ */
 .pimpmymatrix-settings__list {
   overflow: hidden;
 }

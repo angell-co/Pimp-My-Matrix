@@ -1,5 +1,19 @@
 [
 	{
+		"version" : "1.2.2",
+		"date"    : "21-11-2014",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug where the newly added menu buttons triggered a new, empty matrix block."
+			},
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug where PMM was getting applied to entries when edited in huds - this really doesn't work, maybe one day it will."
+			}
+		]
+	},
+	{
 		"version" : "1.2.1",
 		"date"    : "19-11-2014",
 		"notes"   : [

@@ -142,14 +142,15 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
         var $origButtons = $matrixField.find('> .buttons').first();
 
         // from there, check if we've already pimped those buttons
-        if ( $origButtons.next('.buttons.pimped').length < 1 )
+        if ( $origButtons.next('.buttons-pimped').length < 1 )
         {
 
           // if we haven't already pimped them, hide the original ones and start the button pimping process
           $origButtons.hide();
 
-          // make our own container
-          var $ourButtons = $('<div class="buttons pimped" />').insertAfter($origButtons),
+          // make our own container, not using .buttons as it gets event binds
+          // from MatrixInput.js that we really don't want
+          var $ourButtons = $('<div class="buttons-pimped" />').insertAfter($origButtons),
               $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
 
           // loop each blockType / group pairing
@@ -174,15 +175,17 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           // make triggers MenuBtns
           $ourButtonsInner.find('.menubtn').each(function()
           {
+
             new Garnish.MenuBtn($(this),
             {
               onOptionSelect: function(option)
               {
                 // find our type and click the correct original btn!
                 var type = $(option).data('type');
-                $origButtons.find('[data-type="'+type+'"]').click();
+                $origButtons.find('[data-type="'+type+'"]').trigger('click');
               }
             });
+
           });
 
         }
@@ -212,6 +215,8 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   }
 
 });
+
+
 
 
 /**
