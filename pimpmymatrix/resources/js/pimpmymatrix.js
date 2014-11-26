@@ -159,12 +159,12 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
     var matrixFieldHandle = this._getMatrixFieldName($matrixField);
 
     // look for an object that matches this field in the config array
-    if ( this.buttonConfig !== undefined )
+    if ( typeof this.buttonConfig !== "undefined" )
     {
       var buttonConfig = $.grep(this.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
       // if we found one (and it has at least one group)
-      if ( buttonConfig[0] !== undefined )
+      if ( typeof buttonConfig[0] !== "undefined" )
       {
 
         // find the original buttons
