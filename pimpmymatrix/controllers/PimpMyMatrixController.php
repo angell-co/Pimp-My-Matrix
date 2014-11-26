@@ -23,8 +23,6 @@ class PimpMyMatrixController extends BaseController
     // get matrix field handle from POST
     $matrixFieldHandle = craft()->request->getPost('matrixFieldHandle');
 
-
-    // getBlockByHandle();
     $field = craft()->fields->getFieldByHandle($matrixFieldHandle);
     $blockTypes = craft()->matrix->getBlockTypesByFieldId($field->id);
 
@@ -41,6 +39,33 @@ class PimpMyMatrixController extends BaseController
       ));
     }
 
+  }
+
+  public function actionGetBlocks()
+  {
+    // Only ajax post requests
+    $this->requirePostRequest();
+    $this->requireAjaxRequest();
+
+    // get elemendIds from POST
+    $elemendIds = craft()->request->getPost('elemendIds');
+
+    $criteria = craft()->elements->getCriteria(ElementType::MatrixBlock);
+    $criteria->id = $elemendIds;
+    $blocks = $criteria->find();
+
+
+    // return blockTypeIdsByElementId or false
+    if ( $blocks ) {
+      $this->returnJson(array(
+        'success' => true,
+        'blocks' => $blocks
+      ));
+    } else {
+      $this->returnJson(array(
+        'success' => false
+      ));
+    }
   }
 
 }
