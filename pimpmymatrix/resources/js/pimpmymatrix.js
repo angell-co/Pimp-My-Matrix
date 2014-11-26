@@ -199,10 +199,9 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
    */
   _getMatrixFieldName: function($matrixField)
   {
-    var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
-        regExp  = /fields\[([^\]]+)\]/,
-        matches = regExp.exec(matrixFieldName),
-        matrixFieldHandle = matches[1];
+    var matrixFieldId = $matrixField.parents('.field').prop('id'),
+        parts = matrixFieldId.split("-"),
+        matrixFieldHandle = parts[1];
 
     if ( matrixFieldHandle != '' )
     {
