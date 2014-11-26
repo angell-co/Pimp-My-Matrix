@@ -47,7 +47,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   getFieldBlockTypes: function($matrixField)
   {
     // get matrix field handle out of DOM
-    var matrixFieldHandle = this._getMatrixFieldName($matrixField);
+    var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
     var that = this;
 
@@ -65,8 +65,8 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           // bind resize now on the matrix field
           that.addListener($matrixField, 'resize', 'addBlockHeadings');
 
-          // ping addBlockHeadings anyway
-          that.addBlockHeadings();
+          // ping initBlockHeadings
+          that.initBlockHeadings();
 
         }
       }
@@ -75,6 +75,52 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   },
 
   addBlockHeadings: function()
+  {
+
+    // loop available matrix fields
+    this.$matrixContainer.each($.proxy(function()
+    {
+
+      // get field and blockTypes
+      var $matrixField = $(this),
+          blockTypes = $matrixField.data('blockTypes');
+
+      // loop blocks
+      $matrixField.find('.matrixblock').each($.proxy(function()
+      {
+
+        // cache block
+        var $block = $(this);
+
+        // final check that we haven't already added one in case something has gone mental
+        if ( ! $block.hasClass('pimped') )
+        {
+
+          // get the block type handle from DOM
+          var blockTypeHandle = $block.find('input[type="hidden"][name*="[type]"]').val();
+
+          // using the blockTypes, match the handle to the blockType object
+          var result = $.grep(blockTypes, function(e){ return e.handle === blockTypeHandle; });
+
+          if (result.length > 0)
+          {
+
+            // add the block name
+            $block.addClass('pimped');
+            $block.prepend('<div class="pimpmymatrix-heading">'+result[0].name+'</div>')
+
+          }
+
+        }
+
+      }), this);
+
+
+    }), this);
+
+  },
+
+  initBlockHeadings: function()
   {
 
     // loop available matrix fields
@@ -156,7 +202,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   {
 
     // get matrix field handle out of DOM
-    var matrixFieldHandle = this._getMatrixFieldName($matrixField);
+    var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
     // look for an object that matches this field in the config array
     if ( typeof this.buttonConfig !== "undefined" )
@@ -226,11 +272,21 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
   /**
    * This simply returns a fieldHandle if it can get one or false if not
    */
-  _getMatrixFieldName: function($matrixField)
+  _getMatrixFieldName: function($matrixField, fromId)
   {
-    var matrixFieldId = $matrixField.parents('.field').prop('id'),
-        parts = matrixFieldId.split("-"),
-        matrixFieldHandle = parts[1];
+    if ( fromId )
+    {
+      var matrixFieldId = $matrixField.parents('.field').prop('id'),
+          parts = matrixFieldId.split("-"),
+          matrixFieldHandle = parts[1];
+    }
+    else
+    {
+      var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
+          regExp  = /fields\[([^\]]+)\]/,
+          matches = regExp.exec(matrixFieldName),
+          matrixFieldHandle = matches[1];
+    }
 
     if ( matrixFieldHandle != '' )
     {
