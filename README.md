@@ -4,7 +4,7 @@ This plugin provides an alternative control for adding Matrix blocks that allows
 
 ![block type headings](http://s3-eu-west-1.amazonaws.com/supercoolplugins/Pimp-My-Matrix/groups-ui.jpg)
 
-For details of how to use and install this plugin please see the `/docs`.
+For details of how to use and install this plugin please see the [docs](http://plugins.supercooldesign.co.uk/plugin/pimp-my-matrix/docs).
 
 ## A note on block headings
 
