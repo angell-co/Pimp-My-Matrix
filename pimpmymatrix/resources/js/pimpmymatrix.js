@@ -18,7 +18,7 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
 
   init: function(buttonConfig)
   {
-    this.$matrixContainer = $('#entry-form .matrix');
+    this.$matrixContainer = $('.matrix').not('.widget .matrix');
 
     this.buttonConfig = buttonConfig;
 
