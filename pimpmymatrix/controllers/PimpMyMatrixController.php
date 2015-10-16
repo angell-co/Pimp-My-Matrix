@@ -13,6 +13,22 @@ namespace Craft;
 class PimpMyMatrixController extends BaseController
 {
 
+  public function actionGetConfigurator()
+  {
 
+    $this->requirePostRequest();
+    $this->requireAjaxRequest();
+
+    $fieldId = craft()->request->getParam('fieldId');
+
+    $fld = craft()->templates->render('pimpmymatrix/flds/configurator', array(
+      'fieldId' => $fieldId
+    ));
+
+    $this->returnJson(array(
+      'html' => $fld
+    ));
+
+  }
 
 }

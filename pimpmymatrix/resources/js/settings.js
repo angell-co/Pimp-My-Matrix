@@ -9,7 +9,7 @@
 
 if (typeof PimpMyMatrix == 'undefined')
 {
-	PimpMyMatrix = {};
+  PimpMyMatrix = {};
 }
 
 
@@ -25,7 +25,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     this.$container = $(container);
     this.setSettings(settings, PimpMyMatrix.Configurator.defaults);
 
-    this.$container.on('mousedown', this.settings.fieldSelector, $.proxy(this.modifySettingsButtons, this));
+    this.$container.on('mouseup', this.settings.fieldSelector, $.proxy(this.modifySettingsButtons, this));
 
   },
 
@@ -69,7 +69,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
              .prependTo($menu.find('ul:first'))
              .find('a:first')
                .text(Craft.t('Pimp'))
-              //  .data('_reasonsField', $field)
+               .data('pimpmymatrix-field-id', $field.data('id'))
                .attr('data-action', 'pimp')
                .on('click', $.proxy(_this.onFieldConfiguratorClick, _this));
 
@@ -83,43 +83,44 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
   onFieldConfiguratorClick: function(ev)
   {
 
-    var $form = $('<form class="modal elementselectormodal pimpmymatrix__configurator"/>'),
+    var fieldId = $(ev.target).data('pimpmymatrix-field-id'),
+        $form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>'),
         $body = $('<div class="body"/>').appendTo($form),
         $body = $('<div class="content"/>').appendTo($body),
         $spinner = $('<div class="spinner big"/>').appendTo($body),
-        $body = $('<div class="main"/>').appendTo($body);
-
-        // Get the html
-		// Craft.postActionRequest(this.controllerAction, { ids : this.elementIds }, $.proxy(function(response, textStatus)
-		// {
-		// 	if (textStatus == 'success')
-		// 	{
-		// 		// Update the form
-		// 		this._updateForm(response);
-		// 	}
-		// }, this));
-
-    var $footer = $('<div class="footer"/>').appendTo($form),
+        $body = $('<div class="main"/>').appendTo($body),
+        $footer = $('<div class="footer"/>').appendTo($form),
         $buttons = $('<div class="buttons right"/>').appendTo($footer),
         $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
         $submitBtn = $('<input type="submit" class="btn submit disabled" disabled value="'+Craft.t('Save')+'"/>').appendTo($buttons),
         modal = new Garnish.Modal($form,
         {
           resizable: true,
-          closeOtherModals: true
+          closeOtherModals: true,
+          onFadeIn: function()
+          {
+            // Load a fld with all the blocks in the un-used section, this will
+            // allow grouping them in 'tabs' to give us the block groups like normal
+            Craft.postActionRequest('pimpMyMatrix/getConfigurator', { fieldId : fieldId }, $.proxy(function(response, textStatus)
+            {
+              if (textStatus == 'success')
+              {
+                $(response.html).appendTo($body);
+                $spinner.addClass('hidden');
+                var fld = new Craft.FieldLayoutDesigner('#pimpmymatrix-configurator');
+              }
+            }, this));
+
+            // Then, on each block add a settings button that pops open another modal
+            // with another fld in there to enable fields and tabs to happen inside the block
+          },
+          onHide: function()
+          {
+            modal.$container.remove();
+            modal.$shade.remove();
+            delete modal;
+          }
         });
-
-    modal.on('show', $.proxy(function()
-    {
-      console.log('loading');
-    }, this));
-
-    modal.on('hide', $.proxy(function()
-    {
-      modal.$container.remove();
-      modal.$shade.remove();
-      delete modal;
-    }, this));
 
     this.addListener($form, 'submit', '_handleSubmit');
     this.addListener($cancelBtn, 'click', function()
