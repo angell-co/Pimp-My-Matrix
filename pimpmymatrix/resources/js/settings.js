@@ -25,8 +25,16 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     this.$container = $(container);
     this.setSettings(settings, PimpMyMatrix.Configurator.defaults);
 
-    this.$container.on('mouseup', this.settings.fieldSelector, $.proxy(this.modifySettingsButtons, this));
+    setTimeout($.proxy(this.modifySettingsButtons,this),0);
+    this.$container.on('mousedown', this.settings.fieldSelector, $.proxy(this.onFieldMouseDown, this));
 
+  },
+
+  onFieldMouseDown: function(ev)
+  {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.modifySettingsButtons();
   },
 
   modifySettingsButtons: function()
@@ -74,6 +82,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
                .on('click', $.proxy(_this.onFieldConfiguratorClick, _this));
 
         $field.data('pimpmymatrix-configurator-initialized', true);
+
       }
 
     });
@@ -82,6 +91,9 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
 
   onFieldConfiguratorClick: function(ev)
   {
+
+    ev.preventDefault();
+    ev.stopPropagation();
 
     var fieldId = $(ev.target).data('pimpmymatrix-field-id'),
         $form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>'),
@@ -92,7 +104,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
         $footer = $('<div class="footer"/>').appendTo($form),
         $buttons = $('<div class="buttons right"/>').appendTo($footer),
         $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
-        $submitBtn = $('<input type="submit" class="btn submit disabled" disabled value="'+Craft.t('Save')+'"/>').appendTo($buttons),
+        $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
         modal = new Garnish.Modal($form,
         {
           resizable: true,
@@ -107,12 +119,11 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
               {
                 $(response.html).appendTo($body);
                 $spinner.addClass('hidden');
-                var fld = new Craft.FieldLayoutDesigner('#pimpmymatrix-configurator');
+                var fld = new PimpMyMatrix.FieldLayoutDesigner('#pimpmymatrix-configurator', {
+                  fieldInputName: 'matrixGroupsLayout[__TAB_NAME__][]'
+                });
               }
             }, this));
-
-            // Then, on each block add a settings button that pops open another modal
-            // with another fld in there to enable fields and tabs to happen inside the block
           },
           onHide: function()
           {
@@ -139,7 +150,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
 {
   defaults: {
     matrixFieldIds: null,
-    fieldSelector: '.fld-tabs .fld-field'
+    fieldSelector: '.fld-tabcontent > .fld-field'
   }
 });
 

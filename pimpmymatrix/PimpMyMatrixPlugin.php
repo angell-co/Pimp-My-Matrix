@@ -44,6 +44,7 @@ class PimpMyMatrixPlugin extends BasePlugin
       $segments = craft()->request->getSegments();
       if ( $segments[0] === 'settings' && $segments[1] === 'sections' && $segments[3] === 'entrytypes' )
       {
+        craft()->templates->includeJsResource('pimpmymatrix/js/fld.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/settings.js');
 
         $matrixFieldIds = craft()->db->createCommand()
@@ -59,6 +60,7 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
       }
 
+      // TODO: probably remove
       // craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
 
       // $settings = $this->getSettings();

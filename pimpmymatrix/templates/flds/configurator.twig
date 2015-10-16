@@ -40,7 +40,7 @@
 
 <div id="pimpmymatrix-configurator" class="fieldlayoutform">
 
-	<h2>{{ "OH GOLLY"|t }}</h2>
+	<h2>{{ "Group your blocks"|t }}</h2>
 
 	<div class="fld-tabs">
 		{#% if fieldLayout %}
@@ -57,66 +57,33 @@
 	</div>
 
 	<div class="newtabbtn-container">
-		<div class="btn add icon">{{ "New Tab"|t }}</div>
+		<div class="btn add icon">{{ "New Group"|t }}</div>
 	</div>
 
 	<div class="unusedfields">
-		{#% for group in groups %}
-			{% set totalUnselected = 0 %}
-			{% for field in group.fields %}
-				{% if not fieldLayout or field.id not in fieldLayout.getFieldIds() %}
-					{% set totalUnselected = totalUnselected + 1 %}
-				{% endif %}
-			{% endfor %}
+		{% set totalUnselected = 0 %}
+		{#
+		{% for field in group.fields %}
+			{% if not fieldLayout or field.id not in fieldLayout.getFieldIds() %}
+				{% set totalUnselected = totalUnselected + 1 %}
+			{% endif %}
+		{% endfor %}
+		#}
 
-			<div class="fld-tab unused{% if totalUnselected == 0 %} hidden{% endif %}">
-				<div class="tabs">
-					<div class="tab sel"><span>{{ group.name }}</span></div>
-				</div>
-				<div class="fld-tabcontent">
-					{% for field in group.fields %}
-						{% set selected = fieldLayout and field.id in fieldLayout.getFieldIds() %}
-						<div class="fld-field unused{% if selected %} hidden{% endif %}" data-id="{{ field.id }}">
-							<span>{{ field.name }}</span>
-						</div>
-					{% endfor %}
-				</div>
+		<div class="fld-tab unused{#% if totalUnselected == 0 %} hidden{% endif %#}">
+			<div class="tabs">
+				<div class="tab sel"><span>{{ "Blocks"|t }}</span></div>
 			</div>
-		{% endfor %#}
+			<div class="fld-tabcontent">
+				{% for blockType in blockTypes %}
+					{#% set selected = fieldLayout and field.id in fieldLayout.getFieldIds() %#}
+					<div class="fld-field unused{#% if selected %} hidden{% endif %#}" data-id="{{ blockType.id }}">
+						<span>{{ blockType.name }}</span>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
 	</div>
 
 </div>
-
-{% set js %}
-	var initFLD = function() {
-		new Craft.FieldLayoutDesigner('#{{ "fieldlayoutform"|namespaceInputId }}', {
-			customizableTabs: {{ customizableTabs ? 'true' : 'false' }},
-			fieldInputName: '{{ "fieldLayout[__TAB_NAME__][]"|namespaceInputName|e("js") }}',
-			requiredFieldInputName: '{{ "requiredFields[]"|namespaceInputName|e("js") }}'
-		});
-	};
-
-	{% if tab is defined %}
-
-		var $fldTab = $('#{{ ("tab-"~tab)|namespaceInputId }}');
-
-		if ($fldTab.hasClass('sel'))
-		{
-			initFLD();
-		}
-		else
-		{
-			$fldTab.on('activate.fld', function() {
-				initFLD();
-				$fldTab.off('activate.fld');
-			});
-		}
-
-	{% else %}
-
-		initFLD();
-
-	{% endif %}
-{% endset %}
-
-{% includeJs js %}
