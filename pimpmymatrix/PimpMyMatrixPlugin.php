@@ -13,30 +13,6 @@ namespace Craft;
 class PimpMyMatrixPlugin extends BasePlugin
 {
 
-  public function init()
-  {
-
-    // check its a cp request and that they're logged in
-    if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
-    {
-
-      $settings = $this->getSettings();
-
-      $buttonConfig = $settings['buttonConfig'];
-
-      if ( $buttonConfig !== '' )
-      {
-        craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
-        craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-
-        // shall we JsonHelper::encode($buttonConfig) ?
-        craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
-      }
-
-    }
-
-  }
-
   public function getName()
   {
     return Craft::t('Pimp My Matrix');
@@ -56,6 +32,56 @@ class PimpMyMatrixPlugin extends BasePlugin
   {
     return 'http://plugins.supercooldesign.co.uk';
   }
+
+
+  public function init()
+  {
+
+    if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
+    {
+
+      // Check we’re on the right page for doing the configuration
+      $segments = craft()->request->getSegments();
+      if ( $segments[0] === 'settings' && $segments[1] === 'sections' && $segments[3] === 'entrytypes' )
+      {
+        craft()->templates->includeJsResource('pimpmymatrix/js/settings.js');
+
+        $matrixFieldIds = craft()->db->createCommand()
+          ->select('id')
+          ->from('fields')
+          ->where('type = :type', array(':type' => 'Matrix'))
+          ->queryColumn();
+
+        $settings = array(
+          'matrixFieldIds' => $matrixFieldIds
+        );
+
+        craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
+      }
+
+      // craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+
+      // $settings = $this->getSettings();
+      //
+      // $buttonConfig = $settings['buttonConfig'];
+      //
+      // if ( $buttonConfig !== '' )
+      // {
+      //   craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
+      //   craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+      //
+      //   // shall we JsonHelper::encode($buttonConfig) ?
+      //   craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
+      // }
+
+    }
+
+  }
+
+
+
+
+
 
   public function getSettingsHtml()
   {
