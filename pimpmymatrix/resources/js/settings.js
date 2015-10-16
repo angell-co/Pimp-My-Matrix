@@ -19,6 +19,8 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
   $container: null,
   fields: [],
 
+  $form: null,
+
   init: function(container, settings)
   {
 
@@ -95,17 +97,19 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     ev.preventDefault();
     ev.stopPropagation();
 
-    var fieldId = $(ev.target).data('pimpmymatrix-field-id'),
-        $form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>'),
-        $body = $('<div class="body"/>').appendTo($form),
+    var fieldId = $(ev.target).data('pimpmymatrix-field-id');
+
+    this.$form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>');
+
+    var $body = $('<div class="body"/>').appendTo(this.$form),
         $body = $('<div class="content"/>').appendTo($body),
         $spinner = $('<div class="spinner big"/>').appendTo($body),
         $body = $('<div class="main"/>').appendTo($body),
-        $footer = $('<div class="footer"/>').appendTo($form),
+        $footer = $('<div class="footer"/>').appendTo(this.$form),
         $buttons = $('<div class="buttons right"/>').appendTo($footer),
         $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
         $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
-        modal = new Garnish.Modal($form,
+        modal = new Garnish.Modal(this.$form,
         {
           resizable: true,
           closeOtherModals: true,
@@ -133,7 +137,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
           }
         });
 
-    this.addListener($form, 'submit', '_handleSubmit');
+    this.addListener(this.$form, 'submit', '_handleSubmit');
     this.addListener($cancelBtn, 'click', function()
     {
       modal.hide()
@@ -141,9 +145,11 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
 
   },
 
-  _handleSubmit: function()
+  _handleSubmit: function(ev)
   {
-    console.log('submitted');
+    ev.preventDefault();
+    var data = this.$form.serializeArray();
+    console.log(data);
   }
 
 },
