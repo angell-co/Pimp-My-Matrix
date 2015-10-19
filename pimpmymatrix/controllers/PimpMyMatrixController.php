@@ -13,6 +13,7 @@ namespace Craft;
 class PimpMyMatrixController extends BaseController
 {
 
+
   /**
    * @inheritDoc BaseController::init()
    *
@@ -23,6 +24,7 @@ class PimpMyMatrixController extends BaseController
   {
     craft()->userSession->requireAdmin();
   }
+
 
   /**
    * Returns the html for the block type grouping field layout designer.
@@ -55,6 +57,33 @@ class PimpMyMatrixController extends BaseController
       'blockTypes' => $blockTypes,
       'blockTypeIds' => $blockTypeIds,
       'existingBlockTypeGroups' => $existingBlockTypeGroups
+    ));
+
+    $this->returnJson(array(
+      'html' => $fld
+    ));
+
+  }
+
+  /**
+   * Returns the html for the individual block type field layout designer.
+   *
+   * @method actionGetFieldsConfigurator
+   * @return json
+   */
+  public function actionGetFieldsConfigurator()
+  {
+
+    $this->requirePostRequest();
+    $this->requireAjaxRequest();
+
+    $blockTypeId = craft()->request->getParam('blockTypeId');
+    $blockType = craft()->matrix->getBlockTypeById($blockTypeId);
+
+    $fld = craft()->templates->render('pimpmymatrix/flds/fields', array(
+      'blockType' => $blockType,
+      // 'blockTypeIds' => $blockTypeIds,
+      // 'existingBlockTypeGroups' => $existingBlockTypeGroups
     ));
 
     $this->returnJson(array(
