@@ -22,7 +22,7 @@ PimpMyMatrix.FieldLayoutDesigner = Craft.FieldLayoutDesigner.extend(
         $menu = $('<div class="menu" data-align="center"/>').insertAfter($editBtn),
         $ul = $('<ul/>').appendTo($menu);
 
-    $('<li><a data-action="pimp-again">'+Craft.t('Pimp Again')+'</a></li>').appendTo($ul);
+    $('<li><a data-action="pimp-again">'+Craft.t('Edit field layout')+'</a></li>').appendTo($ul);
 
     $('<li><a data-action="remove">'+Craft.t('Remove')+'</a></li>').appendTo($ul);
 
@@ -41,7 +41,7 @@ PimpMyMatrix.FieldLayoutDesigner = Craft.FieldLayoutDesigner.extend(
     {
       case 'pimp-again':
       {
-        // This should pop open another modal with another fld in there to enable
+        // TODO: This should pop open another modal with another fld in there to enable
         // fields and tabs to happen inside the block
         alert("$$$ PIMPING BRAH $$$");
         // this.toggleRequiredField($field, $option);

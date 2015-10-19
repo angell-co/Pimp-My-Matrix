@@ -84,7 +84,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
              .clone(true)
              .prependTo($menu.find('ul:first'))
              .find('a:first')
-               .text(Craft.t('Pimp'))
+               .text(Craft.t('Group block types'))
                .data('pimpmymatrix-field-id', $field.data('id'))
                .attr('data-action', 'pimp')
                .on('click', $.proxy(_this.onFieldConfiguratorClick, _this));
