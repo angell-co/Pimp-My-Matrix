@@ -19,15 +19,25 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 	 * Returns a block type group by its context.
 	 *
 	 * @param $context
-	 * @param $groupBy an optional model attribute to group by
+	 * @param $groupBy          Group by an optional model attribute to group by
+	 * @param $ignoreSubContext Optionally ignore the sub context (id)
 	 * @return array
 	 */
-	public function getBlockTypeGroupsByContext($context, $groupBy = false)
+	public function getBlockTypeGroupsByContext($context, $groupBy = false, $ignoreSubContext = false)
 	{
 
-		$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAllByAttributes(array(
-			'context' => $context
-		));
+		if ($ignoreSubContext)
+		{
+			$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAll(array(
+				'condition' => "context LIKE '{$context}%'"
+			));
+		}
+		else
+		{
+			$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAllByAttributes(array(
+				'context' => $context
+			));
+		}
 
 		if ($blockTypeGroupRecords)
 		{
