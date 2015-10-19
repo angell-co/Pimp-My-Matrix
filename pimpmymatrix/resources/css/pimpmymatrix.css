@@ -14,3 +14,14 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 .buttons-pimped > .btn:first, .buttons-pimped > .btngroup:first { margin-top: 5px !important; }
 .border-box + .buttons-pimped, .shadow-box + .buttons-pimped { margin-top: 7px; }
 .matrix > .buttons-pimped { margin-top: 0; height: 30px; }
+
+
+/**
+ * Make our inception modal a bit smaller than the default
+ */
+.modal.pimpmymatrix-fields-configurator {
+  width: 60%;
+  height: 60%;
+  min-width: 560px;
+  min-height: 360px;
+}

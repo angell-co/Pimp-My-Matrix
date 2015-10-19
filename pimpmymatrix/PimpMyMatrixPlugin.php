@@ -55,6 +55,7 @@ class PimpMyMatrixPlugin extends BasePlugin
            && $segments[4] != 'new'
          )
       {
+        craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
         craft()->templates->includeJsResource('pimpmymatrix/js/fieldlayoutdesigner.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
 
