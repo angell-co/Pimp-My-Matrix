@@ -12,8 +12,10 @@ if (typeof PimpMyMatrix == 'undefined')
   PimpMyMatrix = {};
 }
 
+
 /**
- * PimpMyMatrix Class
+ * Overrides the default Matrix ‘add block’ buttons with our grouped ones
+ * and keeps them up to date based on the current context
  */
 PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
 {
@@ -25,11 +27,41 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
   init: function(settings)
   {
 
+    // Set up
     this.setSettings(settings, PimpMyMatrix.BlockTypeGrouper.defaults);
-    this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
-    this.currentBlockTypeGroups = this.settings.blockTypeGroups[this.settings.context];
+    this.refreshCurrentBlockTypeGroups();
+
+    // Work out what kind of context we’re working with
+    // so we can keep things up to date
+    switch (this.settings.context.split(':')[0])
+    {
+
+      case 'entrytype':
+        // Thanks mmikkel: http://craftcms.stackexchange.com/a/9466/144
+        this.addListener(Garnish.$doc, 'ajaxComplete', function(ev, status, requestData)
+        {
+          if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
+          {
+            this.settings.context = 'entrytype:' + $('#entryType').val();
+            this.refreshCurrentBlockTypeGroups();
+            this.loopMatrixFields();
+          }
+        });
+        break;
+
+      default:
+
+    }
+
+    // Wait until load to loop the Matrix fields
     this.addListener(Garnish.$win, 'load', 'loopMatrixFields');
 
+  },
+
+  refreshCurrentBlockTypeGroups: function()
+  {
+    this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
+    this.currentBlockTypeGroups = this.settings.blockTypeGroups[this.settings.context];
   },
 
   loopMatrixFields: function()

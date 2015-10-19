@@ -1,34 +1,16 @@
 /**
  * Fix lack of .buttons class
  */
-.buttons-pimped {
-  margin-top: 0;
-  height: 30px;
-  position: relative;
-  margin: 24px 0;
-  min-height: 30px;
-}
-.buttons-pimped:last-child {
-  margin-bottom: 0 !important;
-}
-.buttons-pimped:before {
-  content: '.';
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-  margin-bottom: -5px;
-}
+.buttons-pimped:first-child { margin-top: 0 !important; }
+.buttons-pimped:last-child { margin-bottom: 0 !important; }
+.buttons-pimped { position: relative; margin: 24px 0; min-height: 30px; }
+.buttons-pimped:before { content: '.'; display: block; height: 0; clear: both; visibility: hidden; margin-bottom: -5px; }
 
+body.ltr .buttons-pimped > .btn, body.ltr .buttons-pimped > .btngroup { float: left; }
+body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { float: right; }
+body.ltr .buttons-pimped > .btn, body.ltr .buttons-pimped > .btngroup { margin: 5px 5px 0 0 ; }
+body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 5px 0 0 5px ; }
 
-/**
- * Settings page
- */
-.pimpmymatrix-settings__list {
-  overflow: hidden;
-}
-.pimpmymatrix-settings__list li {
-  float: left;
-  margin-right: 12px;
-  margin-top: 12px;
-}
+.buttons-pimped > .btn:first, .buttons-pimped > .btngroup:first { margin-top: 5px !important; }
+.border-box + .buttons-pimped, .shadow-box + .buttons-pimped { margin-top: 7px; }
+.matrix > .buttons-pimped { margin-top: 0; height: 30px; }

@@ -13,6 +13,11 @@ if (typeof PimpMyMatrix == 'undefined')
 }
 
 
+/**
+ * Adds itself to the settings menu of and Matrix field in a fld
+ * and provides a fld interface for the configuration of the block
+ * type groups and a further fld for each block type’s fields.
+ */
 PimpMyMatrix.Configurator = Garnish.Base.extend(
 {
 
