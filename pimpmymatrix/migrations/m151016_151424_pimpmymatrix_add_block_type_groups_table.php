@@ -16,7 +16,7 @@ class m151016_151424_pimpmymatrix_add_block_type_groups_table extends BaseMigrat
 		// Create the craft_pimpmymatrix_blocktypelayouts table
 		craft()->db->createCommand()->createTable('pimpmymatrix_blocktypegroups', array(
 			'matrixBlockTypeId' => array('column' => 'integer', 'required' => true),
-			'tabName'           => array('required' => true),
+			'tabName'           => array('maxLength' => 255, 'column' => 'varchar', 'required' => true),
 			'context'           => array('required' => true),
 		), null, true);
 

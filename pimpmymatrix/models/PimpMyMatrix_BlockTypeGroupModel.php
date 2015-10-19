@@ -34,7 +34,7 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 		return array(
 			'id'                => AttributeType::Number,
 			'matrixBlockTypeId' => AttributeType::Number,
-			'tabName'           => AttributeType::String,
+			'tabName'           => AttributeType::Name,
 			'context'           => AttributeType::String,
 		);
 	}

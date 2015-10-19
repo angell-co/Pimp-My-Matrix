@@ -53,7 +53,7 @@ class PimpMyMatrix_BlockTypeGroupsController extends BaseController
 			{
 				$blockTypeGroup = new PimpMyMatrix_BlockTypeGroupModel();
 				$blockTypeGroup->matrixBlockTypeId = $blockTypeId;
-				$blockTypeGroup->tabName           = $tabName;
+				$blockTypeGroup->tabName           = urldecode($tabName);
 				$blockTypeGroup->context           = $context;
 
 				// TODO: Catch errors
