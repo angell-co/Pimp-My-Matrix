@@ -113,6 +113,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
 
     var $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
         $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
+        _this = this,
         modal = new Garnish.Modal(this.$form,
         {
           resizable: true,
@@ -121,7 +122,11 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
           {
             // Load a fld with all the blocks in the un-used section, this will
             // allow grouping them in 'tabs' to give us the block groups like normal
-            Craft.postActionRequest('pimpMyMatrix/getConfigurator', { fieldId : fieldId }, $.proxy(function(response, textStatus)
+            var data = {
+              fieldId : fieldId,
+              context : _this.settings.context
+            };
+            Craft.postActionRequest('pimpMyMatrix/getConfigurator', data, $.proxy(function(response, textStatus)
             {
               if (textStatus == 'success')
               {

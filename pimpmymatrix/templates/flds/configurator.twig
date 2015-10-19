@@ -1,8 +1,3 @@
-{% set customizableTabs = true %}
-
-{#% set groups = craft.fields.getAllGroups('id') %#}
-{#% set fields = craft.fields.getAllFields('id') %#}
-
 {% includeTranslations
 	"Rename",
 	"Delete",
@@ -12,46 +7,38 @@
 
 {% includeCssFile "//fonts.googleapis.com/css?family=Coming+Soon" %}
 
-{% macro tab(customizableTabs, tabName, tabFields) %}
+{% macro tab(tabName, tabFields) %}
 	<div class="fld-tab">
 		<div class="tabs">
-			<div class="tab sel{% if customizableTabs %} draggable{% endif %}">
+			<div class="tab sel draggable">
 				<span>{{ tabName }}</span>
-				{% if customizableTabs %}
-					<a class="settings icon" title="{{ 'Edit'|t }}"></a>
-				{% endif %}
+				<a class="settings icon" title="{{ 'Edit'|t }}"></a>
 			</div>
 		</div>
 		<div class="fld-tabcontent">
-			{% for field in tabFields %}
+			{#% for field in tabFields %}
 				<div class="fld-field{% if field.required %} fld-required{% endif %}" data-id="{{ field.fieldId }}">
 					<a class="settings icon" title="{{ 'Edit'|t }}"></a>
 					<span>{{ field.getField().name }}</span>
 					<input class="id-input" type="hidden" name="fieldLayout[{{ tabName|e('url') }}][]" value="{{ field.fieldId }}">
 				</div>
-			{% endfor %}
+			{% endfor %#}
 		</div>
 	</div>
 {% endmacro %}
-
-
 
 <div id="pimpmymatrix-configurator" class="fieldlayoutform">
 
 	<h2>{{ "Group your block types"|t }}</h2>
 
 	<div class="fld-tabs">
-		{#% if fieldLayout %}
+		{% if existingBlockTypeGroups and existingBlockTypeGroups | length %}
 			{% import _self as macros %}
 
-			{% if customizableTabs %}
-				{% for tab in fieldLayout.getTabs() %}
-					{{ macros.tab(customizableTabs, tab.name, tab.getFields()) }}
-				{% endfor %}
-			{% else %}
-				{{ macros.tab(customizableTabs, pretendTabName, fieldLayout.getFields()) }}
-			{% endif %}
-		{% endif %#}
+			{% for tabName,blockTypeGroup in existingBlockTypeGroups %}
+				{{ macros.tab(tabName, 'tab.getFields()') }}
+			{% endfor %}
+		{% endif %}
 	</div>
 
 	<div class="newtabbtn-container">

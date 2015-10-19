@@ -32,6 +32,7 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 	protected function defineAttributes()
 	{
 		return array(
+			'id'                => AttributeType::Number,
 			'matrixBlockTypeId' => AttributeType::Number,
 			'tabName'           => AttributeType::String,
 			'context'           => AttributeType::String,
