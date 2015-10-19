@@ -40,9 +40,15 @@ class PimpMyMatrixPlugin extends BasePlugin
     if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
     {
 
-      // Check we’re on the right page for doing the configuration
+      // Check we’re on the right page for doing the configuration.
+      // For now we have to have the entry type saved first.
       $segments = craft()->request->getSegments();
-      if ( $segments[0] === 'settings' && $segments[1] === 'sections' && $segments[3] === 'entrytypes' )
+      if ( count($segments) == 5
+           && $segments[0] == 'settings'
+           && $segments[1] == 'sections'
+           && $segments[3] == 'entrytypes'
+           && $segments[4] != 'new'
+         )
       {
         craft()->templates->includeJsResource('pimpmymatrix/js/fld.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/settings.js');
