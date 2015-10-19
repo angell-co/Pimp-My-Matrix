@@ -20,6 +20,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
   fields: [],
 
   $form: null,
+  $spinner: null,
 
   init: function(container, settings)
   {
@@ -103,11 +104,14 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
 
     var $body = $('<div class="body"/>').appendTo(this.$form),
         $body = $('<div class="content"/>').appendTo($body),
-        $spinner = $('<div class="spinner big"/>').appendTo($body),
+        $bigSpinner = $('<div class="spinner big"/>').appendTo($body),
         $body = $('<div class="main"/>').appendTo($body),
         $footer = $('<div class="footer"/>').appendTo(this.$form),
-        $buttons = $('<div class="buttons right"/>').appendTo($footer),
-        $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
+        $buttons = $('<div class="buttons right"/>').appendTo($footer);
+
+    this.$spinner = $('<div class="spinner hidden"/>').appendTo($buttons);
+
+    var $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
         $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
         modal = new Garnish.Modal(this.$form,
         {
@@ -122,7 +126,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
               if (textStatus == 'success')
               {
                 $(response.html).appendTo($body);
-                $spinner.addClass('hidden');
+                $bigSpinner.addClass('hidden');
                 var fld = new PimpMyMatrix.FieldLayoutDesigner('#pimpmymatrix-configurator', {
                   fieldInputName: 'blockTypeGroups[__TAB_NAME__][]'
                 });
@@ -148,14 +152,42 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
   _handleSubmit: function(ev)
   {
     ev.preventDefault();
+
+    // Show spinner
+    this.$spinner.removeClass('hidden');
+
+    // Get the form data
     var data = this.$form.serializeArray();
-    console.log(data);
+
+    // Add the context
+    data.push({
+      'name' : 'context',
+      'value' : this.settings.context
+    });
+
+    // Post it
+    Craft.postActionRequest('pimpMyMatrix/blockTypeGroups/saveBlockTypeGroups', data, $.proxy(function(response, textStatus)
+    {
+      this.$spinner.addClass('hidden');
+      if (textStatus == 'success' && response.success)
+      {
+        Craft.cp.displayNotice(Craft.t('Block type groups saved.'));
+      }
+      else
+      {
+        if (textStatus == 'success')
+        {
+          Craft.cp.displayError(Craft.t('An unknown error occurred.'));
+        }
+      }
+    }, this));
   }
 
 },
 {
   defaults: {
     matrixFieldIds: null,
+    context: false,
     fieldSelector: '.fld-tabcontent > .fld-field'
   }
 });

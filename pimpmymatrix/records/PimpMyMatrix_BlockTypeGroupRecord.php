@@ -51,8 +51,8 @@ class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 	protected function defineAttributes()
 	{
 		return array(
-			'tabName' => array(AttributeType::String, 'required' => true), // 'Content'
-			'context' => array(AttributeType::String, 'required' => true), // 'entryType:23'
+			'tabName' => array(AttributeType::String, 'required' => true),
+			'context' => array(AttributeType::String, 'required' => true)
 		);
 	}
 

@@ -33,10 +33,10 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'http://plugins.supercooldesign.co.uk';
   }
 
-
   public function init()
   {
 
+    // Move this to somewhere outside of this file for cleanliness
     if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
     {
 
@@ -60,7 +60,8 @@ class PimpMyMatrixPlugin extends BasePlugin
           ->queryColumn();
 
         $settings = array(
-          'matrixFieldIds' => $matrixFieldIds
+          'matrixFieldIds' => $matrixFieldIds,
+          'context' => 'entrytype:'.$segments[4]
         );
 
         craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
