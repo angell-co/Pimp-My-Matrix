@@ -6,40 +6,47 @@
 
 (function($){
 
+
+if (typeof PimpMyMatrix == 'undefined')
+{
+  PimpMyMatrix = {};
+}
+
 /**
  * PimpMyMatrix Class
  */
-Craft.PimpMyMatrix = Garnish.Base.extend(
+PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
 {
 
-  buttonConfig: null,
+  currentBlockTypeGroups: false,
 
   $matrixContainer: null,
 
-  init: function(buttonConfig)
+  init: function(settings)
   {
+
+    this.setSettings(settings, PimpMyMatrix.BlockTypeGrouper.defaults);
     this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
-
-    this.buttonConfig = buttonConfig;
-
+    this.currentBlockTypeGroups = this.settings.blockTypeGroups[this.settings.context];
     this.addListener(Garnish.$win, 'load', 'loopMatrixFields');
+
   },
 
   loopMatrixFields: function()
   {
 
-    var that = this;
+    var _this = this;
 
     // loop each matrix field
-    this.$matrixContainer.each($.proxy(function()
+    this.$matrixContainer.each(function()
     {
-
       // sort buttons
-      that.sortButtons($(this));
-
-    }), this);
+      _this.sortButtons($(this));
+    });
 
   },
+
+  // TODO: keep this.currentBlockTypeGroups updated somehow
 
   sortButtons: function($matrixField)
   {
@@ -47,13 +54,14 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
     // get matrix field handle out of DOM
     var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
-    // look for an object that matches this field in the config array
-    if ( typeof this.buttonConfig !== "undefined" )
+    // check we have some block type groups
+    if ( this.currentBlockTypeGroups )
     {
-      var buttonConfig = $.grep(this.buttonConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+      // Filter by the current matrix field
+      var blockTypeGroups = $.grep(this.currentBlockTypeGroups, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
-      // if we found one (and it has at least one group)
-      if ( typeof buttonConfig[0] !== "undefined" )
+      // if we found one
+      if ( typeof blockTypeGroups !== "undefined" )
       {
 
         // find the original buttons
@@ -71,22 +79,21 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
           var $ourButtons = $('<div class="buttons-pimped" />').insertAfter($origButtons),
               $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
 
-          // loop each blockType / group pairing
-          var buttonObject = buttonConfig[0].config;
-          for (var key in buttonObject)
+          // loop each block type group
+          for (var i = 0; i < blockTypeGroups.length; i++)
           {
 
             // check if group exists, add if not
-            if ( $ourButtonsInner.find('[data-pimped-group="'+buttonObject[key]['group']+'"]').length === 0 )
+            if ( $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['tabName']+'"]').length === 0 )
             {
-              $('<div class="btn  menubtn">'+buttonObject[key]['group']+'</div><div class="menu" data-pimped-group="'+buttonObject[key]['group']+'"><ul /></div>').appendTo($ourButtonsInner);
+              $('<div class="btn  menubtn">'+blockTypeGroups[i]['tabName']+'</div><div class="menu" data-pimped-group="'+blockTypeGroups[i]['tabName']+'"><ul /></div>').appendTo($ourButtonsInner);
             }
 
             // find sub group
-            $groupUl = $ourButtonsInner.find('[data-pimped-group="'+buttonObject[key]['group']+'"] ul');
+            $groupUl = $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['tabName']+'"] ul');
 
             // make link in new sub group
-            $('<li><a data-type="'+buttonObject[key]['blockType']['handle']+'">'+buttonObject[key]['blockType']['name']+'</a></li>').appendTo($groupUl);
+            $('<li><a data-type="'+blockTypeGroups[i]['matrixBlockType']['handle']+'">'+blockTypeGroups[i]['matrixBlockType']['name']+'</a></li>').appendTo($groupUl);
 
           }
 
@@ -140,7 +147,12 @@ Craft.PimpMyMatrix = Garnish.Base.extend(
       return false;
     }
   }
-
+},
+{
+  defaults: {
+    blockTypeGroups: null,
+    context: false
+  }
 });
 
 

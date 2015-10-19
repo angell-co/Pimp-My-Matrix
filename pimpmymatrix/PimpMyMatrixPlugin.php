@@ -40,9 +40,14 @@ class PimpMyMatrixPlugin extends BasePlugin
     if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
     {
 
+      $segments = craft()->request->getSegments();
+
+
+      /**
+       * Groups configuration
+       */
       // Check we’re on the right page for doing the configuration.
       // For now we have to have the entry type saved first.
-      $segments = craft()->request->getSegments();
       if ( count($segments) == 5
            && $segments[0] == 'settings'
            && $segments[1] == 'sections'
@@ -67,23 +72,38 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
       }
 
+      /**
+       * Matrix fields in entry types
+       */
+      if ( count($segments) == 3
+           && $segments[0] == 'entries'
+           && $segments[2] != 'new'
+         )
+      {
+        $entryId = explode('-',$segments[2])[0];
+        $entry = craft()->entries->getEntryById($entryId);
+
+        if ($entry)
+        {
+          // Get all the data for the entrytype context regardless of entrytype id
+          $blockTypeGroups = craft()->pimpMyMatrix_blockTypeGroups->getBlockTypeGroupsByContext('entrytype', 'context', true);
+
+          if ($blockTypeGroups)
+          {
+            craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+            craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
+
+            $settings = array(
+              'blockTypeGroups' => $blockTypeGroups,
+              'context' => 'entrytype:'.$entry->type->id
+            );
+            craft()->templates->includeJs('new PimpMyMatrix.BlockTypeGrouper('.JsonHelper::Encode($settings).');');
+          }
+
+        }
+      }
+
     }
-
-    // TODO: probably remove
-    // craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-
-    // $settings = $this->getSettings();
-    //
-    // $buttonConfig = $settings['buttonConfig'];
-    //
-    // if ( $buttonConfig !== '' )
-    // {
-    //   craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
-    //   craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-    //
-    //   // shall we JsonHelper::encode($buttonConfig) ?
-    //   craft()->templates->includeJs('new Craft.PimpMyMatrix('.$buttonConfig.');');
-    // }
 
   }
 

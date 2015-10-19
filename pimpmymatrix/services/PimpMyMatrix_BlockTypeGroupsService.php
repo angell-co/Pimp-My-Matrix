@@ -203,6 +203,13 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 
 		$blockTypeGroup = PimpMyMatrix_BlockTypeGroupModel::populateModel($blockTypeGroupRecord);
 
+		// Use the fieldId to get the field and save the handle on to the model
+		$matrixField = craft()->fields->getFieldById($blockTypeGroup->fieldId);
+		$blockTypeGroup->fieldHandle = $matrixField->handle;
+
+		// Save the MatrixBlockType model on to our model
+		$blockTypeGroup->matrixBlockType = $blockTypeGroup->getBlockType();
+
 		return $blockTypeGroup;
 	}
 
