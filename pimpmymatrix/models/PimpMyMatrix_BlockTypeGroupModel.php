@@ -18,7 +18,13 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 
 	public function __toString()
 	{
-		return Craft::t($this->id);
+		return Craft::t($this->getBlockType()->name);
+	}
+
+
+	public function getBlockType()
+	{
+		return craft()->matrix->getBlockTypeById($this->matrixBlockTypeId);
 	}
 
 	// Protected Methods

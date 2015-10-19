@@ -41,6 +41,10 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 			}
 
 		}
+		else
+		{
+			return null;
+		}
 
 		if ($groupBy)
 		{
