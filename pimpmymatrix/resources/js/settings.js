@@ -124,7 +124,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
                 $(response.html).appendTo($body);
                 $spinner.addClass('hidden');
                 var fld = new PimpMyMatrix.FieldLayoutDesigner('#pimpmymatrix-configurator', {
-                  fieldInputName: 'matrixGroupsLayout[__TAB_NAME__][]'
+                  fieldInputName: 'blockTypeGroups[__TAB_NAME__][]'
                 });
               }
             }, this));

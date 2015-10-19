@@ -10,7 +10,7 @@ namespace Craft;
  * @link      http://www.supercooldesign.co.uk
  */
 
-class PimpMyMatrix_BlockTypeLayoutRecord extends BaseRecord
+class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 {
 
 	// Public Methods
@@ -23,7 +23,7 @@ class PimpMyMatrix_BlockTypeLayoutRecord extends BaseRecord
 	 */
 	public function getTableName()
 	{
-		return 'pimpmymatrix_blocktypelayouts';
+		return 'pimpmymatrix_blocktypegroups';
 	}
 
 
