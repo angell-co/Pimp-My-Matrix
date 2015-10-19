@@ -55,8 +55,8 @@ class PimpMyMatrixPlugin extends BasePlugin
            && $segments[4] != 'new'
          )
       {
-        craft()->templates->includeJsResource('pimpmymatrix/js/fld.js');
-        craft()->templates->includeJsResource('pimpmymatrix/js/settings.js');
+        craft()->templates->includeJsResource('pimpmymatrix/js/fieldlayoutdesigner.js');
+        craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
 
         $matrixFieldIds = craft()->db->createCommand()
           ->select('id')
@@ -91,7 +91,7 @@ class PimpMyMatrixPlugin extends BasePlugin
           if ($blockTypeGroups)
           {
             craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-            craft()->templates->includeJsResource('pimpmymatrix/js/pimpmymatrix.js');
+            craft()->templates->includeJsResource('pimpmymatrix/js/blocktypegrouper.js');
 
             $settings = array(
               'blockTypeGroups' => $blockTypeGroups,
