@@ -23,20 +23,26 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 	 * @param $ignoreSubContext Optionally ignore the sub context (id)
 	 * @return array
 	 */
-	public function getBlockTypeGroupsByContext($context, $groupBy = false, $ignoreSubContext = false)
+	public function getBlockTypeGroupsByContext($context, $groupBy = false, $ignoreSubContext = false, $fieldId = false)
 	{
 
 		if ($ignoreSubContext)
 		{
 			$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAll(array(
-				'condition' => "context LIKE '{$context}%'"
+				'condition' => $fieldId ? "fieldId = '{$fieldId}' AND context LIKE '{$context}%'" : "context LIKE '{$context}%'"
 			));
 		}
 		else
 		{
-			$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAllByAttributes(array(
-				'context' => $context
-			));
+
+			$attributes = array('context' => $context);
+
+			if ($fieldId)
+			{
+				$attributes['fieldId'] = $fieldId;
+			}
+
+			$blockTypeGroupRecords = PimpMyMatrix_BlockTypeGroupRecord::model()->findAllByAttributes($attributes);
 		}
 
 		if ($blockTypeGroupRecords)
@@ -86,6 +92,7 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 
 		$blockTypeGroupRecord = new PimpMyMatrix_BlockTypeGroupRecord();
 
+		$blockTypeGroupRecord->fieldId           = $blockTypeGroup->fieldId;
 		$blockTypeGroupRecord->matrixBlockTypeId = $blockTypeGroup->matrixBlockTypeId;
 		$blockTypeGroupRecord->tabName           = $blockTypeGroup->tabName;
 		$blockTypeGroupRecord->context           = $blockTypeGroup->context;
@@ -137,7 +144,7 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 	 * @throws \Exception
 	 * @return bool
 	 */
-	public function deleteBlockTypeGroupsByContext($context = false)
+	public function deleteBlockTypeGroupsByContext($context = false, $fieldId = false)
 	{
 
 		if (!$context)
@@ -149,7 +156,14 @@ class PimpMyMatrix_BlockTypeGroupsService extends BaseApplicationComponent
 		try
 		{
 
-			$affectedRows = craft()->db->createCommand()->delete('pimpmymatrix_blocktypegroups', array('context' => $context));
+			$attributes = array('context' => $context);
+
+			if ($fieldId)
+			{
+				$attributes['fieldId'] = $fieldId;
+			}
+
+			$affectedRows = craft()->db->createCommand()->delete('pimpmymatrix_blocktypegroups', $attributes);
 
 			if ($transaction !== null)
 			{

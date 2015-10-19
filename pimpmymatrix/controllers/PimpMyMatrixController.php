@@ -48,7 +48,7 @@ class PimpMyMatrixController extends BaseController
 
     $context = craft()->request->getParam('context');
 
-    $existingBlockTypeGroups = craft()->pimpMyMatrix_blockTypeGroups->getBlockTypeGroupsByContext($context, 'tabName');
+    $existingBlockTypeGroups = craft()->pimpMyMatrix_blockTypeGroups->getBlockTypeGroupsByContext($context, 'tabName', false, $fieldId);
 
     $fld = craft()->templates->render('pimpmymatrix/flds/configurator', array(
       'matrixField' => $field,

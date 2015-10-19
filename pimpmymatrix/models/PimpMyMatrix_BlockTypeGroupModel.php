@@ -21,7 +21,6 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 		return Craft::t($this->getBlockType()->name);
 	}
 
-
 	public function getBlockType()
 	{
 		return craft()->matrix->getBlockTypeById($this->matrixBlockTypeId);
@@ -39,6 +38,7 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 	{
 		return array(
 			'id'                => AttributeType::Number,
+			'fieldId'           => AttributeType::Number,
 			'matrixBlockTypeId' => AttributeType::Number,
 			'tabName'           => AttributeType::Name,
 			'context'           => AttributeType::String,

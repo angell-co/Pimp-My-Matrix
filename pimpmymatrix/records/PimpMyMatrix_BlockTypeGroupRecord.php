@@ -35,6 +35,7 @@ class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 	public function defineRelations()
 	{
 		return array(
+			'field' => array(static::BELONGS_TO, 'FieldRecord', 'required' => true, 'onDelete' => static::CASCADE),
 			'matrixBlockType' => array(static::BELONGS_TO, 'MatrixBlockTypeRecord', 'required' => true, 'onDelete' => static::CASCADE),
 		);
 	}

@@ -41,9 +41,10 @@ class PimpMyMatrix_BlockTypeGroupsController extends BaseController
 		$blockTypeGroupsPostData = craft()->request->getPost('blockTypeGroups');
 
 		$context = craft()->request->getPost('context');
+		$fieldId = craft()->request->getPost('fieldId');
 
 		// Remove all current group rows by context
-		craft()->pimpMyMatrix_blockTypeGroups->deleteBlockTypeGroupsByContext($context);
+		craft()->pimpMyMatrix_blockTypeGroups->deleteBlockTypeGroupsByContext($context, $fieldId);
 
 		// Loop over the data and save new rows for each block type / group combo
 		if (is_array($blockTypeGroupsPostData))
@@ -53,6 +54,7 @@ class PimpMyMatrix_BlockTypeGroupsController extends BaseController
 				foreach ($blockTypeIds as $blockTypeId)
 				{
 					$blockTypeGroup = new PimpMyMatrix_BlockTypeGroupModel();
+					$blockTypeGroup->fieldId           = $fieldId;
 					$blockTypeGroup->matrixBlockTypeId = $blockTypeId;
 					$blockTypeGroup->tabName           = urldecode($tabName);
 					$blockTypeGroup->context           = $context;
