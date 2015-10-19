@@ -13,6 +13,23 @@ namespace Craft;
 class PimpMyMatrixController extends BaseController
 {
 
+  /**
+   * @inheritDoc BaseController::init()
+   *
+   * @throws HttpException
+   * @return null
+   */
+  public function init()
+  {
+    craft()->userSession->requireAdmin();
+  }
+
+  /**
+   * Returns the html for the block type grouping field layout designer.
+   *
+   * @method actionGetConfigurator
+   * @return json
+   */
   public function actionGetConfigurator()
   {
 
