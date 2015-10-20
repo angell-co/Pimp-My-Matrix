@@ -16,6 +16,31 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 	private $_blockTypesByContext;
 
 	/**
+	 * Returns a single PimpMyMatrix_BlockTypeModel
+	 *
+	 * @method getBlockType
+	 * @param  string       $context           required
+	 * @param  int          $matrixBlockTypeId required
+	 * @return bool|PimpMyMatrix_BlockTypeModel
+	 */
+	public function getBlockType($context = false, $matrixBlockTypeId = false)
+	{
+
+		if (!$context || !$matrixBlockTypeId)
+		{
+			return false;
+		}
+
+		$blockTypeRecord = PimpMyMatrix_BlockTypeRecord::model()->findByAttributes(array(
+			'context'           => $context,
+			'matrixBlockTypeId' => $matrixBlockTypeId
+		));
+
+		return $this->_populateBlockTypeFromRecord($blockTypeRecord);
+
+	}
+
+	/**
 	 * Returns a block type by its context.
 	 *
 	 * @param $context
@@ -183,6 +208,16 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 		}
 
 	}
+
+
+	/**
+	 * XXX: WIP
+	 */
+	public function saveFieldLayout($pimpedBlockType)
+	{
+		Craft::dd($pimpedBlockType->getFieldLayout());
+	}
+
 
 	// Private Methods
 	// =========================================================================

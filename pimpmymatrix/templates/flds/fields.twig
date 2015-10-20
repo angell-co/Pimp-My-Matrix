@@ -29,9 +29,9 @@
 
 <div id="pimpmymatrix-fields-configurator" class="fieldlayoutform">
 
-	{#<input type="hidden" name="fieldId" value="{{ matrixField.id }}">#}
+	<input type="hidden" name="pimpedBlockTypeId" value="{{ pimpedBlockType.id }}">
 
-	<h2>{{ "Editing the “"~blockType.name~"” block field layout"|t }}</h2>
+	<h2>{{ "Editing the “"~pimpedBlockType.matrixBlockType.name~"” block field layout"|t }}</h2>
 
 	<div class="fld-tabs">
 		{#% if existingBlockTypeGroups and existingBlockTypeGroups|length %}
@@ -63,7 +63,7 @@
 				<div class="tab sel"><span>{{ "Fields"|t }}</span></div>
 			</div>
 			<div class="fld-tabcontent">
-				{% for field in blockType.getFields() %}
+				{% for field in pimpedBlockType.matrixBlockType.getFields() %}
 					{#% set selected = blockType.id in unGroupedSelectedBlockTypeIds %#}
 					<div class="fld-field unused{#% if selected %} hidden{% endif %#}" data-id="{{ field.id }}">
 						<span>{{ field.name }}</span>

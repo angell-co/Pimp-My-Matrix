@@ -77,11 +77,12 @@ class PimpMyMatrixController extends BaseController
     $this->requirePostRequest();
     $this->requireAjaxRequest();
 
+    $context = craft()->request->getParam('context');
     $blockTypeId = craft()->request->getParam('blockTypeId');
-    $blockType = craft()->matrix->getBlockTypeById($blockTypeId);
+    $pimpedBlockType = craft()->pimpMyMatrix_blockTypes->getBlockType($context, $blockTypeId);
 
     $fld = craft()->templates->render('pimpmymatrix/flds/fields', array(
-      'blockType' => $blockType
+      'pimpedBlockType' => $pimpedBlockType
     ));
 
     $this->returnJson(array(

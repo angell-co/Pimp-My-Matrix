@@ -32,6 +32,7 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 	{
 
 		$this->requirePostRequest();
+		$this->requireAjaxRequest();
 
 		// This will be an array of Tab Names with Block Type IDs.
 		// The order in which they appear is the order in which they should also
@@ -43,7 +44,10 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 		$context = craft()->request->getPost('context');
 		$fieldId = craft()->request->getPost('fieldId');
 
-		// Remove all current group rows by context
+		// Remove all current block types by context
+		// TODO: here we need to save out an array of the field layouts
+		//       that are attached to the current block types in this context
+		//       so that we don’t lose them when saving.
 		craft()->pimpMyMatrix_blockTypes->deleteBlockTypesByContext($context, $fieldId);
 
 		// Loop over the data and save new rows for each block type / group combo
@@ -58,6 +62,7 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 					$pimpedBlockType->matrixBlockTypeId = $blockTypeId;
 					$pimpedBlockType->groupName         = urldecode($groupName);
 					$pimpedBlockType->context           = $context;
+					// TODO: attach field layout here
 
 					// TODO: Catch errors
 					craft()->pimpMyMatrix_blockTypes->saveBlockType($pimpedBlockType);
@@ -71,22 +76,6 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 
 	}
 
-
-	// /**
-	//  * Deletes a group
-	//  */
-	// public function actionDeletePerformanceGroup()
-	// {
-	// 	$this->requirePostRequest();
-	// 	$this->requireAjaxRequest();
-	//
-	// 	$performanceGroupId = craft()->request->getRequiredPost('id');
-	//
-	// 	craft()->boxOffice_performanceGroups->deletePerformanceGroupById($performanceGroupId);
-	// 	$this->returnJson(array('success' => true));
-	// }
-
-	//
 	// /**
 	//  * [editFieldLayout description]
 	//  */
@@ -168,184 +157,53 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 	//
 	// 	$this->renderTemplate('boxoffice/performance-groups/_edit-field-layout', $variables);
 	// }
-	//
-	//
-	// /**
-	//  * [actionSaveFieldLayout description]
-	//  */
-	// public function actionSaveFieldLayout()
-	// {
-	//
-	// 	$this->requirePostRequest();
-	//
-	// 	// Get box office field layout record
-	// 	$boxOfficeFieldLayoutId = craft()->request->getPost('boxOfficeFieldLayoutId');
-	//
-	// 	if ($boxOfficeFieldLayoutId)
-	// 	{
-	//
-	// 		$boxOfficeFieldLayoutRecord = BoxOffice_FieldLayoutRecord::model()->findById($boxOfficeFieldLayoutId);
-	//
-	// 		if (!$boxOfficeFieldLayoutRecord)
-	// 		{
-	// 			throw new Exception(Craft::t('No box office field layout exists with the ID “{id}”', array('id' => $boxOfficeFieldLayoutId)));
-	// 		}
-	//
-	// 		$boxOfficeFieldLayout = BoxOffice_FieldLayoutModel::populateModel($boxOfficeFieldLayoutRecord);
-	//
-	// 	}
-	//
-	// 	$fieldLayoutType = craft()->request->getPost('fieldLayoutType');
-	//
-	// 	switch ($fieldLayoutType) {
-	// 		case 'performances':
-	// 			$boxOfficeFieldLayout->elementType = BoxOfficeElementType::Performance;
-	// 			break;
-	//
-	// 		case 'instances':
-	// 			$boxOfficeFieldLayout->elementType = BoxOfficeElementType::Instance;
-	// 			break;
-	// 	}
-	//
-	// 	// Set the field layout on the model
-	// 	$postedFieldLayout = craft()->fields->assembleLayoutFromPost();
-	// 	$boxOfficeFieldLayout->setFieldLayout($postedFieldLayout);
-	//
-	// 	// Save it
-	// 	if (craft()->boxOffice_performanceGroups->saveFieldLayout($boxOfficeFieldLayout))
-	// 	{
-	// 		craft()->userSession->setNotice(Craft::t('Field layout saved.'));
-	// 		$this->redirectToPostedUrl($boxOfficeFieldLayout);
-	// 	}
-	// 	else
-	// 	{
-	// 		craft()->userSession->setError(Craft::t('Couldn’t save field layout.'));
-	// 	}
-	//
-	// 	// Send the fieldlayout back to the template
-	// 	craft()->urlManager->setRouteVariables(array(
-	// 		'boxOfficeFieldLayout' => $boxOfficeFieldLayout
-	// 	));
-	//
-	// }
-	//
-	//
-	// /**
-	//  * Load the iCal settings view
-	//  */
-	// public function actionICalSettings(array $variables = array())
-	// {
-	//
-	// 	// get the performance group
-	// 	if (!empty($variables['performanceGroupId']))
-	// 	{
-	//
-	// 		$variables['performanceGroup'] = craft()->boxOffice_performanceGroups->getPerformanceGroupById($variables['performanceGroupId']);
-	//
-	// 		if (!$variables['performanceGroup'])
-	// 		{
-	// 			throw new HttpException(404);
-	// 		}
-	//
-	// 		$variables['title'] = $variables['performanceGroup']->name . ' — iCal Settings';
-	// 	}
-	// 	else
-	// 	{
-	// 		throw new HttpException(404);
-	// 	}
-	//
-	// 	// Get all the field layouts for this group
-	// 	$fieldLayoutIds = craft()->db->createCommand()
-	// 		->select('fieldLayoutId')
-	// 		->from('boxoffice_fieldlayouts')
-	// 		->where('performanceGroupId = :performanceGroupId', array(':performanceGroupId' => $variables['performanceGroup']->id))
-	// 		->queryColumn();
-	//
-	// 	// Get the actual performance field layout for this group
-	// 	$variables['fieldLayoutId'] = craft()->db->createCommand()
-	// 		->select('id')
-	// 		->from('fieldlayouts')
-	// 		->where('type = :type', array(':type' => BoxOfficeElementType::Performance))
-	// 		->andWhere(array('and', array('in', 'id', $fieldLayoutIds)))
-	// 		->queryScalar();
-	//
-	// 	// Get the actual instance field layout for this group
-	// 	$variables['instanceFieldLayoutId'] = craft()->db->createCommand()
-	// 		->select('id')
-	// 		->from('fieldlayouts')
-	// 		->where('type = :type', array(':type' => BoxOfficeElementType::Instance))
-	// 		->andWhere(array('and', array('in', 'id', $fieldLayoutIds)))
-	// 		->queryScalar();
-	//
-	// 	$variables['brandNewICalSettings'] = false;
-	//
-	// 	if (!empty($variables['performanceGroupId']))
-	// 	{
-	// 		if (empty($variables['iCalSettings']))
-	// 		{
-	//
-	// 			$variables['iCalSettings'] = craft()->boxOffice_iCalSettings->getICalSettingsByPerformanceGroupId($variables['performanceGroupId']);
-	//
-	// 			if (!$variables['iCalSettings'])
-	// 			{
-	// 				$variables['iCalSettings'] = new BoxOffice_ICalSettingsModel();
-	// 				$variables['brandNewICalSettings'] = true;
-	// 			}
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		throw new HttpException(404);
-	// 	}
-	//
-	// 	$variables['crumbs'] = array(
-	// 		array('label' => Craft::t('Box Office'), 'url' => UrlHelper::getUrl('boxoffice')),
-	// 		array('label' => Craft::t('Performance Groups'), 'url' => UrlHelper::getUrl('boxoffice/performance-groups')),
-	// 	);
-	//
-	// 	$this->renderTemplate('boxoffice/performance-groups/_ical-settings', $variables);
-	//
-	// }
-	//
-	//
-	// /**
-	//  * Save the iCal settings into a record
-	//  */
-	// public function actionSaveICalSettings()
-	// {
-	//
-	// 	$this->requirePostRequest();
-	//
-	// 	$iCalSettings = new BoxOffice_ICalSettingsModel();
-	//
-	// 	$iCalSettings->id                 = craft()->request->getPost('id');
-	// 	$iCalSettings->performanceGroupId = craft()->request->getPost('performanceGroupId');
-	// 	$iCalSettings->summary            = craft()->request->getPost('summary');
-	// 	$iCalSettings->description        = craft()->request->getPost('description');
-	// 	$iCalSettings->location           = craft()->request->getPost('location');
-	// 	$iCalSettings->duration           = craft()->request->getPost('duration');
-	//
-	// 	// Save it
-	// 	if (craft()->boxOffice_iCalSettings->saveICalSettings($iCalSettings))
-	// 	{
-	// 		craft()->userSession->setNotice(Craft::t('iCal Settings saved.'));
-	// 		$this->redirectToPostedUrl();
-	// 	}
-	// 	else
-	// 	{
-	// 		craft()->userSession->setError(Craft::t('Couldn’t save the iCal Settings.'));
-	// 	}
-	//
-	// 	// Send the data back to the template
-	// 	craft()->urlManager->setRouteVariables(array(
-	// 		'performanceGroupId' => $iCalSettings->performanceGroupId,
-	// 		'summary' => $iCalSettings->summary,
-	// 		'description' => $iCalSettings->description,
-	// 		'location' => $iCalSettings->location,
-	// 		'duration' => $iCalSettings->duration
-	// 	));
-	//
-	// }
 
+
+	/**
+	 *
+	 */
+	public function actionSaveFieldLayout()
+	{
+
+		$this->requirePostRequest();
+		$this->requireAjaxRequest();
+
+		$pimpedBlockTypeId = craft()->request->getPost('pimpedBlockTypeId');
+		$blockTypeFieldLayouts = craft()->request->getPost('blockTypeFieldLayouts');
+
+		if ($pimpedBlockTypeId)
+		{
+
+			$pimpedBlockTypeRecord = PimpMyMatrix_BlockTypeRecord::model()->findById($pimpedBlockTypeId);
+
+			if (!$pimpedBlockTypeRecord)
+			{
+				throw new Exception(Craft::t('No PimpMyMatrix block type exists with the ID “{id}”', array('id' => $pimpedBlockTypeId)));
+			}
+
+			$pimpedBlockType = PimpMyMatrix_BlockTypeModel::populateModel($pimpedBlockTypeRecord);
+
+		}
+
+		// Set the field layout on the model
+		$postedFieldLayout = craft()->request->getPost('blockTypeFieldLayouts', array());
+		$assembledLayout = craft()->fields->assembleLayout($postedFieldLayout, array());
+		$pimpedBlockType->setFieldLayout($assembledLayout);
+
+		// Save it
+		if (craft()->pimpMyMatrix_blockTypes->saveFieldLayout($pimpedBlockType))
+		{
+			$this->returnJson(array(
+				'success' => true
+			));
+		}
+		else
+		{
+			$this->returnJson(array(
+				'success' => false
+			));
+		}
+
+	}
 
 }

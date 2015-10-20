@@ -56,7 +56,8 @@ class PimpMyMatrixPlugin extends BasePlugin
          )
       {
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-        craft()->templates->includeJsResource('pimpmymatrix/js/fieldlayoutdesigner.js');
+        craft()->templates->includeJsResource('pimpmymatrix/js/blocktypefieldlayoutdesigner.js');
+        craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
 
         $matrixFieldIds = craft()->db->createCommand()

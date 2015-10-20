@@ -25,7 +25,11 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
   fields: [],
 
   $form: null,
+  $body: null,
+  $bigSpinner: null,
   $spinner: null,
+
+  modal: null,
 
   init: function(container, settings)
   {
@@ -103,59 +107,47 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     ev.preventDefault();
     ev.stopPropagation();
 
-    var fieldId = $(ev.target).data('pimpmymatrix-field-id');
-
+    // Start the markup
     this.$form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>');
 
-    var $body = $('<div class="body"/>').appendTo(this.$form),
-        $body = $('<div class="content"/>').appendTo($body),
-        $bigSpinner = $('<div class="spinner big"/>').appendTo($body),
-        $body = $('<div class="main"/>').appendTo($body),
-        $footer = $('<div class="footer"/>').appendTo(this.$form),
-        $buttons = $('<div class="buttons right"/>').appendTo($footer);
+    // Get field id and store it on the modal form element
+    var fieldId = $(ev.target).data('pimpmymatrix-field-id');
+    this.$form.data('pimpmymatrix-field-id', fieldId);
 
+    // Make the rest of the modal markup
+    this.$body = $('<div class="body"/>').appendTo(this.$form);
+    this.$body = $('<div class="content"/>').appendTo(this.$body);
+    this.$bigSpinner = $('<div class="spinner big"/>').appendTo(this.$body);
+    this.$body = $('<div class="main"/>').appendTo(this.$body);
+    var $footer = $('<div class="footer"/>').appendTo(this.$form);
+    var $buttons = $('<div class="buttons right"/>').appendTo($footer);
     this.$spinner = $('<div class="spinner hidden"/>').appendTo($buttons);
+    var $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons);
+    var $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons);
 
-    var $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
-        $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
-        _this = this,
-        modal = new Garnish.Modal(this.$form,
-        {
-          resizable: true,
-          closeOtherModals: true,
-          onFadeIn: function()
-          {
-            // Load a fld with all the blocks in the un-used section, this will
-            // allow grouping them in 'tabs' to give us the block groups like normal
-            var data = {
-              fieldId : fieldId,
-              context : _this.settings.context
-            };
-            Craft.postActionRequest('pimpMyMatrix/getConfigurator', data, $.proxy(function(response, textStatus)
-            {
-              if (textStatus == 'success')
-              {
-                $(response.html).appendTo($body);
-                $bigSpinner.addClass('hidden');
-                var fld = new PimpMyMatrix.FieldLayoutDesigner('#pimpmymatrix-configurator', {
-                  fieldInputName: 'pimpedBlockTypes[__TAB_NAME__][]'
-                });
-              }
-            }, this));
-          },
-          onHide: function()
-          {
-            modal.$container.remove();
-            modal.$shade.remove();
-            delete modal;
-          }
-        });
-
-    this.addListener(this.$form, 'submit', '_handleSubmit');
-    this.addListener($cancelBtn, 'click', function()
+    // Make the Garnish Modal object
+    this.modal = new Garnish.Modal(this.$form,
     {
-      modal.hide()
+      resizable: true,
+      closeOtherModals: true,
+      onFadeIn: $.proxy(function()
+      {
+        this._populateModal();
+      }, this),
+      onHide: $.proxy(function()
+      {
+        this.modal.$container.remove();
+        this.modal.$shade.remove();
+        delete modal;
+      }, this)
     });
+
+    // Submit and cancel handlers
+    this.addListener(this.$form, 'submit', '_handleSubmit');
+    this.addListener($cancelBtn, 'click', $.proxy(function()
+    {
+      this.modal.hide()
+    }, this));
 
   },
 
@@ -182,6 +174,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
       if (textStatus == 'success' && response.success)
       {
         Craft.cp.displayNotice(Craft.t('Block type groups saved.'));
+        this._populateModal();
       }
       else
       {
@@ -189,6 +182,28 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
         {
           Craft.cp.displayError(Craft.t('An unknown error occurred.'));
         }
+      }
+    }, this));
+  },
+
+  _populateModal: function()
+  {
+    // Load a fld with all the blocks in the un-used section, this will
+    // allow grouping them in 'tabs' to give us the block groups like normal
+    var data = {
+      fieldId : this.$form.data('pimpmymatrix-field-id'),
+      context : this.settings.context
+    };
+    Craft.postActionRequest('pimpMyMatrix/getConfigurator', data, $.proxy(function(response, textStatus)
+    {
+      if (textStatus == 'success')
+      {
+        this.$body.html(response.html);
+        this.$bigSpinner.addClass('hidden');
+        var fld = new PimpMyMatrix.GroupsDesigner('#pimpmymatrix-configurator', {
+          fieldInputName: 'pimpedBlockTypes[__TAB_NAME__][]',
+          context : this.settings.context
+        });
       }
     }, this));
   }
