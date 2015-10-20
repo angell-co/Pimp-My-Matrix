@@ -61,7 +61,7 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
   refreshCurrentBlockTypeGroups: function()
   {
     this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
-    this.currentBlockTypeGroups = this.settings.blockTypeGroups[this.settings.context];
+    this.currentBlockTypeGroups = this.settings.blockTypes[this.settings.context];
   },
 
   loopMatrixFields: function()
@@ -77,8 +77,6 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
     });
 
   },
-
-  // TODO: keep this.currentBlockTypeGroups updated somehow
 
   sortButtons: function($matrixField)
   {
@@ -116,13 +114,13 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
           {
 
             // check if group exists, add if not
-            if ( $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['tabName']+'"]').length === 0 )
+            if ( $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['groupName']+'"]').length === 0 )
             {
-              $('<div class="btn  menubtn">'+blockTypeGroups[i]['tabName']+'</div><div class="menu" data-pimped-group="'+blockTypeGroups[i]['tabName']+'"><ul /></div>').appendTo($ourButtonsInner);
+              $('<div class="btn  menubtn">'+blockTypeGroups[i]['groupName']+'</div><div class="menu" data-pimped-group="'+blockTypeGroups[i]['groupName']+'"><ul /></div>').appendTo($ourButtonsInner);
             }
 
             // find sub group
-            $groupUl = $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['tabName']+'"] ul');
+            $groupUl = $ourButtonsInner.find('[data-pimped-group="'+blockTypeGroups[i]['groupName']+'"] ul');
 
             // make link in new sub group
             $('<li><a data-type="'+blockTypeGroups[i]['matrixBlockType']['handle']+'">'+blockTypeGroups[i]['matrixBlockType']['name']+'</a></li>').appendTo($groupUl);
@@ -182,7 +180,7 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
 },
 {
   defaults: {
-    blockTypeGroups: null,
+    blockTypes: null,
     context: false
   }
 });

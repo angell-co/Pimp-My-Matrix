@@ -50,13 +50,13 @@ class PimpMyMatrixController extends BaseController
 
     $context = craft()->request->getParam('context');
 
-    $existingBlockTypeGroups = craft()->pimpMyMatrix_blockTypeGroups->getBlockTypeGroupsByContext($context, 'tabName', false, $fieldId);
+    $pimpedBlockTypes = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext($context, 'groupName', false, $fieldId);
 
     $fld = craft()->templates->render('pimpmymatrix/flds/configurator', array(
       'matrixField' => $field,
       'blockTypes' => $blockTypes,
       'blockTypeIds' => $blockTypeIds,
-      'existingBlockTypeGroups' => $existingBlockTypeGroups
+      'pimpedBlockTypes' => $pimpedBlockTypes
     ));
 
     $this->returnJson(array(
@@ -81,9 +81,7 @@ class PimpMyMatrixController extends BaseController
     $blockType = craft()->matrix->getBlockTypeById($blockTypeId);
 
     $fld = craft()->templates->render('pimpmymatrix/flds/fields', array(
-      'blockType' => $blockType,
-      // 'blockTypeIds' => $blockTypeIds,
-      // 'existingBlockTypeGroups' => $existingBlockTypeGroups
+      'blockType' => $blockType
     ));
 
     $this->returnJson(array(

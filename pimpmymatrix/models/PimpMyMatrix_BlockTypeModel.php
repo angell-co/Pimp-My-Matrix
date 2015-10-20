@@ -10,7 +10,7 @@ namespace Craft;
  * @link      http://www.supercooldesign.co.uk
  */
 
-class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
+class PimpMyMatrix_BlockTypeModel extends BaseModel
 {
 
 	// Public Methods
@@ -33,6 +33,26 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 		}
 	}
 
+	/**
+	 * @return array
+	 */
+	public function behaviors()
+	{
+		return array(
+			'fieldLayout' => new FieldLayoutBehavior(),
+		);
+	}
+
+	/**
+	 * @inheritDoc BaseElementModel::getFieldLayout()
+	 *
+	 * @return FieldLayoutModel|null
+	 */
+	public function getFieldLayout()
+	{
+		return $this->asa('fieldLayout')->getFieldLayout();
+	}
+
 	// Protected Methods
 	// =========================================================================
 
@@ -49,8 +69,9 @@ class PimpMyMatrix_BlockTypeGroupModel extends BaseModel
 			'fieldHandle'       => AttributeType::String,
 			'matrixBlockTypeId' => AttributeType::Number,
 			'matrixBlockType'   => array(AttributeType::Mixed, 'default' => false),
-			'tabName'           => AttributeType::Name,
+			'groupName'         => AttributeType::Name,
 			'context'           => AttributeType::String,
+			'fieldLayoutId'     => AttributeType::Number,
 		);
 	}
 

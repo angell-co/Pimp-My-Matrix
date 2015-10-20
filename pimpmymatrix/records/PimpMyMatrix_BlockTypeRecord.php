@@ -10,7 +10,7 @@ namespace Craft;
  * @link      http://www.supercooldesign.co.uk
  */
 
-class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
+class PimpMyMatrix_BlockTypeRecord extends BaseRecord
 {
 
 	// Public Methods
@@ -23,7 +23,7 @@ class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 	 */
 	public function getTableName()
 	{
-		return 'pimpmymatrix_blocktypegroups';
+		return 'pimpmymatrix_blocktypes';
 	}
 
 
@@ -37,6 +37,7 @@ class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 		return array(
 			'field' => array(static::BELONGS_TO, 'FieldRecord', 'required' => true, 'onDelete' => static::CASCADE),
 			'matrixBlockType' => array(static::BELONGS_TO, 'MatrixBlockTypeRecord', 'required' => true, 'onDelete' => static::CASCADE),
+			'fieldLayout' => array(static::BELONGS_TO, 'FieldLayoutRecord'),
 		);
 	}
 
@@ -52,8 +53,8 @@ class PimpMyMatrix_BlockTypeGroupRecord extends BaseRecord
 	protected function defineAttributes()
 	{
 		return array(
-			'tabName' => array(AttributeType::Name, 'required' => true),
-			'context' => array(AttributeType::String, 'required' => true)
+			'groupName' => array(AttributeType::Name, 'required' => true),
+			'context'   => array(AttributeType::String, 'required' => true)
 		);
 	}
 

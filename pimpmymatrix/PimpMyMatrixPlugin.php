@@ -87,15 +87,15 @@ class PimpMyMatrixPlugin extends BasePlugin
         if ($entry)
         {
           // Get all the data for the entrytype context regardless of entrytype id
-          $blockTypeGroups = craft()->pimpMyMatrix_blockTypeGroups->getBlockTypeGroupsByContext('entrytype', 'context', true);
+          $pimpedBlockTypes = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('entrytype', 'context', true);
 
-          if ($blockTypeGroups)
+          if ($pimpedBlockTypes)
           {
             craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
             craft()->templates->includeJsResource('pimpmymatrix/js/blocktypegrouper.js');
 
             $settings = array(
-              'blockTypeGroups' => $blockTypeGroups,
+              'blockTypes' => $pimpedBlockTypes,
               'context' => 'entrytype:'.$entry->type->id
             );
             craft()->templates->includeJs('new PimpMyMatrix.BlockTypeGrouper('.JsonHelper::Encode($settings).');');

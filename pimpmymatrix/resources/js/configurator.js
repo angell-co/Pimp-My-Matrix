@@ -138,7 +138,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
                 $(response.html).appendTo($body);
                 $bigSpinner.addClass('hidden');
                 var fld = new PimpMyMatrix.FieldLayoutDesigner('#pimpmymatrix-configurator', {
-                  fieldInputName: 'blockTypeGroups[__TAB_NAME__][]'
+                  fieldInputName: 'pimpedBlockTypes[__TAB_NAME__][]'
                 });
               }
             }, this));
@@ -176,7 +176,7 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     });
 
     // Post it
-    Craft.postActionRequest('pimpMyMatrix/blockTypeGroups/saveBlockTypeGroups', data, $.proxy(function(response, textStatus)
+    Craft.postActionRequest('pimpMyMatrix/blockTypes/saveBlockTypes', data, $.proxy(function(response, textStatus)
     {
       this.$spinner.addClass('hidden');
       if (textStatus == 'success' && response.success)

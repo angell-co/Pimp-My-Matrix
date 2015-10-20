@@ -10,7 +10,7 @@ namespace Craft;
  * @link      http://www.supercooldesign.co.uk
  */
 
-class PimpMyMatrix_BlockTypeGroupsController extends BaseController
+class PimpMyMatrix_BlockTypesController extends BaseController
 {
 
 	/**
@@ -28,7 +28,7 @@ class PimpMyMatrix_BlockTypeGroupsController extends BaseController
 	/**
 	 * Saves a layout
 	 */
-	public function actionSaveBlockTypeGroups()
+	public function actionSaveBlockTypes()
 	{
 
 		$this->requirePostRequest();
@@ -38,29 +38,29 @@ class PimpMyMatrix_BlockTypeGroupsController extends BaseController
 		// be returned in eventually, so we will just rely on the id to describe this
 		// and make sure each time we are referencing a context that already exists to
 		// delete the rows matching that context before proceeding with the save.
-		$blockTypeGroupsPostData = craft()->request->getPost('blockTypeGroups');
+		$blockTypesPostData = craft()->request->getPost('blockTypes');
 
 		$context = craft()->request->getPost('context');
 		$fieldId = craft()->request->getPost('fieldId');
 
 		// Remove all current group rows by context
-		craft()->pimpMyMatrix_blockTypeGroups->deleteBlockTypeGroupsByContext($context, $fieldId);
+		craft()->pimpMyMatrix_blockTypes->deleteBlockTypesByContext($context, $fieldId);
 
 		// Loop over the data and save new rows for each block type / group combo
-		if (is_array($blockTypeGroupsPostData))
+		if (is_array($blockTypesPostData))
 		{
-			foreach ($blockTypeGroupsPostData as $tabName => $blockTypeIds)
+			foreach ($blockTypesPostData as $groupName => $blockTypeIds)
 			{
 				foreach ($blockTypeIds as $blockTypeId)
 				{
-					$blockTypeGroup = new PimpMyMatrix_BlockTypeGroupModel();
-					$blockTypeGroup->fieldId           = $fieldId;
-					$blockTypeGroup->matrixBlockTypeId = $blockTypeId;
-					$blockTypeGroup->tabName           = urldecode($tabName);
-					$blockTypeGroup->context           = $context;
+					$pimpedBlockType = new PimpMyMatrix_BlockTypeModel();
+					$pimpedBlockType->fieldId           = $fieldId;
+					$pimpedBlockType->matrixBlockTypeId = $blockTypeId;
+					$pimpedBlockType->groupName         = urldecode($groupName);
+					$pimpedBlockType->context           = $context;
 
 					// TODO: Catch errors
-					craft()->pimpMyMatrix_blockTypeGroups->saveBlockTypeGroup($blockTypeGroup);
+					craft()->pimpMyMatrix_blockTypes->saveBlockType($pimpedBlockType);
 				}
 			}
 		}

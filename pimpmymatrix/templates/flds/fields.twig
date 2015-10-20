@@ -44,14 +44,14 @@
 	</div>
 
 	<div class="newtabbtn-container">
-		<div class="btn add icon">{{ "New Group"|t }}</div>
+		<div class="btn add icon">{{ "New Tab"|t }}</div>
 	</div>
 
 	<div class="unusedfields">
 		{#% set unGroupedSelectedBlockTypeIds = [] %}
 
 		{% if existingBlockTypeGroups and existingBlockTypeGroups|length %}
-			{% for tabName,selectedBlockTypes in existingBlockTypeGroups %}
+			{% for groupName,selectedBlockTypes in existingBlockTypeGroups %}
 				{% for selectedBlockType in selectedBlockTypes %}
 					{% set unGroupedSelectedBlockTypeIds = unGroupedSelectedBlockTypeIds|merge([selectedBlockType.matrixBlockTypeId]) %}
 				{% endfor %}
@@ -60,7 +60,7 @@
 
 		<div class="fld-tab unused{#% if unGroupedSelectedBlockTypeIds|length == blockTypes|length %} hidden{% endif %#}">
 			<div class="tabs">
-				<div class="tab sel"><span>{{ "Blocks"|t }}</span></div>
+				<div class="tab sel"><span>{{ "Fields"|t }}</span></div>
 			</div>
 			<div class="fld-tabcontent">
 				{% for field in blockType.getFields() %}
