@@ -38,7 +38,7 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 		// be returned in eventually, so we will just rely on the id to describe this
 		// and make sure each time we are referencing a context that already exists to
 		// delete the rows matching that context before proceeding with the save.
-		$blockTypesPostData = craft()->request->getPost('blockTypes');
+		$blockTypesPostData = craft()->request->getPost('pimpedBlockTypes');
 
 		$context = craft()->request->getPost('context');
 		$fieldId = craft()->request->getPost('fieldId');
