@@ -91,7 +91,7 @@ PimpMyMatrix.BlockTypeGrouper = Garnish.Base.extend(
       var blockTypeGroups = $.grep(this.currentBlockTypeGroups, function(e){ return e.fieldHandle === matrixFieldHandle; });
 
       // Check we have some config
-      if ( typeof blockTypeGroups !== "undefined" && blockTypeGroups.length > 1 )
+      if ( typeof blockTypeGroups !== "undefined" && blockTypeGroups.length >= 1 )
       {
 
         // find the original buttons
