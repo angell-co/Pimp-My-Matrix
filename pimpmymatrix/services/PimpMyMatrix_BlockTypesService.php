@@ -115,16 +115,28 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 	public function saveBlockType(PimpMyMatrix_BlockTypeModel $blockType)
 	{
 
-		$blockTypeRecord = new PimpMyMatrix_BlockTypeRecord();
+		if ($blockType->id)
+		{
+			$blockTypeRecord = PimpMyMatrix_BlockTypeRecord::model()->findById($blockType->id);
+
+			if (!$blockTypeRecord)
+			{
+				throw new Exception(Craft::t('No PimpMyMatrix block type exists with the ID “{id}”', array('id' => $blockType->id)));
+			}
+		}
+		else
+		{
+			$blockTypeRecord = new PimpMyMatrix_BlockTypeRecord();
+		}
 
 		$blockTypeRecord->fieldId           = $blockType->fieldId;
 		$blockTypeRecord->matrixBlockTypeId = $blockType->matrixBlockTypeId;
+		$blockTypeRecord->fieldLayoutId     = $blockType->fieldLayoutId;
 		$blockTypeRecord->groupName         = $blockType->groupName;
 		$blockTypeRecord->context           = $blockType->context;
 
 		$blockTypeRecord->validate();
 		$blockType->addErrors($blockTypeRecord->getErrors());
-
 
 		if (!$blockType->hasErrors())
 		{
@@ -215,7 +227,42 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 	 */
 	public function saveFieldLayout($pimpedBlockType)
 	{
-		Craft::dd($pimpedBlockType->getFieldLayout());
+		// First, get the layout
+		$layout = $pimpedBlockType->getFieldLayout();
+
+		// Second save the layout - replicated from FieldsService::saveLayout()
+		// to allow us to retain the $layout->id for our own use
+		$layoutRecord = new FieldLayoutRecord();
+		$layoutRecord->type = 'PimpMyMatrix_BlockType';
+		$layoutRecord->save(false);
+		$layout->id = $layoutRecord->id;
+
+		foreach ($layout->getTabs() as $tab)
+		{
+			$tabRecord = new FieldLayoutTabRecord();
+			$tabRecord->layoutId  = $layout->id;
+			$tabRecord->name      = $tab->name;
+			$tabRecord->sortOrder = $tab->sortOrder;
+			$tabRecord->save(false);
+			$tab->id = $tabRecord->id;
+
+			foreach ($tab->getFields() as $field)
+			{
+				$fieldRecord = new FieldLayoutFieldRecord();
+				$fieldRecord->layoutId  = $layout->id;
+				$fieldRecord->tabId     = $tab->id;
+				$fieldRecord->fieldId   = $field->fieldId;
+				$fieldRecord->required  = $field->required;
+				$fieldRecord->sortOrder = $field->sortOrder;
+				$fieldRecord->save(false);
+				$field->id = $fieldRecord->id;
+			}
+		}
+
+		// Now we have saved the layout, update the id on the given
+		// pimped blocktype model and save it again
+		$pimpedBlockType->fieldLayoutId = $layout->id;
+		return $this->saveBlockType($pimpedBlockType);
 	}
 
 

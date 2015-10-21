@@ -19,6 +19,8 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
   $form: null,
   $spinner: null,
 
+  modal: null,
+
   initField: function($blockType)
   {
     var $editBtn = $blockType.find('.settings'),
@@ -71,45 +73,46 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
     this.$spinner = $('<div class="spinner hidden"/>').appendTo($buttons);
 
     var $cancelBtn = $('<div class="btn">'+Craft.t('Cancel')+'</div>').appendTo($buttons),
-        $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons),
-        modal = new Garnish.Modal(this.$form,
+        $submitBtn = $('<input type="submit" class="btn submit" value="'+Craft.t('Save')+'"/>').appendTo($buttons);
+
+    this.modal = new Garnish.Modal(this.$form,
+    {
+      resizable: true,
+      closeOtherModals: false,
+      onFadeIn: $.proxy(function()
+      {
+
+        var data = {
+          context : this.settings.context,
+          blockTypeId : $blockType.data('id')
+        };
+
+        Craft.postActionRequest('pimpMyMatrix/getFieldsConfigurator', data, $.proxy(function(response, textStatus)
         {
-          resizable: true,
-          closeOtherModals: false,
-          onFadeIn: $.proxy(function()
+          if (textStatus == 'success')
           {
-
-            var data = {
-              context : this.settings.context,
-              blockTypeId : $blockType.data('id')
-            };
-
-            Craft.postActionRequest('pimpMyMatrix/getFieldsConfigurator', data, $.proxy(function(response, textStatus)
-            {
-              if (textStatus == 'success')
-              {
-                $(response.html).appendTo($body);
-                $bigSpinner.addClass('hidden');
-                var fld = new PimpMyMatrix.BlockTypeFieldLayoutDesigner('#pimpmymatrix-fields-configurator', {
-                  fieldInputName: 'blockTypeFieldLayouts[__TAB_NAME__][]'
-                });
-              }
-            }, this));
-
-          }, this),
-          onHide: function()
-          {
-            modal.$container.remove();
-            modal.$shade.remove();
-            delete modal;
+            $(response.html).appendTo($body);
+            $bigSpinner.addClass('hidden');
+            var fld = new PimpMyMatrix.BlockTypeFieldLayoutDesigner('#pimpmymatrix-fields-configurator', {
+              fieldInputName: 'blockTypeFieldLayouts[__TAB_NAME__][]'
+            });
           }
-        });
+        }, this));
+
+      }, this),
+      onHide: $.proxy(function()
+      {
+        this.modal.$container.remove();
+        this.modal.$shade.remove();
+        delete modal;
+      }, this)
+    });
 
     this.addListener(this.$form, 'submit', '_handleSubmit');
-    this.addListener($cancelBtn, 'click', function()
+    this.addListener($cancelBtn, 'click', $.proxy(function()
     {
-      modal.hide()
-    });
+      this.modal.hide();
+    }, this));
   },
 
   _handleSubmit: function(ev)
@@ -128,7 +131,8 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
       this.$spinner.addClass('hidden');
       if (textStatus == 'success' && response.success)
       {
-        Craft.cp.displayNotice(Craft.t('Block type groups saved.'));
+        Craft.cp.displayNotice(Craft.t('Field layout saved.'));
+        this.modal.hide();
       }
       else
       {
