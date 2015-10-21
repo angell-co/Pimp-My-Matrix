@@ -348,9 +348,19 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 
 		// Save the field layout content on to our model
 		$layout = $blockType->getFieldLayout();
+		$fields = array();
+		foreach ($layout->getFields() as $field)
+		{
+			$fields[] = array(
+				'tabId' => $field->tabId,
+				'sortOrder' => $field->sortOrder,
+				'field' => $field->getField()
+			);
+		}
+
 		$blockType->fieldLayout = array(
 			'tabs'   => $layout->getTabs(),
-			'fields' => $layout->getFields()
+			'fields' => $fields
 		);
 
 		return $blockType;

@@ -203,7 +203,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
           if ( pimpedBlockType[0].fieldLayoutId !== null )
           {
             $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
-            this.initBlockFieldLayout($matrixBlock);
+            this.initBlockFieldLayout($matrixBlock, $matrixField);
           }
 
         }
@@ -214,7 +214,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   },
 
-  initBlockFieldLayout: function($matrixBlock)
+  initBlockFieldLayout: function($matrixBlock, $matrixField)
   {
 
     console.log('constructing field layout');
@@ -226,21 +226,80 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     // Check we have more than one tab
     if ( tabs.length > 1 )
     {
-      var $tabs = $('<ul class="pimpmymatrix-tabs"/>').appendTo($matrixBlock.find('.titlebar'));
 
+      // Get a namespaced id
+      var namespace = $matrixField.prop('id') + '-' + $matrixBlock.data('id'),
+          pimpedNamespace = 'pimpmymatrix-' + namespace;
+
+      // Add the tabs container
+      var $tabs = $('<ul class="pimpmymatrix-tabs"/>').appendTo($matrixBlock);
+
+      // Make our own fields container and hide the native one
+      var $pimpedFields = $('<div class="pimpmymatrix-fields"/>').appendTo($matrixBlock),
+          $fields = $matrixBlock.find('.fields');
+      $fields.hide();
+
+      // Loop the tabs
       for (var i = 0; i < tabs.length; i++)
       {
+
+        // Set up the first one to be active
+        var navClasses = '',
+            paneClasses = '';
+
         if (i==0)
         {
-          $('<li><a class="tab sel">'+tabs[i].name+'</a></li>').appendTo($tabs);
+          navClasses = ' sel';
         }
         else
         {
-          $('<li><a class="tab">'+tabs[i].name+'</a></li>').appendTo($tabs);
+          paneClasses = ' hidden';
         }
+
+        // Add the tab nav
+        var $tabLi = $('<li/>').appendTo($tabs);
+        $('<a id="'+pimpedNamespace+'-'+i+'" class="tab'+navClasses+'">'+tabs[i].name+'</a>')
+          .appendTo($tabLi)
+          .data('pimped-tab-target', '#'+pimpedNamespace+'-pane-'+i);
+
+        // Make a tab pane
+        var $pane = $('<div id="'+pimpedNamespace+'-pane-'+i+'" class="'+paneClasses+'"/>').appendTo($pimpedFields);
+
+        // Filter the fields array by their associated tabId and loop over them
+        var tabFields = $.grep(fields, function(e){ return e.tabId === tabs[i].id; });
+        for (var n = 0; n < tabFields.length; n++)
+        {
+          // Move the required field to our new container
+          $fields.find('#' + namespace + '-fields-' + tabFields[n].field.handle + '-field').appendTo($pane);
+        }
+
       }
 
+      // Add the event handlers
+      this.addListener($tabs.find('a'), 'click', 'onTabClick');
+
     }
+
+  },
+
+  onTabClick: function(ev)
+  {
+
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var $tab = $(ev.target),
+        $tabNav = $tab.parent().parent('.pimpmymatrix-tabs'),
+        targetSelector = $tab.data('pimped-tab-target'),
+        $target = $(targetSelector);
+
+    // Toggle tab nav state
+    $tabNav.find('a.sel').removeClass('sel');
+    $tab.addClass('sel');
+
+    // Toggle the pane state
+    $target.siblings('div').addClass('hidden');
+    $target.removeClass('hidden');
 
   },
 
