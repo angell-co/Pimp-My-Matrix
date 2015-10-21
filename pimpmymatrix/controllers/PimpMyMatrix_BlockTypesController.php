@@ -26,7 +26,7 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 
 
 	/**
-	 * Saves a layout
+	 * Saves a pimped block type
 	 */
 	public function actionSaveBlockTypes()
 	{
@@ -44,10 +44,10 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 		$context = craft()->request->getPost('context');
 		$fieldId = craft()->request->getPost('fieldId');
 
+		// Get any existing field layouts so we don’t lose them
+		$fieldLayoutIds = craft()->pimpMyMatrix_blockTypes->getFieldLayoutIds($context, $fieldId);
+
 		// Remove all current block types by context
-		// TODO: here we need to save out an array of the field layouts
-		//       that are attached to the current block types in this context
-		//       so that we don’t lose them when saving.
 		craft()->pimpMyMatrix_blockTypes->deleteBlockTypesByContext($context, $fieldId);
 
 		// Loop over the data and save new rows for each block type / group combo
@@ -60,9 +60,9 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 					$pimpedBlockType = new PimpMyMatrix_BlockTypeModel();
 					$pimpedBlockType->fieldId           = $fieldId;
 					$pimpedBlockType->matrixBlockTypeId = $blockTypeId;
+					$pimpedBlockType->fieldLayoutId     = isset($fieldLayoutIds[$blockTypeId]) ? $fieldLayoutIds[$blockTypeId] : null;
 					$pimpedBlockType->groupName         = urldecode($groupName);
 					$pimpedBlockType->context           = $context;
-					// TODO: attach field layout here
 
 					// TODO: Catch errors
 					craft()->pimpMyMatrix_blockTypes->saveBlockType($pimpedBlockType);
@@ -76,91 +76,9 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 
 	}
 
-	// /**
-	//  * [editFieldLayout description]
-	//  */
-	// public function actionEditFieldLayout(array $variables = array())
-	// {
-	//
-	// 	// get the performance group
-	// 	if (!empty($variables['performanceGroupId']))
-	// 	{
-	//
-	// 		$variables['performanceGroup'] = craft()->boxOffice_performanceGroups->getPerformanceGroupById($variables['performanceGroupId']);
-	//
-	// 		if (!$variables['performanceGroup'])
-	// 		{
-	// 			throw new HttpException(404);
-	// 		}
-	//
-	// 		$variables['title'] = $variables['performanceGroup']->name . ' — ' . $variables['fieldLayoutType'];
-	// 	}
-	// 	else
-	// 	{
-	// 		throw new HttpException(404);
-	// 	}
-	//
-	//
-	// 	// Get all the field layouts for this group
-	// 	$fieldLayoutIds = craft()->db->createCommand()
-	// 		->select('fieldLayoutId')
-	// 		->from('boxoffice_fieldlayouts')
-	// 		->where('performanceGroupId = :performanceGroupId', array(':performanceGroupId' => $variables['performanceGroup']->id))
-	// 		->queryColumn();
-	//
-	// 	// Get the actual performance or instance field layout for this group
-	// 	// depending on the url we're on, and the weird BoxOffice_FieldLayout as well
-	// 	if ($fieldLayoutIds)
-	// 	{
-	// 		switch ($variables['fieldLayoutType']) {
-	// 			case 'performances':
-	// 				$fieldLayoutType = BoxOfficeElementType::Performance;
-	// 				break;
-	//
-	// 			case 'instances':
-	// 				$fieldLayoutType = BoxOfficeElementType::Instance;
-	// 				break;
-	// 		}
-	//
-	// 		$fieldLayoutId = craft()->db->createCommand()
-	// 			->select('id')
-	// 			->from('fieldlayouts')
-	// 			->where('type = :type', array(':type' => $fieldLayoutType))
-	// 			->andWhere(array('and', array('in', 'id', $fieldLayoutIds)))
-	// 			->queryScalar();
-	// 	}
-	//
-	// 	$variables['fieldLayoutId'] = $fieldLayoutId;
-	//
-	// 	$variables['fieldLayout'] = null;
-	//
-	// 	if ( $fieldLayoutId )
-	// 	{
-	// 		$variables['fieldLayout'] = craft()->fields->getLayoutById($fieldLayoutId);
-	//
-	// 		$boxOfficeFieldLayoutId = craft()->db->createCommand()
-	// 			->select('id')
-	// 			->from('boxoffice_fieldlayouts')
-	// 			->where('fieldLayoutId = :fieldLayoutId', array(':fieldLayoutId' => $fieldLayoutId))
-	// 			->queryScalar();
-	//
-	// 		if ( $boxOfficeFieldLayoutId )
-	// 		{
-	// 			$variables['boxOfficeFieldLayoutId'] = $boxOfficeFieldLayoutId;
-	// 		}
-	// 	}
-	//
-	// 	$variables['crumbs'] = array(
-	// 		array('label' => Craft::t('Box Office'), 'url' => UrlHelper::getUrl('boxoffice')),
-	// 		array('label' => Craft::t('Performance Groups'), 'url' => UrlHelper::getUrl('boxoffice/performance-groups')),
-	// 	);
-	//
-	// 	$this->renderTemplate('boxoffice/performance-groups/_edit-field-layout', $variables);
-	// }
-
 
 	/**
-	 *
+	 * Saves a field layout for a given pimped block type
 	 */
 	public function actionSaveFieldLayout()
 	{
@@ -183,6 +101,10 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 
 			$pimpedBlockType = PimpMyMatrix_BlockTypeModel::populateModel($pimpedBlockTypeRecord);
 
+		}
+		else
+		{
+			return false;
 		}
 
 		// Set the field layout on the model
