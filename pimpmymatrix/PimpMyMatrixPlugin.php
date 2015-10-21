@@ -93,13 +93,14 @@ class PimpMyMatrixPlugin extends BasePlugin
           if ($pimpedBlockTypes)
           {
             craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-            craft()->templates->includeJsResource('pimpmymatrix/js/blocktypegrouper.js');
 
+            // Set up the groups
+            craft()->templates->includeJsResource('pimpmymatrix/js/fieldmanipulator.js');
             $settings = array(
               'blockTypes' => $pimpedBlockTypes,
               'context' => 'entrytype:'.$entry->type->id
             );
-            craft()->templates->includeJs('new PimpMyMatrix.BlockTypeGrouper('.JsonHelper::Encode($settings).');');
+            craft()->templates->includeJs('new PimpMyMatrix.FieldManipulator('.JsonHelper::Encode($settings).');');
           }
 
         }
