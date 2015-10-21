@@ -177,6 +177,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Set this so we don’t re-run this
       $matrixBlock.data('pimped', true);
 
+      // Add a class so we can style stuff inside it
+      $matrixBlock.addClass('matrixblock-pimped');
+
       // Get matrix field handle out of the dom
       var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
@@ -197,9 +200,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
           var pimpedBlockType = $.grep(pimpedBlockTypes, function(e){ return e.matrixBlockType.handle === matrixBlockTypeHandle; });
 
           // Initialize the field layout on the block
-          if ( pimpedBlockType.fieldLayoutId !== null )
+          if ( pimpedBlockType[0].fieldLayoutId !== null )
           {
-            $matrixBlock.data('pimped-field-layout-id', pimpedBlockType.fieldLayoutId);
+            $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
             this.initBlockFieldLayout($matrixBlock);
           }
 
@@ -213,10 +216,32 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   initBlockFieldLayout: function($matrixBlock)
   {
-    if ( !$matrixBlock.data('pimped-field-layout-id') )
+
+    console.log('constructing field layout');
+
+    var pimpedBlockType = $matrixBlock.data('pimped-block-type'),
+        tabs = pimpedBlockType.fieldLayout.tabs,
+        fields = pimpedBlockType.fieldLayout.fields;
+
+    // Check we have more than one tab
+    if ( tabs.length > 1 )
     {
-      console.log('fetching field layout');
+      var $tabs = $('<ul class="pimpmymatrix-tabs"/>').appendTo($matrixBlock.find('.titlebar'));
+
+      for (var i = 0; i < tabs.length; i++)
+      {
+        if (i==0)
+        {
+          $('<li><a class="tab sel">'+tabs[i].name+'</a></li>').appendTo($tabs);
+        }
+        else
+        {
+          $('<li><a class="tab">'+tabs[i].name+'</a></li>').appendTo($tabs);
+        }
+      }
+
     }
+
   },
 
   /**

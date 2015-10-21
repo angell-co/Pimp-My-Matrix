@@ -343,8 +343,15 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 		$matrixField = craft()->fields->getFieldById($blockType->fieldId);
 		$blockType->fieldHandle = $matrixField->handle;
 
-		// Save the MatrixBlockType model on to our model
+		// Save the MatrixBlockTypeModel on to our model
 		$blockType->matrixBlockType = $blockType->getBlockType();
+
+		// Save the field layout content on to our model
+		$layout = $blockType->getFieldLayout();
+		$blockType->fieldLayout = array(
+			'tabs'   => $layout->getTabs(),
+			'fields' => $layout->getFields()
+		);
 
 		return $blockType;
 	}

@@ -72,6 +72,7 @@ class PimpMyMatrix_BlockTypeModel extends BaseModel
 			'groupName'         => AttributeType::Name,
 			'context'           => AttributeType::String,
 			'fieldLayoutId'     => AttributeType::Number,
+			'fieldLayout'       => array(AttributeType::Mixed, 'default' => false),
 		);
 	}
 
