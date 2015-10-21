@@ -227,6 +227,7 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 	 */
 	public function saveFieldLayout($pimpedBlockType)
 	{
+
 		// First, get the layout
 		$layout = $pimpedBlockType->getFieldLayout();
 
@@ -259,10 +260,22 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 			}
 		}
 
+		// Get the old field layout id for later
+		$oldFieldLayoutId = $pimpedBlockType->fieldLayoutId;
+
 		// Now we have saved the layout, update the id on the given
 		// pimped blocktype model and save it again
 		$pimpedBlockType->fieldLayoutId = $layout->id;
-		return $this->saveBlockType($pimpedBlockType);
+		if ($this->saveBlockType($pimpedBlockType))
+		{
+			// Delete the old field layout
+			craft()->fields->deleteLayoutById($oldFieldLayoutId);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 
