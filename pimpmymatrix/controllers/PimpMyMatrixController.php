@@ -80,9 +80,11 @@ class PimpMyMatrixController extends BaseController
     $context = craft()->request->getParam('context');
     $blockTypeId = craft()->request->getParam('blockTypeId');
     $pimpedBlockType = craft()->pimpMyMatrix_blockTypes->getBlockType($context, $blockTypeId);
+    $fieldLayout = $pimpedBlockType->getFieldLayout();
 
     $fld = craft()->templates->render('pimpmymatrix/flds/fields', array(
-      'pimpedBlockType' => $pimpedBlockType
+      'pimpedBlockType' => $pimpedBlockType,
+      'fieldLayout' => $fieldLayout
     ));
 
     $this->returnJson(array(

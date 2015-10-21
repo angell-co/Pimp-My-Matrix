@@ -7,7 +7,7 @@
 
 {% includeCssFile "//fonts.googleapis.com/css?family=Coming+Soon" %}
 
-{% macro tab(tabName, selectedBlockTypes) %}
+{% macro tab(tabName, tabFields) %}
 	<div class="fld-tab">
 		<div class="tabs">
 			<div class="tab sel draggable">
@@ -16,11 +16,11 @@
 			</div>
 		</div>
 		<div class="fld-tabcontent">
-			{% for blockType in selectedBlockTypes %}
-				<div class="fld-field" data-id="{{ blockType.matrixBlockTypeId }}">
+			{% for field in tabFields %}
+				<div class="fld-field" data-id="{{ field.fieldId }}">
 					<a class="settings icon" title="{{ 'Edit'|t }}"></a>
-					<span>{{ blockType.getBlockType().name }}</span>
-					<input class="id-input" type="hidden" name="blockTypeFieldLayout[{{ tabName|e('url') }}][]" value="{{ blockType.matrixBlockTypeId }}">
+					<span>{{ field.getField().name }}</span>
+					<input class="id-input" type="hidden" name="blockTypeFieldLayouts[{{ tabName|e('url') }}][]" value="{{ field.fieldId }}">
 				</div>
 			{% endfor %}
 		</div>
@@ -34,13 +34,13 @@
 	<h2>{{ "Editing the “"~pimpedBlockType.matrixBlockType.name~"” block field layout"|t }}</h2>
 
 	<div class="fld-tabs">
-		{#% if existingBlockTypeGroups and existingBlockTypeGroups|length %}
+		{% if fieldLayout %}
 			{% import _self as macros %}
 
-			{% for tabName,selectedBlockTypes in existingBlockTypeGroups %}
-				{{ macros.tab(tabName, selectedBlockTypes) }}
+			{% for tab in fieldLayout.getTabs() %}
+				{{ macros.tab(tab.name, tab.getFields()) }}
 			{% endfor %}
-		{% endif %#}
+		{% endif %}
 	</div>
 
 	<div class="newtabbtn-container">
@@ -48,24 +48,24 @@
 	</div>
 
 	<div class="unusedfields">
-		{#% set unGroupedSelectedBlockTypeIds = [] %}
 
-		{% if existingBlockTypeGroups and existingBlockTypeGroups|length %}
-			{% for groupName,selectedBlockTypes in existingBlockTypeGroups %}
-				{% for selectedBlockType in selectedBlockTypes %}
-					{% set unGroupedSelectedBlockTypeIds = unGroupedSelectedBlockTypeIds|merge([selectedBlockType.matrixBlockTypeId]) %}
-				{% endfor %}
+		{% if fieldLayout %}
+			{% set totalUnselected = 0 %}
+			{% for field in pimpedBlockType.matrixBlockType.getFields() %}
+				{% if field.id not in fieldLayout.getFieldIds() %}
+					{% set totalUnselected = totalUnselected + 1 %}
+				{% endif %}
 			{% endfor %}
-		{% endif %#}
+		{% endif %}
 
-		<div class="fld-tab unused{#% if unGroupedSelectedBlockTypeIds|length == blockTypes|length %} hidden{% endif %#}">
+		<div class="fld-tab unused{% if fieldLayout and totalUnselected == 0 %} hidden{% endif %}">
 			<div class="tabs">
 				<div class="tab sel"><span>{{ "Fields"|t }}</span></div>
 			</div>
 			<div class="fld-tabcontent">
 				{% for field in pimpedBlockType.matrixBlockType.getFields() %}
-					{#% set selected = blockType.id in unGroupedSelectedBlockTypeIds %#}
-					<div class="fld-field unused{#% if selected %} hidden{% endif %#}" data-id="{{ field.id }}">
+					{% set selected = fieldLayout and field.id in fieldLayout.getFieldIds() %}
+					<div class="fld-field unused{% if selected %} hidden{% endif %}" data-id="{{ field.id }}">
 						<span>{{ field.name }}</span>
 					</div>
 				{% endfor %}
