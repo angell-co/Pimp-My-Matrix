@@ -78,6 +78,16 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'categorygroup:'.$segments[2]);
       }
 
+      // Global sets
+      if ( count($segments) == 3
+           && $segments[0] == 'settings'
+           && $segments[1] == 'globals'
+           && $segments[2] != 'new'
+         )
+      {
+        craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'globalset:'.$segments[2]);
+      }
+
       /**
        * Work out the context for the Matrix field manipulation
        */
@@ -115,6 +125,15 @@ class PimpMyMatrixPlugin extends BasePlugin
         if ($group)
         {
           $context = 'categorygroup:'.$group->id;
+        }
+      }
+      // Global sets
+      else if ( count($segments) == 2 && $segments[0] == 'globals' )
+      {
+        $set = craft()->globals->getSetByHandle($segments[1]);
+        if ($set)
+        {
+          $context = 'globalset:'.$set->id;
         }
       }
 
