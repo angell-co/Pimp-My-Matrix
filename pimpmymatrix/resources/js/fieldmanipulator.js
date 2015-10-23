@@ -32,26 +32,19 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     this.setSettings(settings, PimpMyMatrix.FieldManipulator.defaults);
     this.refreshMatrixContainers();
 
-    // Work out what kind of context we’re working with
-    // so we can keep things up to date
-    switch (this.settings.context.split(':')[0])
+    // Work out if we’re in the 'entrytype' context so we can keep things up to date
+    if (this.settings.context.split(':')[0] === 'entrytype')
     {
-
-      case 'entrytype':
-        // Thanks mmikkel: http://craftcms.stackexchange.com/a/9466/144
-        this.addListener(Garnish.$doc, 'ajaxComplete', function(ev, status, requestData)
+      // Thanks mmikkel: http://craftcms.stackexchange.com/a/9466/144
+      this.addListener(Garnish.$doc, 'ajaxComplete', function(ev, status, requestData)
+      {
+        if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
         {
-          if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
-          {
-            this.settings.context = 'entrytype:' + $('#entryType').val();
-            this.refreshMatrixContainers();
-            this.processMatrixFields();
-          }
-        });
-        break;
-
-      default:
-
+          this.settings.context = 'entrytype:' + $('#entryType').val();
+          this.refreshMatrixContainers();
+          this.processMatrixFields();
+        }
+      });
     }
 
     // Wait until load to loop the Matrix fields
