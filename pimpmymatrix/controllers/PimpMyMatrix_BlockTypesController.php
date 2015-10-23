@@ -51,6 +51,7 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 		craft()->pimpMyMatrix_blockTypes->deleteBlockTypesByContext($context, $fieldId);
 
 		// Loop over the data and save new rows for each block type / group combo
+		$errors = 0;
 		if (is_array($blockTypesPostData))
 		{
 			foreach ($blockTypesPostData as $groupName => $blockTypeIds)
@@ -64,15 +65,28 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 					$pimpedBlockType->groupName         = urldecode($groupName);
 					$pimpedBlockType->context           = $context;
 
-					// TODO: Catch errors
-					craft()->pimpMyMatrix_blockTypes->saveBlockType($pimpedBlockType);
+					$success = craft()->pimpMyMatrix_blockTypes->saveBlockType($pimpedBlockType);
+					if (!$success)
+					{
+						$errors++;
+					}
 				}
 			}
 		}
 
-		$this->returnJson(array(
-			'success' => true
-		));
+
+		if ($errors > 0)
+		{
+			$this->returnJson(array(
+				'success' => false
+			));
+		}
+		else
+		{
+			$this->returnJson(array(
+				'success' => true
+			));
+		}
 
 	}
 

@@ -46,7 +46,7 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
     {
       case 'edit-field-layout':
       {
-        this.editFieldLayout($blockType);
+        this.onEditFieldLayout($blockType);
         break;
       }
       case 'remove':
@@ -57,10 +57,29 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
     }
   },
 
+  /**
+   * When trying to edit a field layout make sure the
+   * block groups have saved first
+   */
+  onEditFieldLayout: function($blockType)
+  {
+    var $modalForm = $blockType.parents('.modal');
+    $modalForm.one('blockTypesSaved', $.proxy(function()
+    {
+      this.editFieldLayout($blockType);
+    }, this));
+
+    $modalForm.trigger('submit');
+  },
+
+  /**
+   * This pops open another modal with another fld in it to enable
+   * the editing of fields and tabs to happen inside the block type
+   */
   editFieldLayout: function($blockType)
   {
-    // This pops open another modal with another fld in it to enable
-    // the editing of fields and tabs to happen inside the block type
+
+    // Build the markup
     this.$form = $('<form class="modal elementselectormodal pimpmymatrix-fields-configurator"/>');
 
     var $body = $('<div class="body"/>').appendTo(this.$form),
