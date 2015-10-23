@@ -23,8 +23,6 @@ if (typeof PimpMyMatrix == 'undefined')
 PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 {
 
-  currentBlockTypesConfig: false,
-
   $matrixContainer: null,
 
   init: function(settings)
@@ -32,7 +30,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
     // Set up
     this.setSettings(settings, PimpMyMatrix.FieldManipulator.defaults);
-    this.refreshCurrentBlockTypeConfig();
+    this.refreshMatrixContainers();
 
     // Work out what kind of context we’re working with
     // so we can keep things up to date
@@ -46,7 +44,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
           if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
           {
             this.settings.context = 'entrytype:' + $('#entryType').val();
-            this.refreshCurrentBlockTypeConfig();
+            this.refreshMatrixContainers();
             this.processMatrixFields();
           }
         });
@@ -61,10 +59,10 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   },
 
-  refreshCurrentBlockTypeConfig: function()
+  // Update our copy of all the Matrix containers
+  refreshMatrixContainers: function()
   {
     this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
-    this.currentBlockTypesConfig = this.settings.blockTypes[this.settings.context];
   },
 
   processMatrixFields: function()
@@ -101,66 +99,72 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // get matrix field handle out of the dom
       var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
-      // check we have some block type configs
-      if ( this.currentBlockTypesConfig )
+      // Filter by the current matrix field
+      var pimpedBlockTypes = [];
+
+      // Check current context first
+      if (typeof this.settings.blockTypes[this.settings.context] !== "undefined")
+      {
+        pimpedBlockTypes = $.grep(this.settings.blockTypes[this.settings.context], function(e){ return e.fieldHandle === matrixFieldHandle; });
+      }
+
+      // Check global context
+      if (pimpedBlockTypes.length < 1 && typeof this.settings.blockTypes['global'] !== "undefined")
+      {
+        pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
+      }
+
+      // Check we have some config
+      if ( pimpedBlockTypes.length >= 1 )
       {
 
-        // Filter by the current matrix field
-        var pimpedBlockTypes = $.grep(this.currentBlockTypesConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+        // add some data to tell us we’re pimped
+        $matrixField.data('pimped', true);
 
-        // Check we have some config
-        if ( typeof pimpedBlockTypes !== "undefined" && pimpedBlockTypes.length >= 1 )
+        // find the original buttons
+        var $origButtons = $matrixField.find('> .buttons').first();
+
+        // hide the original ones and start the button pimping process
+        $origButtons.hide();
+
+        // make our own container, not using .buttons as it gets event binds
+        // from MatrixInput.js that we really don't want
+        var $ourButtons = $('<div class="buttons-pimped" />').insertAfter($origButtons),
+            $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
+
+        // loop each block type config
+        for (var i = 0; i < pimpedBlockTypes.length; i++)
         {
 
-          // add some data to tell us we’re pimped
-          $matrixField.data('pimped', true);
-
-          // find the original buttons
-          var $origButtons = $matrixField.find('> .buttons').first();
-
-          // hide the original ones and start the button pimping process
-          $origButtons.hide();
-
-          // make our own container, not using .buttons as it gets event binds
-          // from MatrixInput.js that we really don't want
-          var $ourButtons = $('<div class="buttons-pimped" />').insertAfter($origButtons),
-              $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
-
-          // loop each block type config
-          for (var i = 0; i < pimpedBlockTypes.length; i++)
+          // check if group exists, add if not
+          if ( $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"]').length === 0 )
           {
-
-            // check if group exists, add if not
-            if ( $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"]').length === 0 )
-            {
-              $('<div class="btn  menubtn">'+pimpedBlockTypes[i]['groupName']+'</div><div class="menu" data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"><ul /></div>').appendTo($ourButtonsInner);
-            }
-
-            // find sub group
-            $groupUl = $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"] ul');
-
-            // make link in new sub group
-            $('<li><a data-type="'+pimpedBlockTypes[i]['matrixBlockType']['handle']+'">'+pimpedBlockTypes[i]['matrixBlockType']['name']+'</a></li>').appendTo($groupUl);
-
+            $('<div class="btn  menubtn">'+pimpedBlockTypes[i]['groupName']+'</div><div class="menu" data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"><ul /></div>').appendTo($ourButtonsInner);
           }
 
-          // make triggers MenuBtns
-          $ourButtonsInner.find('.menubtn').each(function()
-          {
+          // find sub group
+          $groupUl = $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"] ul');
 
-            new Garnish.MenuBtn($(this),
-            {
-              onOptionSelect: function(option)
-              {
-                // find our type and click the correct original btn!
-                var type = $(option).data('type');
-                $origButtons.find('[data-type="'+type+'"]').trigger('click');
-              }
-            });
-
-          });
+          // make link in new sub group
+          $('<li><a data-type="'+pimpedBlockTypes[i]['matrixBlockType']['handle']+'">'+pimpedBlockTypes[i]['matrixBlockType']['name']+'</a></li>').appendTo($groupUl);
 
         }
+
+        // make triggers MenuBtns
+        $ourButtonsInner.find('.menubtn').each(function()
+        {
+
+          new Garnish.MenuBtn($(this),
+          {
+            onOptionSelect: function(option)
+            {
+              // find our type and click the correct original btn!
+              var type = $(option).data('type');
+              $origButtons.find('[data-type="'+type+'"]').trigger('click');
+            }
+          });
+
+        });
 
       }
 
@@ -180,29 +184,52 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Get matrix field handle out of the dom
       var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
-      // Check we have some block type configs
-      if ( this.currentBlockTypesConfig )
+      // Filter by the current matrix field
+      var pimpedBlockTypes = [];
+
+      // Check current context first
+      if (typeof this.settings.blockTypes[this.settings.context] !== "undefined")
       {
-        // Filter by the current matrix field
-        var pimpedBlockTypes = $.grep(this.currentBlockTypesConfig, function(e){ return e.fieldHandle === matrixFieldHandle; });
+        pimpedBlockTypes = $.grep(this.settings.blockTypes[this.settings.context], function(e){ return e.fieldHandle === matrixFieldHandle; });
+      }
 
-        // Check we have some config
-        if ( typeof pimpedBlockTypes !== "undefined" && pimpedBlockTypes.length >= 1 )
+      // Check global context
+      if (pimpedBlockTypes.length < 1 && typeof this.settings.blockTypes['global'] !== "undefined")
+      {
+        pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
+      }
+
+      // Check we have some config
+      if ( pimpedBlockTypes.length >= 1 )
+      {
+
+        // Get the current blocks type out of the dom
+        var matrixBlockTypeHandle = this._getMatrixBlockTypeHandle($matrixBlock);
+
+        // Further filter our pimpedBlockTypes array by the current block’s type
+        var pimpedBlockType = $.grep(pimpedBlockTypes, function(e){ return e.matrixBlockType.handle === matrixBlockTypeHandle; });
+
+        // Initialize the field layout on the block
+        if ( pimpedBlockType.length === 1 && pimpedBlockType[0].fieldLayoutId !== null )
         {
+          $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
+          this.initBlockFieldLayout($matrixBlock, $matrixField);
+        }
+        // If that failed, do another check against the global context
+        else
+        {
+          pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
 
-          // Get the current blocks type out of the dom
-          var matrixBlockTypeHandle = this._getMatrixBlockTypeHandle($matrixBlock);
-
-          // Further filter our pimpedBlockTypes array by the current block’s type
-          var pimpedBlockType = $.grep(pimpedBlockTypes, function(e){ return e.matrixBlockType.handle === matrixBlockTypeHandle; });
-
-          // Initialize the field layout on the block
-          if ( pimpedBlockType[0].fieldLayoutId !== null )
+          if ( pimpedBlockTypes.length >= 1 )
           {
-            $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
-            this.initBlockFieldLayout($matrixBlock, $matrixField);
-          }
+            pimpedBlockType = $.grep(pimpedBlockTypes, function(e){ return e.matrixBlockType.handle === matrixBlockTypeHandle; });
 
+            if ( pimpedBlockType.length === 1 && pimpedBlockType[0].fieldLayoutId !== null )
+            {
+              $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
+              this.initBlockFieldLayout($matrixBlock, $matrixField);
+            }
+          }
         }
 
       }

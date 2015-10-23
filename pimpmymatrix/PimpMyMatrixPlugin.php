@@ -85,33 +85,47 @@ class PimpMyMatrixPlugin extends BasePlugin
       /**
        * Matrix fields in entry types
        */
-      if ( count($segments) == 3
-           && $segments[0] == 'entries'
-           && $segments[2] != 'new'
-         )
+      if ( count($segments) == 3 && $segments[0] == 'entries' )
       {
-        $entryId = explode('-',$segments[2])[0];
-        $entry = craft()->entries->getEntryById($entryId);
 
-        if ($entry)
+        if ($segments[2] == 'new')
         {
-          // Get all the data for the entrytype context regardless of entrytype id
-          $pimpedBlockTypes = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('entrytype', 'context', true);
-
-          if ($pimpedBlockTypes)
-          {
-            craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-
-            // Set up the groups
-            craft()->templates->includeJsResource('pimpmymatrix/js/fieldmanipulator.js');
-            $settings = array(
-              'blockTypes' => $pimpedBlockTypes,
-              'context' => 'entrytype:'.$entry->type->id
-            );
-            craft()->templates->includeJs('new PimpMyMatrix.FieldManipulator('.JsonHelper::Encode($settings).');');
-          }
-
+          $section = craft()->sections->getSectionByHandle($segments[1]);
+          $sectionEntryTypes = $section->getEntryTypes();
+          $entryType = ArrayHelper::getFirstValue($sectionEntryTypes);
         }
+        else
+        {
+          $entryId = explode('-',$segments[2])[0];
+          $entry = craft()->entries->getEntryById($entryId);
+
+          if ($entry)
+          {
+            $entryType = $entry->type;
+          }
+        }
+
+        // Get global data
+        $globalPimpedBlockTypes = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('global', 'context');
+
+        // Get all the data for the entrytype context regardless of entrytype id
+        $contextPimpedBlockTypes = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('entrytype', 'context', true);
+
+        $pimpedBlockTypes = array_merge($globalPimpedBlockTypes, $contextPimpedBlockTypes);
+
+        if ($pimpedBlockTypes)
+        {
+          craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+
+          // Set up the groups
+          craft()->templates->includeJsResource('pimpmymatrix/js/fieldmanipulator.js');
+          $settings = array(
+            'blockTypes' => $pimpedBlockTypes,
+            'context' => 'entrytype:'.$entryType->id
+          );
+          craft()->templates->includeJs('new PimpMyMatrix.FieldManipulator('.JsonHelper::Encode($settings).');');
+        }
+
       }
 
     }
