@@ -27,6 +27,38 @@ class PimpMyMatrixController extends BaseController
 
 
   /**
+   * [actionEditGlobalContext description]
+   *
+   * @method actionEditGlobalContext
+   * @return [type]                  [description]
+   */
+  public function actionEditGlobalContext()
+  {
+
+    $matrixFieldIds = craft()->pimpMyMatrix->getMatrixFieldIds();
+
+    $variables['matrixFields'] = craft()->pimpMyMatrix->getMatrixFields();
+
+    $variables['globalPimpedBlockTypes'] = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('global', 'fieldId', true);
+
+    craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
+    craft()->templates->includeJsResource('pimpmymatrix/js/blocktypefieldlayoutdesigner.js');
+    craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');
+    // craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
+
+    // craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
+    //
+    $settings = array(
+      'matrixFieldIds' => $matrixFieldIds,
+      'context' => 'global'
+    );
+
+    $this->renderTemplate('pimpmymatrix/_index', $variables);
+
+  }
+
+
+  /**
    * Returns the html for the block type grouping field layout designer.
    *
    * @method actionGetConfigurator

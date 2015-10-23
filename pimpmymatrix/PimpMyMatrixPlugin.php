@@ -33,6 +33,19 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'http://plugins.supercooldesign.co.uk';
   }
 
+  public function hasCpSection()
+  {
+    return true;
+  }
+
+  public function registerCpRoutes()
+  {
+    return array(
+      // Edit Global Context
+      'pimpmymatrix' => array('action' => 'pimpMyMatrix/editGlobalContext'),
+    );
+  }
+
   public function init()
   {
 
@@ -60,14 +73,8 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
 
-        $matrixFieldIds = craft()->db->createCommand()
-          ->select('id')
-          ->from('fields')
-          ->where('type = :type', array(':type' => 'Matrix'))
-          ->queryColumn();
-
         $settings = array(
-          'matrixFieldIds' => $matrixFieldIds,
+          'matrixFieldIds' => craft()->pimpMyMatrix->getMatrixFieldIds(),
           'context' => 'entrytype:'.$segments[4]
         );
 
