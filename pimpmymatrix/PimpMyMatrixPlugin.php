@@ -88,6 +88,16 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'globalset:'.$segments[2]);
       }
 
+      // Users
+      if ( count($segments) == 3
+           && $segments[0] == 'settings'
+           && $segments[1] == 'users'
+           && $segments[2] == 'fields'
+         )
+      {
+        craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'users');
+      }
+
       /**
        * Work out the context for the Matrix field manipulation
        */
@@ -135,6 +145,11 @@ class PimpMyMatrixPlugin extends BasePlugin
         {
           $context = 'globalset:'.$set->id;
         }
+      }
+      // Users
+      else if ( (count($segments) == 1 && $segments[0] == 'myaccount') || (count($segments) == 2 && $segments[0] == 'users') )
+      {
+        $context = 'users';
       }
 
       // Run the field manipulation code
