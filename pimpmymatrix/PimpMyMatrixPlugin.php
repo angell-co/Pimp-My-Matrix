@@ -68,6 +68,16 @@ class PimpMyMatrixPlugin extends BasePlugin
         craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'entrytype:'.$segments[4]);
       }
 
+      // Category groups
+      if ( count($segments) == 3
+           && $segments[0] == 'settings'
+           && $segments[1] == 'categories'
+           && $segments[2] != 'new'
+         )
+      {
+        craft()->pimpMyMatrix->loadConfigurator('#fieldlayoutform', 'categorygroup:'.$segments[2]);
+      }
+
       /**
        * Work out the context for the Matrix field manipulation
        */
@@ -97,6 +107,15 @@ class PimpMyMatrixPlugin extends BasePlugin
 
         $context = 'entrytype:'.$entryType->id;
 
+      }
+      // Category groups
+      else if ( count($segments) == 3 && $segments[0] == 'categories' )
+      {
+        $group = craft()->categories->getGroupByHandle($segments[1]);
+        if ($group)
+        {
+          $context = 'categorygroup:'.$group->id;
+        }
       }
 
       // Run the field manipulation code
