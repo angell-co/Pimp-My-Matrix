@@ -72,8 +72,6 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 		if ($blockTypeRecords)
 		{
 
-			$blockTypes = array();
-
 			foreach ($blockTypeRecords as $blockTypeRecord)
 			{
 				$blockType = $this->_populateBlockTypeFromRecord($blockTypeRecord);
@@ -83,7 +81,7 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 		}
 		else
 		{
-			return null;
+			return array();
 		}
 
 		if ($groupBy)
