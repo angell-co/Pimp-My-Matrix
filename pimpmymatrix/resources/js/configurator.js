@@ -1,6 +1,6 @@
 /**
  * @author    Supercool Ltd <josh@supercooldesign.co.uk>
- * @copyright Copyright (c) 2014, Supercool Ltd
+ * @copyright Copyright (c) 2015, Supercool Ltd
  * @see       http://supercooldesign.co.uk
  */
 

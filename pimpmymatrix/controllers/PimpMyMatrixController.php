@@ -6,7 +6,7 @@ namespace Craft;
  *
  * @package   PimpMyMatrix
  * @author    Josh Angell
- * @copyright Copyright (c) 2014, Supercool Ltd
+ * @copyright Copyright (c) 2015, Supercool Ltd
  * @link      http://www.supercooldesign.co.uk
  */
 
