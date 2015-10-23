@@ -177,9 +177,6 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Set this so we don’t re-run this
       $matrixBlock.data('pimped', true);
 
-      // Add a class so we can style stuff inside it
-      $matrixBlock.addClass('matrixblock-pimped');
-
       // Get matrix field handle out of the dom
       var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
 
@@ -217,8 +214,6 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
   initBlockFieldLayout: function($matrixBlock, $matrixField)
   {
 
-    console.log('constructing field layout');
-
     var pimpedBlockType = $matrixBlock.data('pimped-block-type'),
         tabs = pimpedBlockType.fieldLayout.tabs,
         fields = pimpedBlockType.fieldLayout.fields;
@@ -226,6 +221,8 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     // Check we have more than one tab
     if ( tabs.length > 1 )
     {
+      // Add a class so we can style
+      $matrixBlock.addClass('matrixblock-pimped');
 
       // Get a namespaced id
       var namespace = $matrixField.prop('id') + '-' + $matrixBlock.data('id'),
