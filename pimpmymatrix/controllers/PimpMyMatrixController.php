@@ -27,32 +27,17 @@ class PimpMyMatrixController extends BaseController
 
 
   /**
-   * [actionEditGlobalContext description]
-   *
-   * @method actionEditGlobalContext
-   * @return [type]                  [description]
+   * Loads the edit page for the global context.
+   * Used in the plugin cp section.
    */
   public function actionEditGlobalContext()
   {
-
-    $matrixFieldIds = craft()->pimpMyMatrix->getMatrixFieldIds();
 
     $variables['matrixFields'] = craft()->pimpMyMatrix->getMatrixFields();
 
     $variables['globalPimpedBlockTypes'] = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('global', 'fieldId', true);
 
-    craft()->templates->includeCssFile('//fonts.googleapis.com/css?family=Coming+Soon');
-    craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
-    craft()->templates->includeJsResource('pimpmymatrix/js/blocktypefieldlayoutdesigner.js');
-    craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');
-    craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
-
-    $settings = array(
-      'matrixFieldIds' => $matrixFieldIds,
-      'context' => 'global'
-    );
-
-    craft()->templates->includeJs('new PimpMyMatrix.Configurator("#pimpmymatrix-global-context-table", '.JsonHelper::encode($settings).');');
+    craft()->pimpMyMatrix->loadConfigurator('#pimpmymatrix-global-context-table', 'global');
 
     $this->renderTemplate('pimpmymatrix/_index', $variables);
 
