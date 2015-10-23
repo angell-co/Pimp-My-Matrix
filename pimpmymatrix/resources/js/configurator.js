@@ -138,15 +138,26 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
       {
         this.modal.$container.remove();
         this.modal.$shade.remove();
-        delete modal;
+        delete this;
       }, this)
     });
 
     // Submit and cancel handlers
     this.addListener(this.$form, 'submit', '_handleSubmit');
+
+    this.addListener($submitBtn, 'click', $.proxy(function(ev)
+    {
+      ev.preventDefault();
+      this.$form.one('blockTypesSaved', $.proxy(function()
+      {
+        this.modal.hide();
+      }, this));
+      this.$form.trigger('submit');
+    }, this));
+
     this.addListener($cancelBtn, 'click', $.proxy(function()
     {
-      this.modal.hide()
+      this.modal.hide();
     }, this));
 
   },
@@ -175,12 +186,13 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
       {
         Craft.cp.displayNotice(Craft.t('Block type groups saved.'));
         this._populateModal();
+        this.$form.trigger('blockTypesSaved');
       }
       else
       {
         if (textStatus == 'success')
         {
-          Craft.cp.displayError(Craft.t('An unknown error occurred.'));
+          Craft.cp.displayError(Craft.t('There was an unknown error saving some block type groups.'));
         }
       }
     }, this));

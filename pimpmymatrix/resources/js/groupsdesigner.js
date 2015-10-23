@@ -123,7 +123,7 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
       {
         this.modal.$container.remove();
         this.modal.$shade.remove();
-        delete modal;
+        delete this;
       }, this)
     });
 
