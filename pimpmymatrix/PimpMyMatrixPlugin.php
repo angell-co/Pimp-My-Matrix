@@ -68,6 +68,7 @@ class PimpMyMatrixPlugin extends BasePlugin
            && $segments[4] != 'new'
          )
       {
+        craft()->templates->includeCssFile('//fonts.googleapis.com/css?family=Coming+Soon');
         craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
         craft()->templates->includeJsResource('pimpmymatrix/js/blocktypefieldlayoutdesigner.js');
         craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');

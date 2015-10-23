@@ -92,6 +92,33 @@ class PimpMyMatrix_BlockTypesController extends BaseController
 
 
 	/**
+	 * Delete a set of pimped block types for a given field and context
+	 */
+	public function actionDeleteBlockTypes()
+	{
+		$this->requirePostRequest();
+		$this->requireAjaxRequest();
+
+		$context = craft()->request->getPost('context');
+		$fieldId = craft()->request->getPost('fieldId');
+
+		if (craft()->pimpMyMatrix_blockTypes->deleteBlockTypesByContext($context, $fieldId))
+		{
+			$this->returnJson(array(
+				'success' => true
+			));
+		}
+		else
+		{
+			$this->returnJson(array(
+				'success' => false
+			));
+		}
+
+	}
+
+
+	/**
 	 * Saves a field layout for a given pimped block type
 	 */
 	public function actionSaveFieldLayout()

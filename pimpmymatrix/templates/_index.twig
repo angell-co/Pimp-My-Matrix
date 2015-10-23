@@ -4,7 +4,7 @@
 
 {% set content %}
 	<h2>{{ "Set up your Matrix fields for the global context"|t }}</h2>
-	<table class="data fullwidth">
+	<table id="pimpmymatrix-global-context-table" class="data fullwidth">
 		<thead>
 			<th scole="col">{{ "Name"|t }}</th>
 			<th class="thin"></th>
@@ -13,12 +13,10 @@
 			{% for field in matrixFields %}
 				<tr>
 					<td>
-						<a title="{{ 'Edit'|t }}" role="button">{{ field.name }}</a>
+						<a title="{{ 'Edit'|t }}" role="button" class="edit" data-pimpmymatrix-field-id="{{ field.id }}">{{ field.name }}</a>
 					</td>
 					<td class="thin">
-						{% if field.id in globalPimpedBlockTypes|keys %}
-							<a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a>
-						{% endif %}
+						<a class="delete icon{% if field.id not in globalPimpedBlockTypes|keys %} hidden{% endif %}" title="{{ 'Delete'|t }}" role="button" data-pimpmymatrix-field-id="{{ field.id }}"></a>
 					</td>
 				</tr>
 			{% endfor %}

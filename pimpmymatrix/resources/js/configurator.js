@@ -37,9 +37,43 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     this.$container = $(container);
     this.setSettings(settings, PimpMyMatrix.Configurator.defaults);
 
-    setTimeout($.proxy(this.modifySettingsButtons,this),0);
-    this.$container.on('mousedown', this.settings.fieldSelector, $.proxy(this.onFieldMouseDown, this));
+    if (this.settings.context === 'global')
+    {
+      this.addListener(this.$container.find('.edit'), 'click', 'onFieldConfiguratorClick');
+      this.addListener(this.$container.find('.delete'), 'click', 'onRemoveConfiguration');
+    }
+    else
+    {
+      setTimeout($.proxy(this.modifySettingsButtons,this),0);
+      this.$container.on('mousedown', this.settings.fieldSelector, $.proxy(this.onFieldMouseDown, this));
+    }
 
+  },
+
+  onRemoveConfiguration: function(ev)
+  {
+    var $btn = $(ev.target),
+        fieldId = $btn.data('pimpmymatrix-field-id'),
+        data = {
+          context : 'global',
+          fieldId : fieldId
+        };
+
+    Craft.postActionRequest('pimpMyMatrix/blockTypes/deleteBlockTypes', data, $.proxy(function(response, textStatus)
+    {
+      if (textStatus == 'success' && response.success)
+      {
+        Craft.cp.displayNotice(Craft.t('Block type groups deleted.'));
+        $btn.addClass('hidden');
+      }
+      else
+      {
+        if (textStatus == 'success')
+        {
+          Craft.cp.displayError(Craft.t('There was an unknown error.'));
+        }
+      }
+    }, this));
   },
 
   onFieldMouseDown: function(ev)
@@ -107,11 +141,13 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     ev.preventDefault();
     ev.stopPropagation();
 
+    var $elem = $(ev.target);
+
     // Start the markup
     this.$form = $('<form class="modal elementselectormodal pimpmymatrix-configurator"/>');
 
     // Get field id and store it on the modal form element
-    var fieldId = $(ev.target).data('pimpmymatrix-field-id');
+    var fieldId = $elem.data('pimpmymatrix-field-id');
     this.$form.data('pimpmymatrix-field-id', fieldId);
 
     // Make the rest of the modal markup
@@ -151,6 +187,12 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
       this.$form.one('blockTypesSaved', $.proxy(function()
       {
         this.modal.hide();
+
+        if (this.settings.context === 'global')
+        {
+          $elem.parent('td').parent('tr').find('.delete').removeClass('hidden');
+        }
+
       }, this));
       this.$form.trigger('submit');
     }, this));

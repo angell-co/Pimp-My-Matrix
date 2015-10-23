@@ -41,17 +41,18 @@ class PimpMyMatrixController extends BaseController
 
     $variables['globalPimpedBlockTypes'] = craft()->pimpMyMatrix_blockTypes->getBlockTypesByContext('global', 'fieldId', true);
 
+    craft()->templates->includeCssFile('//fonts.googleapis.com/css?family=Coming+Soon');
     craft()->templates->includeCssResource('pimpmymatrix/css/pimpmymatrix.css');
     craft()->templates->includeJsResource('pimpmymatrix/js/blocktypefieldlayoutdesigner.js');
     craft()->templates->includeJsResource('pimpmymatrix/js/groupsdesigner.js');
-    // craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
+    craft()->templates->includeJsResource('pimpmymatrix/js/configurator.js');
 
-    // craft()->templates->includeJs('new PimpMyMatrix.Configurator("#fieldlayoutform", '.JsonHelper::encode($settings).');');
-    //
     $settings = array(
       'matrixFieldIds' => $matrixFieldIds,
       'context' => 'global'
     );
+
+    craft()->templates->includeJs('new PimpMyMatrix.Configurator("#pimpmymatrix-global-context-table", '.JsonHelper::encode($settings).');');
 
     $this->renderTemplate('pimpmymatrix/_index', $variables);
 
