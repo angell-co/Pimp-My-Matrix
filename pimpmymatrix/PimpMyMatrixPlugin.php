@@ -49,7 +49,8 @@ class PimpMyMatrixPlugin extends BasePlugin
   public function init()
   {
 
-    if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() )
+    // Check the conditions are right to run
+    if ( craft()->request->isCpRequest() && craft()->userSession->isLoggedIn() && !craft()->request->isAjaxRequest() )
     {
 
       $segments = craft()->request->getSegments();
