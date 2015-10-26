@@ -72,3 +72,11 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
   -moz-box-shadow: 0 -3px 8px -2px rgba(0, 0, 0, 0.1);
   box-shadow: 0 -3px 8px -2px rgba(0, 0, 0, 0.1);
 }
+
+/**
+ * Block level context menu
+ */
+.menu ul.padded.pimped h6 {
+  padding-top: 4px;
+  padding-left: 10px;
+}

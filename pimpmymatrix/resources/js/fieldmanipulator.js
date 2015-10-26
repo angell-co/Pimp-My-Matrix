@@ -114,6 +114,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // add some data to tell us we’re pimped
         $matrixField.data('pimped', true);
 
+        // store the data for when we loop the blocks themselves so we don’t have to run all this again
+        $matrixField.data('pimpmymatrix-block-types', pimpedBlockTypes);
+
         // find the original buttons
         var $origButtons = $matrixField.find('> .buttons').first();
 
@@ -174,29 +177,18 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Set this so we don’t re-run this
       $matrixBlock.data('pimped', true);
 
-      // Get matrix field handle out of the dom
-      var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
-
-      // Filter by the current matrix field
-      var pimpedBlockTypes = [];
-
-      // Check current context first
-      if (typeof this.settings.blockTypes[this.settings.context] !== "undefined")
-      {
-        pimpedBlockTypes = $.grep(this.settings.blockTypes[this.settings.context], function(e){ return e.fieldHandle === matrixFieldHandle; });
-      }
-
-      // Check global context
-      if (pimpedBlockTypes.length < 1 && typeof this.settings.blockTypes['global'] !== "undefined")
-      {
-        pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
-      }
+      // Get the cached pimped block types data for this whole field
+      var pimpedBlockTypes = $matrixField.data('pimpmymatrix-block-types');
 
       // Check we have some config
-      if ( pimpedBlockTypes.length >= 1 )
+      if ( typeof pimpedBlockTypes !== "undefined" && pimpedBlockTypes.length >= 1 )
       {
 
-        // Get the current blocks type out of the dom
+        // First, sort out the context menu
+        var $settingsBtn = $matrixBlock.find('.actions .settings.menubtn');
+        this.initContextMenu($settingsBtn, pimpedBlockTypes);
+
+        // Second, get the current block’s type out of the dom so we can do the field layout
         var matrixBlockTypeHandle = this._getMatrixBlockTypeHandle($matrixBlock);
 
         // Further filter our pimpedBlockTypes array by the current block’s type
@@ -211,6 +203,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // If that failed, do another check against the global context
         else
         {
+          var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
           pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
 
           if ( pimpedBlockTypes.length >= 1 )
@@ -318,6 +311,59 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     $target.siblings('div').addClass('hidden');
     $target.removeClass('hidden');
 
+  },
+
+  initContextMenu: function($settingsBtn, pimpedBlockTypes)
+  {
+    setTimeout($.proxy(function()
+    {
+      // Get the Garnish.MenuBtn object
+      var menuBtn = $settingsBtn.data('menubtn') || false;
+
+      // If there wasn’t one then fail and try again
+      if (!menuBtn)
+      {
+        this.initContextMenu($settingsBtn, pimpedBlockTypes);
+        return;
+      }
+
+      // Get the actual menu out of it once we get this far
+      var $menu = menuBtn.menu.$container;
+
+      // Hide all the li’s with add block links in them
+      $menu.find('a[data-action="add"]').parents('li').addClass('hidden');
+
+      // Remove all the padded classes on hr’s
+      $menu.find('hr').removeClass('padded');
+
+      // Remove the last hr as we’ll be adding more and don’t want a dupe at the end
+      $menu.find('hr').last().remove();
+
+      // Get the correct ul to play with in the menu container
+      var $origUl = $menu.find('a[data-action="add"]').parents('li').parent('ul');
+
+      // Loop the given block type data and adjust the menu to match the groups
+      for (var i = 0; i < pimpedBlockTypes.length; i++)
+      {
+        var handle = pimpedBlockTypes[i].matrixBlockType.handle;
+
+        // Make a new group ul if needed
+        if ( $menu.find('[data-pimped-group="'+pimpedBlockTypes[i].groupName+'"]').length === 0 )
+        {
+          var $hr = $('<hr/>'),
+              $newUl = $('<ul class="padded pimped" data-pimped-group="'+pimpedBlockTypes[i].groupName+'" />');
+          $newUl.append('<li><h6>'+pimpedBlockTypes[i].groupName+'</h6></li>');
+          $newUl.insertBefore($origUl);
+          $hr.insertAfter($newUl);
+        }
+
+        // Add the li
+        var $li = $menu.find('a[data-type="'+handle+'"]').parents('li');
+        $newUl.append($li);
+        $li.removeClass('hidden');
+      }
+
+    }, this), 0);
   },
 
   /**
