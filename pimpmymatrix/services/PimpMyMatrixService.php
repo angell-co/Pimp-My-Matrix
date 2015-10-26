@@ -114,7 +114,15 @@ class PimpMyMatrixService extends BaseApplicationComponent
         $this->loadConfigurator('#fieldlayoutform', 'users');
       }
 
-      // XXX: HOOK
+      // Call a hook to allow plugins to add their own configurator
+      $hookedConfigurators = craft()->plugins->call('loadPimpMyMatrixConfigurator');
+      foreach ($hookedConfigurators as $configurator)
+      {
+        if (isset($configurator['container']) && isset($configurator['context']))
+        {
+          $this->loadConfigurator($configurator['container'], $configurator['context']);
+        }
+      }
 
       /**
        * Work out the context for the Matrix field manipulation
@@ -147,13 +155,13 @@ class PimpMyMatrixService extends BaseApplicationComponent
 
       }
       // Category groups
-      else if ( count($segments) == 3 && $segments[0] == 'categories' )
-      {
-        $group = craft()->categories->getGroupByHandle($segments[1]);
-        if ($group)
+        else if ( count($segments) == 3 && $segments[0] == 'categories' )
         {
-          $context = 'categorygroup:'.$group->id;
-        }
+          $group = craft()->categories->getGroupByHandle($segments[1]);
+          if ($group)
+          {
+            $context = 'categorygroup:'.$group->id;
+          }
       }
       // Global sets
       else if ( count($segments) == 2 && $segments[0] == 'globals' )
@@ -170,7 +178,15 @@ class PimpMyMatrixService extends BaseApplicationComponent
         $context = 'users';
       }
 
-      // XXX: HOOK
+      // Call a hook to allow plugins to add their own field manipulators
+      $hookedFieldManipulators = craft()->plugins->call('loadPimpMyMatrixFieldManipulator');
+      foreach ($hookedFieldManipulators as $hookedContext)
+      {
+        if (is_string($hookedContext))
+        {
+          $context = $hookedContext;
+        }
+      }
 
       // Run the field manipulation code
       $this->loadFieldManipulator($context);
