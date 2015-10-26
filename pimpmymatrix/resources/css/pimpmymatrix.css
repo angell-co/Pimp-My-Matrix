@@ -1,34 +1,82 @@
 /**
  * Fix lack of .buttons class
  */
-.buttons-pimped {
-  margin-top: 0;
-  height: 30px;
-  position: relative;
-  margin: 24px 0;
-  min-height: 30px;
-}
-.buttons-pimped:last-child {
-  margin-bottom: 0 !important;
-}
-.buttons-pimped:before {
-  content: '.';
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-  margin-bottom: -5px;
+.buttons-pimped:first-child { margin-top: 0 !important; }
+.buttons-pimped:last-child { margin-bottom: 0 !important; }
+.buttons-pimped { position: relative; margin: 24px 0; min-height: 30px; }
+.buttons-pimped:before { content: '.'; display: block; height: 0; clear: both; visibility: hidden; margin-bottom: -5px; }
+
+body.ltr .buttons-pimped > .btn, body.ltr .buttons-pimped > .btngroup { float: left; }
+body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { float: right; }
+body.ltr .buttons-pimped > .btn, body.ltr .buttons-pimped > .btngroup { margin: 5px 5px 0 0 ; }
+body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 5px 0 0 5px ; }
+
+.buttons-pimped > .btn:first, .buttons-pimped > .btngroup:first { margin-top: 5px !important; }
+.border-box + .buttons-pimped, .shadow-box + .buttons-pimped { margin-top: 7px; }
+.matrix > .buttons-pimped { margin-top: 0; height: 30px; }
+
+
+/**
+ * Make our inception modal a bit smaller than the default
+ */
+.modal.pimpmymatrix-fields-configurator {
+  width: 60%;
+  height: 60%;
+  min-width: 560px;
+  min-height: 360px;
 }
 
 
 /**
- * Settings page
+ * Block level field layouts
  */
-.pimpmymatrix-settings__list {
-  overflow: hidden;
+.matrixblock-pimped .pimpmymatrix-tabs {
+  position: absolute;
+  top: 5px;
+  right: 76px;
+  display: block;
+  font-size: 0;
 }
-.pimpmymatrix-settings__list li {
-  float: left;
-  margin-right: 12px;
-  margin-top: 12px;
+
+.matrixblock-pimped .fields,
+.matrixblock-pimped.velocity-animating .pimpmymatrix-tabs,
+.matrixblock-pimped.velocity-animating .pimpmymatrix-fields,
+.matrixblock-pimped.collapsed .pimpmymatrix-tabs,
+.matrixblock-pimped.collapsed .pimpmymatrix-fields {
+  display: none !important;
+}
+
+.matrixblock-pimped .pimpmymatrix-tabs li {
+  display: inline-block;
+  font-size: 13px;
+}
+
+.matrixblock-pimped .pimpmymatrix-tabs li a {
+  display: block;
+  padding: 4px 10px;
+  color: #777;
+  white-space: nowrap;
+}
+
+.matrixblock-pimped .pimpmymatrix-tabs li a:hover {
+  text-decoration: none;
+  color: #0d78f2;
+}
+
+.matrixblock-pimped .pimpmymatrix-tabs li a.sel {
+  color: #29323d;
+  cursor: default;
+  background-color: #f9fafa;
+  border-radius: 3px 3px 0 0;
+  -webkit-box-shadow: 0 -3px 8px -2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 -3px 8px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -3px 8px -2px rgba(0, 0, 0, 0.1);
+}
+
+/**
+ * Block level context menu
+ */
+.menu ul.padded.pimped h6 {
+  padding-top: 4px;
+  padding-left: 10px;
 }

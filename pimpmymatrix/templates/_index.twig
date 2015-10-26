@@ -1,0 +1,25 @@
+{% extends '_layouts/cp' %}
+
+{% set title = "Pimp My Matrix"|t %}
+
+{% set content %}
+	<h2>{{ "Set up your Matrix fields for the global context"|t }}</h2>
+	<table id="pimpmymatrix-global-context-table" class="data fullwidth">
+		<thead>
+			<th scole="col">{{ "Name"|t }}</th>
+			<th class="thin"></th>
+		</thead>
+		<tbody>
+			{% for field in matrixFields %}
+				<tr>
+					<td>
+						<a title="{{ 'Edit'|t }}" role="button" class="edit" data-pimpmymatrix-field-id="{{ field.id }}">{{ field.name }}</a>
+					</td>
+					<td class="thin">
+						<a class="delete icon{% if field.id not in globalPimpedBlockTypes|keys %} hidden{% endif %}" title="{{ 'Delete'|t }}" role="button" data-pimpmymatrix-field-id="{{ field.id }}"></a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endset %}
