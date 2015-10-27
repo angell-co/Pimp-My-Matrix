@@ -184,9 +184,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       if ( typeof pimpedBlockTypes !== "undefined" && pimpedBlockTypes.length >= 1 )
       {
 
-        // First, sort out the context menu
+        // First, sort out the settings menu
         var $settingsBtn = $matrixBlock.find('.actions .settings.menubtn');
-        this.initContextMenu($settingsBtn, pimpedBlockTypes);
+        this.initSettingsMenu($settingsBtn, pimpedBlockTypes);
 
         // Second, get the current block’s type out of the dom so we can do the field layout
         var matrixBlockTypeHandle = this._getMatrixBlockTypeHandle($matrixBlock);
@@ -313,7 +313,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   },
 
-  initContextMenu: function($settingsBtn, pimpedBlockTypes)
+  initSettingsMenu: function($settingsBtn, pimpedBlockTypes)
   {
     setTimeout($.proxy(function()
     {
@@ -323,21 +323,19 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // If there wasn’t one then fail and try again
       if (!menuBtn)
       {
-        this.initContextMenu($settingsBtn, pimpedBlockTypes);
+        this.initSettingsMenu($settingsBtn, pimpedBlockTypes);
         return;
       }
 
       // Get the actual menu out of it once we get this far
       var $menu = menuBtn.menu.$container;
+      $menu.addClass('pimpmymatrix-settings-menu');
 
       // Hide all the li’s with add block links in them
       $menu.find('a[data-action="add"]').parents('li').addClass('hidden');
 
       // Remove all the padded classes on hr’s
       $menu.find('hr').removeClass('padded');
-
-      // Remove the last hr as we’ll be adding more and don’t want a dupe at the end
-      $menu.find('hr').last().remove();
 
       // Get the correct ul to play with in the menu container
       var $origUl = $menu.find('a[data-action="add"]').parents('li').parent('ul');
@@ -350,11 +348,13 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // Make a new group ul if needed
         if ( $menu.find('[data-pimped-group="'+pimpedBlockTypes[i].groupName+'"]').length === 0 )
         {
-          var $hr = $('<hr/>'),
-              $newUl = $('<ul class="padded pimped" data-pimped-group="'+pimpedBlockTypes[i].groupName+'" />');
-          $newUl.append('<li><h6>'+pimpedBlockTypes[i].groupName+'</h6></li>');
+          var $newUl = $('<ul class="padded" data-pimped-group="'+pimpedBlockTypes[i].groupName+'" />');
+          if (i!==0)
+          {
+            $('<hr/>').insertBefore($origUl);
+          }
+          $('<h6>'+pimpedBlockTypes[i].groupName+'</h6>').insertBefore($origUl);
           $newUl.insertBefore($origUl);
-          $hr.insertAfter($newUl);
         }
 
         // Add the li
