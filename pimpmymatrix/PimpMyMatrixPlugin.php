@@ -48,7 +48,11 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function init()
   {
-    craft()->pimpMyMatrix->loader();
+    $plugin = craft()->plugins->getPlugin('PimpMyMatrix');
+    if (!craft()->plugins->doesPluginRequireDatabaseUpdate($plugin))
+    {
+      craft()->pimpMyMatrix->loader();
+    }
   }
 
 }
