@@ -74,10 +74,15 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 }
 
 /**
- * Block level context menu
+ * Block level settings menu
  */
 .pimpmymatrix-settings-menu h6 {
   margin-top: 10px;
   margin-bottom: 0;
   padding-left: 10px;
+}
+
+
+.pimpmymatrix-secondary-menu {
+  padding-top: 10px;
 }

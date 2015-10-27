@@ -121,33 +121,53 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         var $origButtons = $matrixField.find('> .buttons').first();
 
         // hide the original ones and start the button pimping process
-        $origButtons.hide();
+        $origButtons.addClass('hidden');
 
-        // make our own container, not using .buttons as it gets event binds
+        // make our own container, not using .buttons as it gets event bindings
         // from MatrixInput.js that we really don't want
-        var $ourButtons = $('<div class="buttons-pimped" />').insertAfter($origButtons),
-            $ourButtonsInner = $('<div class="btngroup" />').appendTo($ourButtons);
+        var $pimpedButtonsContainer = $('<div class="buttons-pimped" />').insertAfter($origButtons);
+
+        // the main button group
+        var $mainButtons = $('<div class="btngroup" />').appendTo($pimpedButtonsContainer);
+
+        // the secondary one, used when the container gets too small
+        var $secondaryButtons = $('<div class="btn add icon menubtn hidden">'+Craft.t('Add a block')+'</div>').appendTo($pimpedButtonsContainer),
+            $secondaryMenu = $('<div class="menu pimpmymatrix-secondary-menu" />').appendTo($pimpedButtonsContainer);
 
         // loop each block type config
         for (var i = 0; i < pimpedBlockTypes.length; i++)
         {
 
           // check if group exists, add if not
-          if ( $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"]').length === 0 )
+          if ( $mainButtons.find('[data-pimped-group="'+pimpedBlockTypes[i].groupName+'"]').length === 0 )
           {
-            $('<div class="btn  menubtn">'+pimpedBlockTypes[i]['groupName']+'</div><div class="menu" data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"><ul /></div>').appendTo($ourButtonsInner);
+            // main buttons
+            var $mainMenuBtn = $('<div class="btn  menubtn">'+pimpedBlockTypes[i]['groupName']+'</div>').appendTo($mainButtons),
+                $mainMenu = $('<div class="menu" data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'" />').appendTo($mainButtons),
+                $mainUl = $('<ul />').appendTo($mainMenu);
+
+            // single group buttons
+            if (i!==0)
+            {
+              $('<hr>').appendTo($secondaryMenu);
+            }
+            $('<h6>'+pimpedBlockTypes[i]['groupName']+'</h6>').appendTo($secondaryMenu);
+            var $secondaryUl = $('<ul/>').appendTo($secondaryMenu);
           }
 
-          // find sub group
-          $groupUl = $ourButtonsInner.find('[data-pimped-group="'+pimpedBlockTypes[i]['groupName']+'"] ul');
+          // make a link
+          $li = $('<li><a data-type="'+pimpedBlockTypes[i].matrixBlockType.handle+'">'+pimpedBlockTypes[i].matrixBlockType.name+'</a></li>');
 
-          // make link in new sub group
-          $('<li><a data-type="'+pimpedBlockTypes[i]['matrixBlockType']['handle']+'">'+pimpedBlockTypes[i]['matrixBlockType']['name']+'</a></li>').appendTo($groupUl);
+          // add it to the main list
+          $li.appendTo($mainUl);
+
+          // add a copy to the secondary one as well
+          $li.clone().appendTo($secondaryUl);
 
         }
 
-        // make triggers MenuBtns
-        $ourButtonsInner.find('.menubtn').each(function()
+        // make the MenuBtns work
+        $mainButtons.find('.menubtn').each(function()
         {
 
           new Garnish.MenuBtn($(this),
@@ -161,6 +181,46 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
           });
 
         });
+
+        new Garnish.MenuBtn($secondaryButtons,
+        {
+          onOptionSelect: function(option)
+          {
+            // find our type and click the correct original btn!
+            var type = $(option).data('type');
+            $origButtons.find('[data-type="'+type+'"]').trigger('click');
+          }
+        });
+
+        // Bind a resize to the $matrixField so we can work out which groups UI to show
+        this.addListener($matrixField, 'resize', $.proxy(function()
+        {
+          // Do we know what the button group width is yet?
+          if (!$matrixField.data('pimpmymatrix-main-buttons-width'))
+          {
+            $matrixField.data('pimpmymatrix-main-buttons-width', $mainButtons.width());
+
+            if (!$matrixField.data('pimpmymatrix-main-buttons-width'))
+            {
+              return;
+            }
+          }
+
+          // Check the widths and do the hide/show
+          var fieldWidth = $matrixField.width(),
+              mainButtonsWidth = $matrixField.data('pimpmymatrix-main-buttons-width');
+          if (fieldWidth < mainButtonsWidth)
+          {
+            $secondaryButtons.removeClass('hidden');
+            $mainButtons.addClass('hidden');
+          }
+          else
+          {
+            $secondaryButtons.addClass('hidden');
+            $mainButtons.removeClass('hidden');
+          }
+
+        }, this));
 
       }
 
