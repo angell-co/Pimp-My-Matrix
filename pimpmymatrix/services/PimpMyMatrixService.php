@@ -53,9 +53,6 @@ class PimpMyMatrixService extends BaseApplicationComponent
 
   }
 
-  // XXX
-  // =========================================================================
-
   /**
    * Loads the configurator and field manupulator code in all the
    * core supported contexts as well as providing a hook for
