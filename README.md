@@ -21,7 +21,7 @@ If you want to add your own context, perhaps for a custom element type, then the
 
 1. Copy the `pimpmymatrix/` folder to your `craft/plugins/` folder.
 2. Go to Settings > Plugins from your Craft control panel and install the Pimp My Matrix plugin.
-3. Click the Pimp My Matrix tab that will have now appeared as part of the main navigation.
+3. Click the “Pimp My Matrix” tab that will have now appeared as part of the main navigation.
 4. Select a Matrix field and define your groups.
 5. Click the gear icon on any block type to edit its field layout.
 
