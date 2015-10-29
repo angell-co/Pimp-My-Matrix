@@ -348,6 +348,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Add the event handlers
       this.addListener($tabs.find('a'), 'click', 'onTabClick');
 
+      // Re-initialize the Craft UI
+      Craft.initUiElements($pimpedFields);
+
     }
 
   },
