@@ -64,14 +64,33 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
   font-size: 0;
 }
 
-.matrixblock-pimped .fields,
+/* hide all matrix block fields */
+.matrixblock .fields {
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  opacity: 0;
+}
+
+/* don’t break certain places */
+.widget .matrix .matrixblock .fields,
+.superTable .matrix .matrixblock .fields,
+.matrixblock.matrixblock-not-pimped .fields {
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
+
+/* fix for animating and collapsed blocks */
 .matrixblock-pimped.velocity-animating .pimpmymatrix-tabs,
 .matrixblock-pimped.velocity-animating .pimpmymatrix-fields,
 .matrixblock-pimped.collapsed .pimpmymatrix-tabs,
 .matrixblock-pimped.collapsed .pimpmymatrix-fields {
-  display: none !important;
+  -webkit-opacity: 0 !important;
+  -moz-opacity: 0 !important;
+  opacity: 0 !important;
 }
 
+/* tabs */
 .matrixblock-pimped .pimpmymatrix-tabs li {
   display: inline-block;
   font-size: 13px;
