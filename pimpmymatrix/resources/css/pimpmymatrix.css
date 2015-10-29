@@ -16,6 +16,32 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 .matrix > .buttons-pimped { margin-top: 0; height: 30px; }
 
 
+
+/**
+ * Make the configurator fld all red to give some differentiation
+ * as it’s not actually a field layout that we’re designing
+ */
+.modal.pimpmymatrix-configurator .fieldlayoutform,
+.modal.pimpmymatrix-configurator .fieldlayoutform h2,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-field,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .tabs .tab,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .fld-tabcontent,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .icon:before,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-field .icon:before { color: #da5a47; }
+
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .tabs .tab,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .fld-tabcontent,
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-field { border-color: #da5a47; }
+
+.modal.pimpmymatrix-configurator .fieldlayoutform .fld-tab .tabs .tab { border-bottom-color: #f4f3fb; }
+
+.modal.pimpmymatrix-configurator .fieldlayoutform .newtabbtn-container .btn.add {
+  color: #da5a47;
+  border-color: #da5a47;
+}
+
+
 /**
  * Make our inception modal a bit smaller than the default
  */
