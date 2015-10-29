@@ -275,9 +275,21 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
               $matrixBlock.data('pimped-block-type', pimpedBlockType[0]);
               this.initBlockFieldLayout($matrixBlock, $matrixField);
             }
+            else
+            {
+              $matrixBlock.addClass('matrixblock-not-pimped');
+            }
+          }
+          else
+          {
+            $matrixBlock.addClass('matrixblock-not-pimped');
           }
         }
 
+      }
+      else
+      {
+        $matrixBlock.addClass('matrixblock-not-pimped');
       }
 
     }
@@ -305,48 +317,61 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       var $tabs = $('<ul class="pimpmymatrix-tabs"/>').appendTo($matrixBlock);
 
       // Make our own fields container and hide the native one
-      var $pimpedFields = $('<div class="pimpmymatrix-fields"/>').appendTo($matrixBlock),
+      var $pimpedFields = $('<div class="pimpmymatrix-fields"/>').css({ 'opacity' : 0 }).appendTo($matrixBlock),
           $fields = $matrixBlock.find('.fields');
-      $fields.hide();
+      $fields.css({ 'opacity' : 0 });
 
-      // Loop the tabs
-      for (var i = 0; i < tabs.length; i++)
-      {
+      // Wait a bit for the add block animation to finish
+      setTimeout($.proxy(function(){
 
-        // Set up the first one to be active
-        var navClasses = '',
-            paneClasses = '';
-
-        if (i==0)
+        // Loop the tabs
+        for (var i = 0; i < tabs.length; i++)
         {
-          navClasses = ' sel';
+
+          // Set up the first one to be active
+          var navClasses = '',
+              paneClasses = '';
+
+          if (i==0)
+          {
+            navClasses = ' sel';
+          }
+          else
+          {
+            paneClasses = ' hidden';
+          }
+
+          // Add the tab nav
+          var $tabLi = $('<li/>').appendTo($tabs);
+          $('<a id="'+pimpedNamespace+'-'+i+'" class="tab'+navClasses+'">'+tabs[i].name+'</a>')
+            .appendTo($tabLi)
+            .data('pimped-tab-target', '#'+pimpedNamespace+'-pane-'+i);
+
+          // Make a tab pane
+          var $pane = $('<div id="'+pimpedNamespace+'-pane-'+i+'" class="'+paneClasses+'"/>').appendTo($pimpedFields);
+
+          // Filter the fields array by their associated tabId and loop over them
+          var tabFields = $.grep(fields, function(e){ return e.tabId === tabs[i].id; });
+          for (var n = 0; n < tabFields.length; n++)
+          {
+            // Move the required field to our new container
+            $fields.find('#' + namespace + '-fields-' + tabFields[n].field.handle + '-field').appendTo($pane);
+          }
+
         }
-        else
+
+        // Add the event handlers
+        this.addListener($tabs.find('a'), 'click', 'onTabClick');
+
+        $fields.hide();
+
+        $pimpedFields.velocity({opacity: 1}, 'fast', $.proxy(function()
         {
-          paneClasses = ' hidden';
-        }
+          // Re-initialize the Craft UI
+          Craft.initUiElements($pimpedFields);
+        }, this));
 
-        // Add the tab nav
-        var $tabLi = $('<li/>').appendTo($tabs);
-        $('<a id="'+pimpedNamespace+'-'+i+'" class="tab'+navClasses+'">'+tabs[i].name+'</a>')
-          .appendTo($tabLi)
-          .data('pimped-tab-target', '#'+pimpedNamespace+'-pane-'+i);
-
-        // Make a tab pane
-        var $pane = $('<div id="'+pimpedNamespace+'-pane-'+i+'" class="'+paneClasses+'"/>').appendTo($pimpedFields);
-
-        // Filter the fields array by their associated tabId and loop over them
-        var tabFields = $.grep(fields, function(e){ return e.tabId === tabs[i].id; });
-        for (var n = 0; n < tabFields.length; n++)
-        {
-          // Move the required field to our new container
-          $fields.find('#' + namespace + '-fields-' + tabFields[n].field.handle + '-field').appendTo($pane);
-        }
-
-      }
-
-      // Add the event handlers
-      this.addListener($tabs.find('a'), 'click', 'onTabClick');
+      }, this), 110);
 
     }
 

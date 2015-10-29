@@ -1,5 +1,35 @@
 [
 	{
+		"version" : "2.0",
+		"date"    : "29-10-2015",
+		"notes"   : [
+			{
+				"type"    : "added",
+				"message" : "Completely re-worked how groups are defined and stored."
+			},
+			{
+				"type"    : "added",
+				"message" : "Added block type field layouts."
+			},
+			{
+				"type"    : "added",
+				"message" : "Added the option to override a given field’s global defaults for a specific context (Entry Types, Category Groups, Global Sets and Users)."
+			},
+			{
+				"type"    : "added",
+				"message" : "Added group headings to the block type settings menu."
+			},
+			{
+				"type"    : "added",
+				"message" : "Added the <code>loadPimpMyMatrixConfigurator</code> and <code>loadPimpMyMatrixFieldManipulator</code> hooks so plugins can add custom contexts."
+			},
+			{
+				"type"    : "improved",
+				"message" : "When the field gets too narrow the button group is swapped for one button with group headings in the menu. Fixes issue <a href='https://github.com/supercool/Pimp-My-Matrix/issues/7'>#7</a>."
+			}
+		]
+	},
+	{
 		"version" : "1.3.2",
 		"date"    : "1-7-2015",
 		"notes"   : [
