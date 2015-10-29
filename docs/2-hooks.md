@@ -10,7 +10,7 @@ There are two hooks provided that allow plugin developers to enable their own sp
 
 Gives plugins a chance to load the block type groups editor on their own field layout designer.
 
-It should return an array or `null`;
+It should return an array or `null`.
 
 ```php
 public function loadPimpMyMatrixConfigurator()
@@ -35,12 +35,11 @@ public function loadPimpMyMatrixConfigurator()
 
 Gives plugins a chance to load the field manipulation js on their own pages that use fields.
 
-It should return a string or `null`;
+It should return a string or `null`.
 
 ```php
 public function loadPimpMyMatrixFieldManipulator()
 {
-
   $segments = craft()->request->getSegments();
 
   if ( count($segments) == 3 && $segments[0] == 'myelementtype' )
@@ -51,6 +50,5 @@ public function loadPimpMyMatrixFieldManipulator()
       return 'myelementtypegroup:'.$myElementGroup->id;
     }
   }
-
 }
 ```
