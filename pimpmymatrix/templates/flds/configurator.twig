@@ -1,0 +1,77 @@
+{% includeTranslations
+	"Rename",
+	"Delete",
+	"Remove",
+	"Give your tab a name."
+%}
+
+{% includeCssFile "//fonts.googleapis.com/css?family=Coming+Soon" %}
+
+{% macro tab(groupName, selectedBlockTypes) %}
+	<div class="fld-tab">
+		<div class="tabs">
+			<div class="tab sel draggable">
+				<span>{{ groupName }}</span>
+				<a class="settings icon" title="{{ 'Edit'|t }}"></a>
+			</div>
+		</div>
+		<div class="fld-tabcontent">
+			{% for blockType in selectedBlockTypes %}
+				<div class="fld-field" data-id="{{ blockType.matrixBlockTypeId }}">
+					<a class="settings icon" title="{{ 'Edit'|t }}"></a>
+					<span>{{ blockType.getBlockType().name }}</span>
+					<input class="id-input" type="hidden" name="pimpedBlockTypes[{{ groupName|e('url') }}][]" value="{{ blockType.matrixBlockTypeId }}">
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endmacro %}
+
+<div id="pimpmymatrix-configurator" class="fieldlayoutform">
+
+	<input type="hidden" name="fieldId" value="{{ matrixField.id }}">
+
+	<h2>{{ "Group your block types"|t }}</h2>
+
+	<div class="fld-tabs">
+		{% if pimpedBlockTypes and pimpedBlockTypes|length %}
+			{% import _self as macros %}
+
+			{% for groupName,selectedBlockTypes in pimpedBlockTypes %}
+				{{ macros.tab(groupName, selectedBlockTypes) }}
+			{% endfor %}
+		{% endif %}
+	</div>
+
+	<div class="newtabbtn-container">
+		<div class="btn add icon">{{ "New Group"|t }}</div>
+	</div>
+
+	<div class="unusedfields">
+		{% set unGroupedSelectedBlockTypeIds = [] %}
+
+		{% if pimpedBlockTypes and pimpedBlockTypes|length %}
+			{% for groupName,selectedBlockTypes in pimpedBlockTypes %}
+				{% for selectedBlockType in selectedBlockTypes %}
+					{% set unGroupedSelectedBlockTypeIds = unGroupedSelectedBlockTypeIds|merge([selectedBlockType.matrixBlockTypeId]) %}
+				{% endfor %}
+			{% endfor %}
+		{% endif %}
+
+		<div class="fld-tab unused{% if unGroupedSelectedBlockTypeIds|length == blockTypes|length %} hidden{% endif %}">
+			<div class="tabs">
+				<div class="tab sel"><span>{{ "Blocks"|t }}</span></div>
+			</div>
+			<div class="fld-tabcontent">
+				{% for blockType in blockTypes %}
+					{% set selected = blockType.id in unGroupedSelectedBlockTypeIds %}
+					<div class="fld-field unused{% if selected %} hidden{% endif %}" data-id="{{ blockType.id }}">
+						<span>{{ blockType.name }}</span>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+	</div>
+
+</div>
