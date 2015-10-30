@@ -220,6 +220,16 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
       'value' : this.settings.context
     });
 
+    // If CSRF protection isn't enabled, these won't be defined.
+    if (typeof Craft.csrfTokenName !== 'undefined' && typeof Craft.csrfTokenValue !== 'undefined')
+    {
+      // Add the CSRF token
+      data.push({
+        'name' : Craft.csrfTokenName,
+        'value' : Craft.csrfTokenValue
+      });
+    }
+
     // Post it
     Craft.postActionRequest('pimpMyMatrix/blockTypes/saveBlockTypes', data, $.proxy(function(response, textStatus)
     {

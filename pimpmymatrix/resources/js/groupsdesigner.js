@@ -185,7 +185,7 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
     this.$spinner.removeClass('hidden');
 
     // Get the form data
-    var data = this.$form.serializeArray();
+    var data = this.$form.serialize();
 
     // Post it
     Craft.postActionRequest('pimpMyMatrix/blockTypes/saveFieldLayout', data, $.proxy(function(response, textStatus)
