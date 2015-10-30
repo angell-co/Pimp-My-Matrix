@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "2.0.1",
+		"date"    : "30-10-2015",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug that meant the configuration pages didn’t work with CSRF protection enabled."
+			}
+		]
+	},
+	{
 		"version" : "2.0",
 		"date"    : "29-10-2015",
 		"notes"   : [
