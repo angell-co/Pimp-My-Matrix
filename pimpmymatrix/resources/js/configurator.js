@@ -212,23 +212,10 @@ PimpMyMatrix.Configurator = Garnish.Base.extend(
     this.$spinner.removeClass('hidden');
 
     // Get the form data
-    var data = this.$form.serializeArray();
+    var data = this.$form.serialize();
 
     // Add the context
-    data.push({
-      'name' : 'context',
-      'value' : this.settings.context
-    });
-
-    // If CSRF protection isn't enabled, these won't be defined.
-    if (typeof Craft.csrfTokenName !== 'undefined' && typeof Craft.csrfTokenValue !== 'undefined')
-    {
-      // Add the CSRF token
-      data.push({
-        'name' : Craft.csrfTokenName,
-        'value' : Craft.csrfTokenValue
-      });
-    }
+    data += '&context=' + this.settings.context
 
     // Post it
     Craft.postActionRequest('pimpMyMatrix/blockTypes/saveBlockTypes', data, $.proxy(function(response, textStatus)
