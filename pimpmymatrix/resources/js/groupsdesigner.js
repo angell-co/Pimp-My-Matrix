@@ -39,7 +39,7 @@ PimpMyMatrix.GroupsDesigner = Craft.FieldLayoutDesigner.extend(
   onFieldOptionSelect: function(option)
   {
     var $option = $(option),
-        $blockType = $option.data('menu').$trigger.parent(),
+        $blockType = $option.data('menu').$anchor.parent(),
         action = $option.data('action');
 
     switch (action)
