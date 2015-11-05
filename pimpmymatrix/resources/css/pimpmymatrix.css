@@ -74,7 +74,8 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 /* don’t break certain places */
 .widget .matrix .matrixblock .fields,
 .superTable .matrix .matrixblock .fields,
-.matrixblock.matrixblock-not-pimped .fields {
+.matrixblock.matrixblock-not-pimped .fields,
+.matrix.variant-matrix .matrixblock .fields {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;

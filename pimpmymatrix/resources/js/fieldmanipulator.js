@@ -55,7 +55,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
   // Update our copy of all the Matrix containers
   refreshMatrixContainers: function()
   {
-    this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix');
+    this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix, .matrix.variant-matrix');
   },
 
   processMatrixFields: function()
