@@ -303,8 +303,9 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         tabs = pimpedBlockType.fieldLayout.tabs,
         fields = pimpedBlockType.fieldLayout.fields;
 
-    // Check we have more than one tab
-    if ( tabs.length > 1 )
+    // Check we have some tabs
+    // TODO: would be nice to not show the tab nav if there is only one tab
+    if ( tabs.length >= 1 )
     {
       // Add a class so we can style
       $matrixBlock.addClass('matrixblock-pimped');
