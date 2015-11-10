@@ -20,7 +20,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '2.1.0';
+    return '2.1.1';
   }
 
   public function getSchemaVersion()
@@ -48,9 +48,9 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'http://plugins.supercooldesign.co.uk/plugin/pimp-my-matrix/docs';
   }
 
-  public function hasCpSection()
+  public function getSettingsUrl()
   {
-    return true;
+    return 'pimpmymatrix';
   }
 
   public function registerCpRoutes()

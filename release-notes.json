@@ -1,5 +1,19 @@
 [
 	{
+		"version" : "2.1.1",
+		"date"    : "10-11-2015",
+		"notes"   : [
+			{
+				"type"    : "improved",
+				"message" : "Switched to configuring the global context from the settings page rather than a main cp section."
+			},
+			{
+				"type"    : "improved",
+				"message" : "Don’t show the tab nav if there is only one tab."
+			}
+		]
+	},
+	{
 		"version" : "2.1.0",
 		"date"    : "10-11-2015",
 		"notes"   : [
