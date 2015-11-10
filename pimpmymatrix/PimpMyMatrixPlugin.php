@@ -70,4 +70,18 @@ class PimpMyMatrixPlugin extends BasePlugin
     }
   }
 
+  /**
+   * Require Craft 2.5
+   *
+   * @return bool
+   * @throws Exception
+   */
+  public function onBeforeInstall()
+  {
+    if (version_compare(craft()->getVersion(), '2.5', '<'))
+    {
+      throw new Exception('Pimp My Matrix requires Craft CMS 2.5+ in order to run.');
+    }
+  }
+
 }
