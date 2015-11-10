@@ -1,5 +1,27 @@
 [
 	{
+		"version" : "2.0.2",
+		"date"    : "10-11-2015",
+		"notes"   : [
+			{
+				"type"    : "added",
+				"message" : "Updated the plugin to work with Craft 2.5, which will soon be required (I think)."
+			},
+			{
+				"type"    : "added",
+				"message" : "Added some default Supercool icons until we get a better one."
+			},
+			{
+				"type"    : "improved",
+				"message" : "Switched to inclusive method of finding which Matrix fields we want to better avoid conflicts."
+			},
+			{
+				"type"    : "fixed",
+				"message" : "Fixed an issue with block type field layouts where if you only had one tab nothing would display."
+			}
+		]
+	},
+	{
 		"version" : "2.0.1",
 		"date"    : "30-10-2015",
 		"notes"   : [

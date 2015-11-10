@@ -20,7 +20,17 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '2.0.1';
+    return '2.0.2';
+  }
+
+  public function getSchemaVersion()
+  {
+    return '2.0.0';
+  }
+
+  public function getDescription()
+  {
+    return Craft::t('Enhance a busy Matrix field by organising block types');
   }
 
   public function getDeveloper()
@@ -31,6 +41,11 @@ class PimpMyMatrixPlugin extends BasePlugin
   public function getDeveloperUrl()
   {
     return 'http://plugins.supercooldesign.co.uk';
+  }
+
+  public function getDocumentationUrl()
+  {
+    return 'http://plugins.supercooldesign.co.uk/plugin/pimp-my-matrix/docs';
   }
 
   public function hasCpSection()
