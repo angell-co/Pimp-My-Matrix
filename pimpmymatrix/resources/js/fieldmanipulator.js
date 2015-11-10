@@ -317,7 +317,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       // Add the tabs container
       var $tabs = $('<ul class="pimpmymatrix-tabs"/>').appendTo($matrixBlock);
 
-      // Make our own fields container and hide the native one
+      // Make our own fields container and hide the native one, but keep its height
       var $pimpedFields = $('<div class="pimpmymatrix-fields"/>').css({ 'opacity' : 0 }).appendTo($matrixBlock),
           $fields = $matrixBlock.find('.fields');
       $fields.css({ 'opacity' : 0 });
@@ -342,11 +342,14 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
             paneClasses = ' hidden';
           }
 
-          // Add the tab nav
-          var $tabLi = $('<li/>').appendTo($tabs);
-          $('<a id="'+pimpedNamespace+'-'+i+'" class="tab'+navClasses+'">'+tabs[i].name+'</a>')
-            .appendTo($tabLi)
-            .data('pimped-tab-target', '#'+pimpedNamespace+'-pane-'+i);
+          // Add the tab nav, if there is more than one
+          if (tabs.length > 1)
+          {
+            var $tabLi = $('<li/>').appendTo($tabs);
+            $('<a id="'+pimpedNamespace+'-'+i+'" class="tab'+navClasses+'">'+tabs[i].name+'</a>')
+              .appendTo($tabLi)
+              .data('pimped-tab-target', '#'+pimpedNamespace+'-pane-'+i);
+          }
 
           // Make a tab pane
           var $pane = $('<div id="'+pimpedNamespace+'-pane-'+i+'" class="'+paneClasses+'"/>').appendTo($pimpedFields);
@@ -361,9 +364,13 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
         }
 
-        // Add the event handlers
-        this.addListener($tabs.find('a'), 'click', 'onTabClick');
+        // Bind events to tab nav clicks
+        if (tabs.length > 1)
+        {
+          this.addListener($tabs.find('a'), 'click', 'onTabClick');
+        }
 
+        // Force the fields to be removed from the layout
         $fields.hide();
 
         $pimpedFields.velocity({opacity: 1}, 'fast', $.proxy(function()
