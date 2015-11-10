@@ -55,7 +55,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
   // Update our copy of all the Matrix containers
   refreshMatrixContainers: function()
   {
-    this.$matrixContainer = $('.matrix').not('.widget .matrix, .superTable .matrix, .matrix.variant-matrix');
+    this.$matrixContainer = Garnish.$doc.find('.matrix-field');
   },
 
   processMatrixFields: function()
@@ -90,7 +90,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     {
 
       // get matrix field handle out of the dom
-      var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
+      var matrixFieldHandle = this._getMatrixFieldName($matrixField);
 
       // Filter by the current matrix field
       var pimpedBlockTypes = [];
@@ -263,7 +263,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // If that failed, do another check against the global context
         else
         {
-          var matrixFieldHandle = this._getMatrixFieldName($matrixField, true);
+          var matrixFieldHandle = this._getMatrixFieldName($matrixField);
           pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
 
           if ( pimpedBlockTypes.length >= 1 )
@@ -455,21 +455,11 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
   /**
    * This simply returns a fieldHandle if it can get one or false if not
    */
-  _getMatrixFieldName: function($matrixField, fromId)
+  _getMatrixFieldName: function($matrixField)
   {
-    if ( fromId )
-    {
-      var matrixFieldId = $matrixField.parents('.field').prop('id'),
-          parts = matrixFieldId.split("-"),
-          matrixFieldHandle = parts[1];
-    }
-    else
-    {
-      var matrixFieldName = $matrixField.siblings('input[type="hidden"][name*="fields"]').prop('name'),
-          regExp  = /fields\[([^\]]+)\]/,
-          matches = regExp.exec(matrixFieldName),
-          matrixFieldHandle = matches[1];
-    }
+    var matrixFieldId = $matrixField.parents('.field').prop('id'),
+        parts = matrixFieldId.split("-"),
+        matrixFieldHandle = parts[parts.length-2];
 
     if ( matrixFieldHandle != '' )
     {
