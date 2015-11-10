@@ -1,11 +1,11 @@
 [
 	{
-		"version" : "2.0.2",
+		"version" : "2.1.0",
 		"date"    : "10-11-2015",
 		"notes"   : [
 			{
 				"type"    : "added",
-				"message" : "Updated the plugin to work with Craft 2.5, which will soon be required (I think)."
+				"message" : "Updated the plugin to work with Craft 2.5, which is now required."
 			},
 			{
 				"type"    : "added",
