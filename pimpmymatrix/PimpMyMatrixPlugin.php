@@ -20,7 +20,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '2.1.0';
+    return '2.1.1';
   }
 
   public function getSchemaVersion()
