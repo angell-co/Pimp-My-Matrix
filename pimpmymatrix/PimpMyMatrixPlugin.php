@@ -48,9 +48,9 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'http://plugins.supercooldesign.co.uk/plugin/pimp-my-matrix/docs';
   }
 
-  public function hasCpSection()
+  public function getSettingsUrl()
   {
-    return true;
+    return 'pimpmymatrix';
   }
 
   public function registerCpRoutes()
