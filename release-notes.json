@@ -9,7 +9,7 @@
 			},
 			{
 				"type"    : "improved",
-				"message" : "Added some default Supercool icons until we get a better one."
+				"message" : "Don’t show the tab nav if there is only one tab."
 			}
 		]
 	},
