@@ -20,7 +20,7 @@ class PimpMyMatrixPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '2.0.2';
+    return '2.1.0';
   }
 
   public function getSchemaVersion()
@@ -67,6 +67,20 @@ class PimpMyMatrixPlugin extends BasePlugin
     if (!craft()->plugins->doesPluginRequireDatabaseUpdate($plugin))
     {
       craft()->pimpMyMatrix->loader();
+    }
+  }
+
+  /**
+   * Require Craft 2.5
+   *
+   * @return bool
+   * @throws Exception
+   */
+  public function onBeforeInstall()
+  {
+    if (version_compare(craft()->getVersion(), '2.5', '<'))
+    {
+      throw new Exception('Pimp My Matrix requires Craft CMS 2.5+ in order to run.');
     }
   }
 

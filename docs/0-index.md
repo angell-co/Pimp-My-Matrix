@@ -13,7 +13,7 @@ To install Pimp My Matrix, follow these steps:
 
 ## Requirements
 
-This plugin requires Craft 2.2 or greater and has only been tested on PHP versions 5.5 and 5.6.
+This plugin requires Craft 2.5 or greater and has only been tested on PHP versions 5.5 and 5.6.
 
 
 ## Upgrading
