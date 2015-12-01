@@ -293,6 +293,11 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       }
 
     }
+    else
+    {
+      // Fixes Redactor
+      Garnish.$doc.trigger('scroll');
+    }
 
   },
 
@@ -323,7 +328,8 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
       $fields.css({ 'opacity' : 0 });
 
       // Wait a bit for the add block animation to finish
-      setTimeout($.proxy(function(){
+      setTimeout($.proxy(function()
+      {
 
         // Loop the tabs
         for (var i = 0; i < tabs.length; i++)
@@ -373,11 +379,15 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // Force the fields to be removed from the layout
         $fields.hide();
 
+        console.log('timer');
+
         $pimpedFields.velocity({opacity: 1}, 'fast', $.proxy(function()
         {
           // Re-initialize the Craft UI
           Craft.initUiElements($pimpedFields);
+          console.log('UI');
         }, this));
+
 
       }, this), 110);
 
