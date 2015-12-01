@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "2.1.2",
+		"date"    : "1-12-2015",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug with Redactor fields not initializing properly if hidden when the page loads."
+			}
+		]
+	},
+	{
 		"version" : "2.1.1",
 		"date"    : "10-11-2015",
 		"notes"   : [
