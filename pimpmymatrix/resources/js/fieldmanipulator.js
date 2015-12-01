@@ -379,13 +379,10 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         // Force the fields to be removed from the layout
         $fields.hide();
 
-        console.log('timer');
-
         $pimpedFields.velocity({opacity: 1}, 'fast', $.proxy(function()
         {
           // Re-initialize the Craft UI
           Craft.initUiElements($pimpedFields);
-          console.log('UI');
         }, this));
 
 
