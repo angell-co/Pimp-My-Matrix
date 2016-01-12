@@ -72,6 +72,8 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 }
 
 /* don’t break blocks that don’t need pimping */
+.elementeditor .matrix-field .matrixblock .fields,
+.superTableContainer .matrix-field .matrixblock .fields,
 .matrix-field .matrixblock.matrixblock-not-pimped .fields {
   -webkit-opacity: 1;
   -moz-opacity: 1;
