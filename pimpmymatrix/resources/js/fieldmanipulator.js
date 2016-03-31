@@ -41,7 +41,6 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
         {
           this.settings.context = 'entrytype:' + $('#entryType').val();
-          this.refreshMatrixContainers();
           this.processMatrixFields();
         }
       });
@@ -60,6 +59,8 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   processMatrixFields: function()
   {
+
+    this.refreshMatrixContainers();
 
     var _this = this;
 

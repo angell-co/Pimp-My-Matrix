@@ -78,7 +78,6 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
   opacity: 1;
 }
 
-
 /* fix for animating and collapsed blocks */
 .matrix-field .matrixblock-pimped.velocity-animating .pimpmymatrix-tabs,
 .matrix-field .matrixblock-pimped.velocity-animating .pimpmymatrix-fields,
