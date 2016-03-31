@@ -47,7 +47,18 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
     }
 
     // Wait until load to loop the Matrix fields
-    this.addListener(Garnish.$win, 'load resize', 'processMatrixFields');
+    this.addListener(Garnish.$win, 'load', 'processMatrixFields');
+
+    // Debounced resize event
+    this.addListener(Garnish.$win, 'resize', $.proxy(function()
+    {
+      if (this.resizeTimeout)
+      {
+        clearTimeout(this.resizeTimeout);
+      }
+
+      this.resizeTimeout = setTimeout($.proxy(this, 'processMatrixFields'), 25);
+    }, this));
 
   },
 
