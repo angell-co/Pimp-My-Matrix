@@ -56,13 +56,6 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 /**
  * Block level field layouts
  */
-.matrix-field .matrixblock-pimped .pimpmymatrix-tabs {
-  position: absolute;
-  top: 5px;
-  right: 76px;
-  display: block;
-  font-size: 0;
-}
 
 /* hide all matrix block fields */
 .matrix-field .matrixblock .fields {
@@ -72,42 +65,51 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 }
 
 /* don’t break blocks that don’t need pimping */
-.matrix-field .matrixblock.matrixblock-not-pimped .fields {
-  -webkit-opacity: 1;
-  -moz-opacity: 1;
-  opacity: 1;
+.matrixblock.matrixblock-not-pimped .fields {
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  opacity: 1 !important;
 }
 
-
 /* fix for animating and collapsed blocks */
-.matrix-field .matrixblock-pimped.velocity-animating .pimpmymatrix-tabs,
-.matrix-field .matrixblock-pimped.velocity-animating .pimpmymatrix-fields,
-.matrix-field .matrixblock-pimped.collapsed .pimpmymatrix-tabs,
-.matrix-field .matrixblock-pimped.collapsed .pimpmymatrix-fields {
+.matrixblock-pimped.collapsed.draghelper .pimpmymatrix-tabs,
+.matrixblock-pimped.collapsed.draghelper .pimpmymatrix-fields,
+.matrixblock-pimped.velocity-animating .pimpmymatrix-tabs,
+.matrixblock-pimped.velocity-animating .pimpmymatrix-fields,
+.matrixblock-pimped.collapsed .pimpmymatrix-tabs,
+.matrixblock-pimped.collapsed .pimpmymatrix-fields {
   -webkit-opacity: 0 !important;
   -moz-opacity: 0 !important;
   opacity: 0 !important;
 }
 
 /* tabs */
-.matrix-field .matrixblock-pimped .pimpmymatrix-tabs li {
+.matrixblock-pimped .pimpmymatrix-tabs {
+  position: absolute;
+  top: 5px;
+  right: 76px;
+  display: block;
+  font-size: 0;
+}
+
+.matrixblock-pimped .pimpmymatrix-tabs li {
   display: inline-block;
   font-size: 13px;
 }
 
-.matrix-field .matrixblock-pimped .pimpmymatrix-tabs li a {
+.matrixblock-pimped .pimpmymatrix-tabs li a {
   display: block;
   padding: 4px 10px;
   color: #777;
   white-space: nowrap;
 }
 
-.matrix-field .matrixblock-pimped .pimpmymatrix-tabs li a:hover {
+.matrixblock-pimped .pimpmymatrix-tabs li a:hover {
   text-decoration: none;
   color: #0d78f2;
 }
 
-.matrix-field .matrixblock-pimped .pimpmymatrix-tabs li a.sel {
+.matrixblock-pimped .pimpmymatrix-tabs li a.sel {
   color: #29323d;
   cursor: default;
   background-color: #f9fafa;

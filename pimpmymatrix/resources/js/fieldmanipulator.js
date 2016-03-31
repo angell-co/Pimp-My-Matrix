@@ -41,14 +41,24 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
         if ( requestData.url.indexOf( 'switchEntryType' ) > -1 )
         {
           this.settings.context = 'entrytype:' + $('#entryType').val();
-          this.refreshMatrixContainers();
           this.processMatrixFields();
         }
       });
     }
 
     // Wait until load to loop the Matrix fields
-    this.addListener(Garnish.$win, 'load resize', 'processMatrixFields');
+    this.addListener(Garnish.$win, 'load', 'processMatrixFields');
+
+    // Debounced resize event
+    this.addListener(Garnish.$win, 'resize', $.proxy(function()
+    {
+      if (this.resizeTimeout)
+      {
+        clearTimeout(this.resizeTimeout);
+      }
+
+      this.resizeTimeout = setTimeout($.proxy(this, 'processMatrixFields'), 25);
+    }, this));
 
   },
 
@@ -60,6 +70,8 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
 
   processMatrixFields: function()
   {
+
+    this.refreshMatrixContainers();
 
     var _this = this;
 
