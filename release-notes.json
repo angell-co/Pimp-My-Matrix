@@ -1,5 +1,23 @@
 [
 	{
+		"version" : "2.1.3",
+		"date"    : "31-3-2016",
+		"notes"   : [
+			{
+				"type"    : "improved",
+				"message" : "Debounced the window resize event to try and improve performance."
+			},
+			{
+				"type"    : "fixed",
+				"message" : "Fixed numerous situations where matrix fields were turning up blank e.g. element editor HUDs and nested SuperTable Matrix fields."
+			},
+			{
+				"type"    : "fixed",
+				"message" : "Fixed a bug where collapsed/dragging blocks weren’t getting their layouts."
+			}
+		]
+	},
+	{
 		"version" : "2.1.2",
 		"date"    : "1-12-2015",
 		"notes"   : [
