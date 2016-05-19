@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "2.1.4",
+		"date"    : "19-5-2016",
+		"notes"   : [
+			{
+				"type"    : "fixed",
+				"message" : "Fixed an issue where long menus would be inaccessibile in Live Preview on devices with short screens."
+			}
+		]
+	},
+	{
 		"version" : "2.1.3",
 		"date"    : "31-3-2016",
 		"notes"   : [
