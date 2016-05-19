@@ -132,3 +132,10 @@ body.rtl .buttons-pimped > .btn, body.rtl .buttons-pimped > .btngroup { margin: 
 .pimpmymatrix-secondary-menu {
   padding-top: 10px;
 }
+
+/* Keep long secondary menu from going offscreen on Live Preview where scrolling is not possible */
+html.noscroll .pimpmymatrix-secondary-menu {
+  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
