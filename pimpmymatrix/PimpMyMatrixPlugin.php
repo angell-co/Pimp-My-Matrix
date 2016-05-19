@@ -53,6 +53,12 @@ class PimpMyMatrixPlugin extends BasePlugin
     return 'pimpmymatrix';
   }
 
+  public function getReleaseFeedUrl()
+  {
+    return 'https://raw.githubusercontent.com/supercool/Pimp-My-Matrix/master/release-notes.json';
+  }
+
+
   public function registerCpRoutes()
   {
     return array(
