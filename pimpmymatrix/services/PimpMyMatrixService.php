@@ -162,9 +162,9 @@ class PimpMyMatrixService extends BaseApplicationComponent
       }
 
       // Global sets
-      else if ( count($segments) == 2 && $segments[0] == 'globals' )
+      else if ( count($segments) >= 2 && $segments[0] == 'globals' )
       {
-        $set = craft()->globals->getSetByHandle($segments[1]);
+        $set = craft()->globals->getSetByHandle(end($segments));
         if ($set)
         {
           $context = 'globalset:'.$set->id;
