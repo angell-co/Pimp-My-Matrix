@@ -130,7 +130,6 @@ class PimpMyMatrixService extends BaseApplicationComponent
       // Entry types
       if ( count($segments) == 3 && $segments[0] == 'entries' )
       {
-
         if ($segments[2] == 'new')
         {
           $section = craft()->sections->getSectionByHandle($segments[1]);
@@ -149,6 +148,7 @@ class PimpMyMatrixService extends BaseApplicationComponent
         }
 
         $cont
+        ext = 'entrytype:'.$entryType->id;
       }
 
       // Category groups
