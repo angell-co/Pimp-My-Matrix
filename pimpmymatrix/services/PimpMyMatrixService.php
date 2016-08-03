@@ -147,8 +147,7 @@ class PimpMyMatrixService extends BaseApplicationComponent
           }
         }
 
-        $cont
-        ext = 'entrytype:'.$entryType->id;
+        $context = 'entrytype:'.$entryType->id;
       }
 
       // Category groups
