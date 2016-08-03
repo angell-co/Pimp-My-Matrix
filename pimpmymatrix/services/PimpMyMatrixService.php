@@ -128,7 +128,7 @@ class PimpMyMatrixService extends BaseApplicationComponent
       $context = 'global';
 
       // Entry types
-      if ( count($segments) == 3 && $segments[0] == 'entries' )
+      if ( count($segments) >= 3 && $segments[0] == 'entries' )
       {
         if ($segments[2] == 'new')
         {
