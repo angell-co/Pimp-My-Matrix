@@ -148,18 +148,19 @@ class PimpMyMatrixService extends BaseApplicationComponent
           }
         }
 
-        $context = 'entrytype:'.$entryType->id;
+        $cont
+      }
 
-      }
       // Category groups
-        else if ( count($segments) == 3 && $segments[0] == 'categories' )
+      else if ( count($segments) == 3 && $segments[0] == 'categories' )
+      {
+        $group = craft()->categories->getGroupByHandle($segments[1]);
+        if ($group)
         {
-          $group = craft()->categories->getGroupByHandle($segments[1]);
-          if ($group)
-          {
-            $context = 'categorygroup:'.$group->id;
-          }
+          $context = 'categorygroup:'.$group->id;
+        }
       }
+
       // Global sets
       else if ( count($segments) == 2 && $segments[0] == 'globals' )
       {
@@ -169,6 +170,7 @@ class PimpMyMatrixService extends BaseApplicationComponent
           $context = 'globalset:'.$set->id;
         }
       }
+
       // Users
       else if ( (count($segments) == 1 && $segments[0] == 'myaccount') || (count($segments) == 2 && $segments[0] == 'users') )
       {
