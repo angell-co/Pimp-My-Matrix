@@ -142,10 +142,14 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 			{
 
 				// Save it!
+				$isNew = $blockTypeRecord->isNewRecord();
 				$blockTypeRecord->save(false);
+				if ($isNew) {
+					$blockType->id = $blockTypeRecord->id;
+				}
 
 				// Might as well update our cache of the block type group while we have it.
-				$this->_blockTypesByContext[$blockType->context] = $blockType;
+				$this->_blockTypesByContext[$blockType->context][$blockType->id] = $blockType;
 
 				if ($transaction !== null)
 				{
@@ -203,6 +207,9 @@ class PimpMyMatrix_BlockTypesService extends BaseApplicationComponent
 			{
 				$transaction->commit();
 			}
+
+			// update the internal cache
+			$this->_blockTypesByContext[$context] = [];
 
 			return (bool) $affectedRows;
 		}
