@@ -273,7 +273,7 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
           this.initBlockFieldLayout($matrixBlock, $matrixField);
         }
         // If that failed, do another check against the global context
-        else
+        else if (this.settings.blockTypes.hasOwnProperty('global'))
         {
           var matrixFieldHandle = this._getMatrixFieldName($matrixField);
           pimpedBlockTypes = $.grep(this.settings.blockTypes['global'], function(e){ return e.fieldHandle === matrixFieldHandle; });
@@ -297,7 +297,10 @@ PimpMyMatrix.FieldManipulator = Garnish.Base.extend(
             $matrixBlock.addClass('matrixblock-not-pimped');
           }
         }
-
+        else
+        {
+          $matrixBlock.addClass('matrixblock-not-pimped');
+        }
       }
       else
       {
