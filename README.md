@@ -1,4 +1,6 @@
-# Pimp My Matrix - a plugin for [Craft](http://buildwithcraft.com)
+# This plugin has now retired and we are no longer supporting or developing it any further. A good replacement would be [Neo](https://github.com/benjamminf/craft-neo)
+
+## Pimp My Matrix - a plugin for [Craft](http://buildwithcraft.com).
 
 Pimp My Matrix provides additional control for displaying blocks and fields within a Matrix field.
 
