@@ -1,4 +1,6 @@
-# This plugin has now retired and we are no longer supporting or developing it any further. A good replacement would be [Neo](https://github.com/benjamminf/craft-neo)
+# Its back 👻, Craft 3 version coming soon.
+
+---
 
 ## Pimp My Matrix - a plugin for [Craft](http://buildwithcraft.com).
 
