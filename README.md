@@ -1,4 +1,4 @@
-# Its back 👻, Craft 3 version coming soon.
+# Its back 👻, Craft 3 version re-named and in beta -> [🥄Spoon](https://github.com/angell-co/Spoon)
 
 ---
 
