@@ -128,9 +128,8 @@ class PimpMyMatrixService extends BaseApplicationComponent
       $context = 'global';
 
       // Entry types
-      if ( count($segments) == 3 && $segments[0] == 'entries' )
+      if ( count($segments) >= 3 && $segments[0] == 'entries' )
       {
-
         if ($segments[2] == 'new')
         {
           $section = craft()->sections->getSectionByHandle($segments[1]);
@@ -149,26 +148,28 @@ class PimpMyMatrixService extends BaseApplicationComponent
         }
 
         $context = 'entrytype:'.$entryType->id;
+      }
 
-      }
       // Category groups
-        else if ( count($segments) == 3 && $segments[0] == 'categories' )
-        {
-          $group = craft()->categories->getGroupByHandle($segments[1]);
-          if ($group)
-          {
-            $context = 'categorygroup:'.$group->id;
-          }
-      }
-      // Global sets
-      else if ( count($segments) == 2 && $segments[0] == 'globals' )
+      else if ( count($segments) == 3 && $segments[0] == 'categories' )
       {
-        $set = craft()->globals->getSetByHandle($segments[1]);
+        $group = craft()->categories->getGroupByHandle($segments[1]);
+        if ($group)
+        {
+          $context = 'categorygroup:'.$group->id;
+        }
+      }
+
+      // Global sets
+      else if ( count($segments) >= 2 && $segments[0] == 'globals' )
+      {
+        $set = craft()->globals->getSetByHandle(end($segments));
         if ($set)
         {
           $context = 'globalset:'.$set->id;
         }
       }
+
       // Users
       else if ( (count($segments) == 1 && $segments[0] == 'myaccount') || (count($segments) == 2 && $segments[0] == 'users') )
       {
