@@ -1,4 +1,6 @@
-# Its back 👻, Craft 3 version re-named and in beta -> [🥄Spoon](https://github.com/angell-co/Spoon)
+# Its back 👻, Craft 3 version re-named -> [🥄Spoon](https://github.com/angell-co/Spoon)
+
+This repository is now archived, but will remain here for anyone to use indefinitely.
 
 ---
 
